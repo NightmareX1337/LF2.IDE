@@ -39,7 +39,8 @@ namespace LF2.IDE
 		private void Insert(object sender, EventArgs e)
 		{
 			if (mainForm.ActiveDocument != null)
-				mainForm.ActiveDocument.Scintilla.Selection.Text = mainForm.ActiveDocument.Scintilla.EndOfLine.Mode == ScintillaNET.EndOfLineMode.LF ? richTextBox.Text.Replace("\r", string.Empty) : richTextBox.Text;
+				mainForm.ActiveDocument.Scintilla.Selection.Text = richTextBox.Text;
+			mainForm.ActiveDocument.Scintilla.EndOfLine.ConvertAllLines(mainForm.ActiveDocument.Scintilla.EndOfLine.Mode);
 		}
 
 		private void Generate(object sender, EventArgs e)
@@ -57,8 +58,11 @@ namespace LF2.IDE
 			str.Append(hit_Dj.Text.Trim() == "" ? "" : "  hit_Dj: " + hit_Dj.Text.Trim());
 			str.Append(hit_ja.Text.Trim() == "" ? "" : "  hit_ja: " + hit_ja.Text.Trim());
 			str.Append(sound.Text.Trim() == "" ? "" : "\r\n  sound: " + sound.Text.Trim());
-			if (checkBox_AddTags.Checked && mainForm.formTag.richTextBox.Text != "")
-				str.Append("\r\n" + mainForm.formTag.richTextBox.Text);
+
+			string tags = mainForm.formTag.Generate();
+
+			if (checkBox_AddTags.Checked && tags != "")
+				str.Append("\r\n" + tags);
 			str.Append("\r\n<frame_end>");
 
 			for (int i = 0; i < frameCount.Value; i++)
@@ -75,15 +79,15 @@ namespace LF2.IDE
 				str.Append(hit_Dj.Text.Trim() == "" ? "" : "  hit_Dj: " + hit_Dj.Text.Trim());
 				str.Append(hit_ja.Text.Trim() == "" ? "" : "  hit_ja: " + hit_ja.Text.Trim());
 				str.Append(sound.Text.Trim() == "" ? "" : "\r\n  sound: " + sound.Text.Trim());
-				if (checkBox_AddTags.Checked && mainForm.formTag.richTextBox.Text != "")
-					str.Append("\r\n" + mainForm.formTag.richTextBox.Text);
+				if (checkBox_AddTags.Checked && tags != "")
+					str.Append("\r\n" + tags);
 				str.Append("\r\n<frame_end>");
 			}
 
 			if (string.IsNullOrEmpty(richTextBox.Text))
 				richTextBox.Text = str.ToString();
 			else
-				richTextBox.Text += "\r\n\n" + str.ToString();
+				richTextBox.Text += "\r\n\r\n" + str.ToString();
 
 			richTextBox.SelectionStart = richTextBox.Text.Length;
 			richTextBox.ScrollToCaret();
@@ -117,7 +121,7 @@ namespace LF2.IDE
 		void NewLine(object sender, EventArgs e)
 		{
 			if (mainForm.ActiveDocument != null)
-				mainForm.ActiveDocument.Scintilla.Selection.Text = (mainForm.ActiveDocument.Scintilla.EndOfLine.Mode == ScintillaNET.EndOfLineMode.LF ? "\n" : System.Environment.NewLine);
+				mainForm.ActiveDocument.Scintilla.Selection.Text = mainForm.ActiveDocument.Scintilla.EndOfLine.EolString;
 		}
 
 		void FormFrame_Closing(object sender, FormClosingEventArgs e)

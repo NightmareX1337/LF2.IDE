@@ -17,7 +17,7 @@ namespace DrawBox
 {
 	#region Enums
 
-	public enum DrawingMode
+	public enum DrawingMode : byte
 	{
 		None,
 		Point,
@@ -31,7 +31,7 @@ namespace DrawBox
 	}
 
 	[Flags]
-	public enum DisplayModes
+	public enum DisplayModes : byte
 	{
 		None = 0,
 		Point = 1,
@@ -43,7 +43,7 @@ namespace DrawBox
 		All = 63
 	}
 
-	public enum PictureMode
+	public enum PictureMode : byte
 	{
 		Normal,
 		CenterImage,
@@ -66,6 +66,7 @@ namespace DrawBox
 		public DrawBox()
 			: base()
 		{
+			rectangles = new List<Rectangle>();
 			imageAttr.SetColorKey(trancparencyKey, trancparencyKey);
 			this.SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.DoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
 			this.TabStop = false;
@@ -89,7 +90,7 @@ namespace DrawBox
 		public int VectorDivision
 		{
 			get { return vectorDivision; }
-			set { vectorDivision = value; }
+			set { if (value != 0) vectorDivision = value; }
 		}
 
 		bool trancparency;
@@ -338,20 +339,130 @@ namespace DrawBox
 		}
 		public event EventHandler VectorChanged;
 
-		Rectangle rectangle;
+		bool multiRectangleMode;
+		public bool MultiRectangleMode
+		{
+			get { return multiRectangleMode; }
+			set
+			{
+				bool old = multiRectangleMode;
+				multiRectangleMode = value;
+				base.Invalidate();
+
+				if (old != value && MultiRectangleModeChanged != null)
+				{
+					MultiRectangleModeChanged(this, EventArgs.Empty);
+				}
+			}
+		}
+		public event EventHandler MultiRectangleModeChanged;
+
+		Rectangle oneRectangle;
+		public Rectangle OneRectangle
+		{
+			get
+			{
+				Rectangle rect = oneRectangle;
+				return new Rectangle(rect.Width < 0 ? rect.X + rect.Width : rect.X, rect.Height < 0 ? rect.Y + rect.Height : rect.Y, Math.Abs(rect.Width), Math.Abs(rect.Height));
+			}
+			set
+			{
+				Rectangle old = oneRectangle;
+				oneRectangle = value;
+
+				if (!multiRectangleMode)
+				{
+					base.Invalidate();
+
+					if (old != value && RectangleChanged != null)
+					{
+						RectangleChanged(this, EventArgs.Empty);
+					}
+				}
+			}
+		}
+
+		List<Rectangle> rectangles;
+		public List<Rectangle> Rectangles
+		{
+			get { return rectangles; }
+			set
+			{
+				List<Rectangle> old = rectangles;
+				rectangles = value;
+				base.Invalidate();
+
+				if (!object.ReferenceEquals(old, value) && RectangleChanged != null)
+				{
+					RectangleChanged(this, EventArgs.Empty);
+				}
+			}
+		}
+
+		int? activeRectangleIndex = null;
+		[DefaultValue(null)]
+		public int? ActiveRectangleIndex
+		{
+			get { return activeRectangleIndex; }
+			set
+			{
+				if (value.HasValue)
+				{
+					if (value.Value < Rectangles.Count && value.Value >= 0)
+						activeRectangleIndex = value;
+				}
+				else
+				{
+					activeRectangleIndex = null;
+				}
+			}
+		}
+
 		[DefaultValue(typeof(Rectangle), "-1, -1, 0, 0")]
 		public Rectangle Rectangle
 		{
-			get { return new Rectangle(rectangle.Width < 0 ? rectangle.X + rectangle.Width : rectangle.X, rectangle.Height < 0 ? rectangle.Y + rectangle.Height : rectangle.Y, Math.Abs(rectangle.Width), Math.Abs(rectangle.Height)); }
+			get
+			{
+				if (multiRectangleMode)
+				{
+					if (!activeRectangleIndex.HasValue)
+						return new Rectangle(-1, -1, 0, 0);
+
+					return GetRectangleNormalized(Rectangles[activeRectangleIndex.Value]);
+				}
+				else
+				{
+					return OneRectangle;
+				}
+			}
 			set
 			{
-				Rectangle old = rectangle;
-				rectangle = value;
-				base.Invalidate();
-
-				if (old != value && RectangleChanged != null)
+				if(multiRectangleMode)
 				{
-					RectangleChanged(this, EventArgs.Empty);
+					if (!activeRectangleIndex.HasValue)
+						NewRectangle(value, true);
+					else
+					{
+						Rectangle old = rectangles[activeRectangleIndex.Value];
+						rectangles[activeRectangleIndex.Value] = value;
+
+						if (old != value && RectangleChanged != null)
+						{
+							RectangleChanged(this, EventArgs.Empty);
+						}
+					}
+					base.Invalidate();
+				}
+				else
+				{
+					Rectangle old = oneRectangle;
+					oneRectangle = value;
+					base.Invalidate();
+
+					if (old != value && RectangleChanged != null)
+					{
+						RectangleChanged(this, EventArgs.Empty);
+					}
 				}
 			}
 		}
@@ -584,6 +695,7 @@ namespace DrawBox
 			set { vectorBrush.Color = vectorPen.Color = value; }
 		}
 
+		Pen rectangleBoldPen = new Pen(Color.Blue, 3);
 		Pen rectanglePen = new Pen(Color.Blue);
 		[Browsable(false)]
 		public Pen RectanglePen
@@ -610,7 +722,7 @@ namespace DrawBox
 			set
 			{
 				Color old = rectanglePen.Color;
-				rectanglePen.Color = value;
+				rectangleBoldPen.Color = rectanglePen.Color = value;
 				base.Invalidate();
 
 				if (old != value && RectanglePenChanged != null)
@@ -620,6 +732,7 @@ namespace DrawBox
 			}
 		}
 
+		SolidBrush rectangleChoiceBrush = new SolidBrush(Color.FromArgb(127, 255, 255, 0));
 		SolidBrush rectangleBrush = new SolidBrush(Color.FromArgb(64, 0, 0, 255));
 		[Browsable(false)]
 		public SolidBrush RectangleBrush
@@ -662,7 +775,9 @@ namespace DrawBox
 			set
 			{
 				rectangleBrush.Color = Color.FromArgb(rectangleBrush.Color.A, rectanglePen.Color = value);
-
+				rectangleChoiceBrush.Color = Color.FromArgb(~rectangleBrush.Color.ToArgb());
+				rectangleBoldPen.Color = Color.FromArgb(rectanglePen.Color.A, Color.FromArgb(~rectangleBrush.Color.ToArgb()));
+				
 				if (RectangleColorSet != null)
 				{
 					RectangleColorSet(this, EventArgs.Empty);
@@ -935,6 +1050,52 @@ namespace DrawBox
 			return a / Math.PI * 180.0;
 		}
 
+		private void NewRectangle(Rectangle rect, bool callEvent)
+		{
+			rectangles.Add(rect);
+			activeRectangleIndex = rectangles.Count - 1;
+			if (callEvent && RectangleChanged != null)
+				RectangleChanged(this, EventArgs.Empty);
+		}
+
+		private int? GetRectangleChoice(int x, int y)
+		{
+			int? result = null;
+			float minDistance = float.MaxValue;
+			for (int i = 0; i < rectangles.Count; i++)
+			{
+				Rectangle rect = GetRectangleNormalized(rectangles[i]);
+				if (rect.Contains(x, y))
+				{
+					int q = x - (rect.X + rect.Width / 2), w = y - (rect.Y + rect.Height / 2);
+					float distance = (float)Math.Sqrt(q * q + w * w);
+					if (distance < minDistance)
+					{
+						minDistance = distance;
+						result = i;
+					}
+				}
+			}
+			return result;
+		}
+		public Rectangle GetRectangleUnhandled()
+		{
+			if (multiRectangleMode)
+			{
+				if (!activeRectangleIndex.HasValue)
+					return new Rectangle(-1, -1, 0, 0);
+
+				return Rectangles[activeRectangleIndex.Value];
+			}
+			else
+				return oneRectangle;
+		}
+
+		public Rectangle GetRectangleNormalized(Rectangle rect)
+		{
+			return new Rectangle(rect.Width < 0 ? rect.X + rect.Width : rect.X, rect.Height < 0 ? rect.Y + rect.Height : rect.Y, Math.Abs(rect.Width), Math.Abs(rect.Height));
+		}
+
 		#endregion
 
 		#region Painting
@@ -1015,9 +1176,32 @@ namespace DrawBox
 
 			if (HasFlag(displayMode, DisplayModes.Rectangle))
 			{
-				Rectangle rec = this.Rectangle;
-				e.Graphics.DrawRectangle(rectanglePen, rec);
-				e.Graphics.FillRectangle(rectangleBrush, rec);
+				if (multiRectangleMode)
+				{
+					foreach (Rectangle rec in Rectangles)
+					{
+						Rectangle rect = GetRectangleNormalized(rec);
+						e.Graphics.DrawRectangle(rectanglePen, rect);
+						e.Graphics.FillRectangle(rectangleBrush, rect);
+					}
+					if (ShiftKey)
+					{
+						if(activeRectangleIndex.HasValue)
+						{
+							Rectangle rect = rectangles[activeRectangleIndex.Value];
+							rect = new Rectangle(rect.X + rect.Width * 3 / 8, rect.Y + rect.Height * 3 / 8, rect.Width / 4, rect.Height / 4);
+							e.Graphics.FillEllipse(rectangleChoiceBrush, rect);
+						}
+						int? r = GetRectangleChoice(mouse.X - matrix.X, mouse.Y - matrix.Y);
+						if (r.HasValue)
+							e.Graphics.DrawRectangle(rectangleBoldPen, GetRectangleNormalized(rectangles[r.Value]));
+					}
+				}
+				else
+				{
+					e.Graphics.DrawRectangle(rectanglePen, OneRectangle);
+					e.Graphics.FillRectangle(rectangleBrush, OneRectangle);
+				}
 			}
 
 			if (HasFlag(displayMode, DisplayModes.Vector) && (vector.X != 0 || vector.Y != 0))
@@ -1026,7 +1210,7 @@ namespace DrawBox
 				if (DrawingMode == DrawingMode.PointVector)
 					e.Graphics.TranslateTransform(point.X, point.Y);
 				else if (DrawingMode == DrawingMode.RectangleVector)
-					e.Graphics.TranslateTransform(rectangle.X + rectangle.Width / 2, rectangle.Y + rectangle.Height / 2);
+					e.Graphics.TranslateTransform(Rectangle.X + Rectangle.Width / 2, Rectangle.Y + Rectangle.Height / 2);
 				else
 					e.Graphics.TranslateTransform(matrix.Width / 2 + imageIndent, matrix.Height / 2 + imageIndent);
 				e.Graphics.DrawLine(vectorPen, 0, 0, vector.X, vector.Y);
@@ -1056,17 +1240,17 @@ namespace DrawBox
 		}
 
 		[EditorBrowsable]
-		protected override void OnPaintBackground(PaintEventArgs e)
+		protected override void OnPaintBackground(PaintEventArgs pevent)
 		{
-			e.Graphics.InterpolationMode = backgroundInterpolation;
-			base.OnPaintBackground(e);
+			pevent.Graphics.InterpolationMode = backgroundInterpolation;
+			base.OnPaintBackground(pevent);
 		}
 
 		#endregion
 
 		#region Mouse Handlers
 
-		private bool leftMouse, rightMouse, middleMouse;
+		private bool leftMouse, rightMouse, middleMouse, controlKey, shiftKey;
 		[Browsable(false)]
 		public bool LeftMouse { get { return leftMouse; } }
 		[Browsable(false)]
@@ -1079,6 +1263,11 @@ namespace DrawBox
 		public bool LeftAndRightMouse { get { return leftMouse & rightMouse; } }
 		[Browsable(false)]
 		public bool AnyMouse { get { return leftMouse | rightMouse | middleMouse; } }
+
+		[Browsable(false)]
+		public bool ControlKey { get { return controlKey; } set { controlKey = value; } }
+		[Browsable(false)]
+		public bool ShiftKey { get { return shiftKey; } set { shiftKey = value; } }
 
 		object lastBounds = new object(), lastBBounds = new object();
 		bool b, bb;
@@ -1106,6 +1295,8 @@ namespace DrawBox
 			controlMouseLocationBB.Offset(15, -5);
 			relativeMouseLocation.Offset(-matrix.X, -matrix.Y);
 
+			Rectangle rect = GetRectangleUnhandled();
+
 			switch (drawingMode)
 			{
 				case DrawingMode.Point:
@@ -1127,9 +1318,29 @@ namespace DrawBox
 					}
 					break;
 				case DrawingMode.Rectangle:
-					if (LeftOrRightMouse && e.Location != rectangle.Location)
+					if (multiRectangleMode)
 					{
-						Rectangle = new Rectangle(e.X - matrix.X, e.Y - matrix.Y, rectangle.Width, rectangle.Height);
+						if (ControlKey || !activeRectangleIndex.HasValue)
+							NewRectangle(new Rectangle(e.X - matrix.X, e.Y - matrix.Y, 0, 0), false);
+						else if (ShiftKey)
+						{
+							if (LeftMouse)
+								ActiveRectangleIndex = GetRectangleChoice(e.X - matrix.X, e.Y - matrix.Y);
+							else if (RightMouse)
+							{
+								int? del = GetRectangleChoice(e.X - matrix.X, e.Y - matrix.Y);
+								if (del.HasValue)
+								{
+									rectangles.RemoveAt(del.Value);
+									activeRectangleIndex = rectangles.Count > 0 ? (int?)(rectangles.Count - 1) : null;
+								}
+							}
+						}
+					}
+					if (LeftMouse && e.Location != Rectangle.Location)
+					{
+						if(!ShiftKey)
+							Rectangle = new Rectangle(e.X - matrix.X, e.Y - matrix.Y, rect.Width, rect.Height);
 						if (showBoundToolTip)
 							toolTipB.Show((lastBounds = lastBBounds = Rectangle).ToString(), this, controlMouseLocationB);
 						b = true;
@@ -1156,15 +1367,35 @@ namespace DrawBox
 				case DrawingMode.RectangleVector:
 					if (LeftMouse)
 					{
-						if (e.Location != rectangle.Location)
-							Rectangle = new Rectangle(e.X - matrix.X, e.Y - matrix.Y, rectangle.Width, rectangle.Height);
+						if (multiRectangleMode)
+						{
+							if (ControlKey)
+								NewRectangle(new Rectangle(e.X - matrix.X, e.Y - matrix.Y, 0, 0), false);
+							else if (ShiftKey)
+							{
+								if (LeftMouse)
+									ActiveRectangleIndex = GetRectangleChoice(e.X - matrix.X, e.Y - matrix.Y);
+								else if (RightMouse)
+								{
+									int? del = GetRectangleChoice(e.X - matrix.X, e.Y - matrix.Y);
+									if (del.HasValue)
+									{
+										rectangles.RemoveAt(del.Value);
+										activeRectangleIndex = rectangles.Count > 0 ? (int?)(rectangles.Count - 1) : null;
+									}
+								}
+							}
+						}
+						if (!ShiftKey && e.Location != Rectangle.Location)
+							Rectangle = new Rectangle(e.X - matrix.X, e.Y - matrix.Y, rect.Width, rect.Height);
 						if (showBoundToolTip)
 							toolTipB.Show((lastBounds = Rectangle).ToString(), this, controlMouseLocationB);
 						b = true;
 					}
 					if (RightMouse)
 					{
-						Vector = new Point((e.X - matrix.X - rectangle.X - rectangle.Width / 2) / vectorDivision, (e.Y - matrix.Y - rectangle.Y - rectangle.Height / 2) / vectorDivision);
+						if (!ShiftKey)
+							Vector = new Point((e.X - matrix.X - Rectangle.X - Rectangle.Width / 2) / vectorDivision, (e.Y - matrix.Y - Rectangle.Y - Rectangle.Height / 2) / vectorDivision);
 						if (showBoundToolTip)
 							toolTipBB.Show((lastBBounds = vector).ToString(), this, controlMouseLocationBB);
 						bb = true;
@@ -1208,7 +1439,7 @@ namespace DrawBox
 			else
 				mouse = e.Location;
 
-			Rectangle matrix = Matrix;
+			Rectangle matrix = Matrix, rect = GetRectangleUnhandled();
 			relativeMouseLocation = controlMouseLocationC = controlMouseLocationB = controlMouseLocationBB = e.Location;
 			controlMouseLocationC.Offset(15, 25);
 			controlMouseLocationB.Offset(15, -25);
@@ -1237,10 +1468,28 @@ namespace DrawBox
 					}
 					break;
 				case DrawingMode.Rectangle:
-					if (LeftOrRightMouse)
+					if (multiRectangleMode)
 					{
-						if (e.Location != rectangle.Location)
-							Rectangle = Rectangle.FromLTRB(rectangle.X, rectangle.Y, e.X - Matrix.X == rectangle.X ? rectangle.Right : e.X - Matrix.X, e.Y - Matrix.Y == rectangle.Y ? rectangle.Bottom : e.Y - Matrix.Y);
+						if (ShiftKey)
+						{
+							if (LeftMouse)
+								ActiveRectangleIndex = GetRectangleChoice(e.X - matrix.X, e.Y - matrix.Y);
+							else if(RightMouse)
+							{
+								int? del = GetRectangleChoice(e.X - matrix.X, e.Y - matrix.Y);
+								if (del.HasValue)
+								{
+									rectangles.RemoveAt(del.Value);
+									activeRectangleIndex = rectangles.Count > 0 ? (int?)(rectangles.Count - 1) : null;
+								}
+							}
+							base.Invalidate();
+						}
+					}
+					if (LeftMouse)
+					{
+						if (!ShiftKey && e.Location != Rectangle.Location)
+							Rectangle = Rectangle.FromLTRB(rect.X, rect.Y, e.X - matrix.X == rect.X ? rect.Right : e.X - matrix.X, e.Y - matrix.Y == rect.Y ? rect.Bottom : e.Y - matrix.Y);
 						if (showBoundToolTip)
 							toolTipB.Show((lastBounds = lastBBounds = Rectangle).ToString(), this, controlMouseLocationB);
 					}
@@ -1264,14 +1513,33 @@ namespace DrawBox
 				case DrawingMode.RectangleVector:
 					if (LeftMouse)
 					{
-						if (e.Location != rectangle.Location)
-							Rectangle = Rectangle.FromLTRB(rectangle.X, rectangle.Y, e.X - Matrix.X == rectangle.X ? rectangle.Right : e.X - Matrix.X, e.Y - Matrix.Y == rectangle.Y ? rectangle.Bottom : e.Y - Matrix.Y);
+						if (multiRectangleMode)
+						{
+							if (ShiftKey)
+							{
+								if (LeftMouse)
+									ActiveRectangleIndex = GetRectangleChoice(e.X - matrix.X, e.Y - matrix.Y);
+								else if (RightMouse)
+								{
+									int? del = GetRectangleChoice(e.X - matrix.X, e.Y - matrix.Y);
+									if (del.HasValue)
+									{
+										rectangles.RemoveAt(del.Value);
+										activeRectangleIndex = rectangles.Count > 0 ? (int?)(rectangles.Count - 1) : null;
+									}
+								}
+								base.Invalidate();
+							}
+						}
+						if (!ShiftKey && e.Location != Rectangle.Location)
+							Rectangle = Rectangle.FromLTRB(rect.X, rect.Y, e.X - matrix.X == rect.X ? rect.Right : e.X - matrix.X, e.Y - matrix.Y == rect.Y ? rect.Bottom : e.Y - matrix.Y);
 						if (showBoundToolTip)
 							toolTipB.Show((lastBounds = Rectangle).ToString(), this, controlMouseLocationB);
 					}
 					if (RightMouse)
 					{
-						Vector = new Point((e.X - matrix.X - rectangle.X - rectangle.Width / 2) / vectorDivision, (e.Y - matrix.Y - rectangle.Y - rectangle.Height / 2) / vectorDivision);
+						if (!ShiftKey)
+							Vector = new Point((e.X - matrix.X - Rectangle.X - Rectangle.Width / 2) / vectorDivision, (e.Y - matrix.Y - Rectangle.Y - Rectangle.Height / 2) / vectorDivision);
 						if (showBoundToolTip)
 							toolTipBB.Show((lastBBounds = vector).ToString(), this, controlMouseLocationBB);
 					}

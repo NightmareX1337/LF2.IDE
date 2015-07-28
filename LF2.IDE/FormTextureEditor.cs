@@ -26,15 +26,18 @@ namespace LF2.IDE
 			reSize();
 		}
 
+		static bool _reversePaint = true;
 		public static bool ReversePaint
 		{
-			get { return Settings.Current.reversePaint; }
-			set { Settings.Current.reversePaint = value; }
+			get { return _reversePaint; }
+			set { _reversePaint = value; }
 		}
-		public static int Zoom
+
+		static int _zoom = 10;
+		public int Zoom
 		{
-			get { return Settings.Current.textureZoom; }
-			set { Settings.Current.textureZoom = value; }
+			get { return _zoom; }
+			set { _zoom = value; }
 		}
 
 		int lastX = -1, lastY = -1;

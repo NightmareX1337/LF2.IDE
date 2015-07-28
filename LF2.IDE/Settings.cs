@@ -19,22 +19,18 @@ namespace LF2.IDE
 		public string lfPath = "lf2.exe",
 			encryptionKey = "odBearBecauseHeIsVeryGoodSiuHungIsAGo",
 			decryptionKey = "odBearBecauseHeIsVeryGoodSiuHungIsAGo",
-			dataUtil = null,
-			lang = "default";
+			dataUtil = null;
 
-		public LineWrappingMode lineWrappingMode = LineWrappingMode.None;
+		//TODO: make these per-document sensitive
 
-		public int tabWidth = 3,
-			textureZoom = 10;
-
-		public bool showWhiteSpaces = false,
-			showEndOfLineChars = false,
-			reversePaint = true,
-			checkUpdatesAuto = true,
-			autoComplete = true;
+		public bool checkUpdatesAuto = true,
+			autoComplete = true,
+			saveDocStates = true;
 
 		public List<string> recentFileHistory = new List<string>(8),
 			activePlugins = new List<string>();
+
+		public List<DocSet> documentSettings;
 
 		public void Reload()
 		{
@@ -60,5 +56,19 @@ namespace LF2.IDE
 				settings.Close();
 			}
 		}
+	}
+
+	public class DocSet
+	{
+		public string filePath;
+
+		public LineWrappingMode lineWrappingMode = LineWrappingMode.None;
+
+		public bool showWhiteSpaces = false,
+			showEndOfLineChars = false;
+
+		public int firstVisibleLine = 0,
+			selectionStart = 0,
+			selectionEnd = 0;
 	}
 }

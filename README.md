@@ -1,20 +1,16 @@
 LF2.IDE
 =======
-A Visual Editor for LF2 Data Files
+###### LF2 Integrated Development Environment
 
 So what exactly LF2 is?
 -----------------------
 It's a 2D fighting game that made by Marti Wong & Starsky Wong. See [Official Website](http://lf2.net)
 
-Google 'lf2' for a lot more info. 
-
-But what "LF2" means then?
---------------------------
-It means "Little Fighter 2".
+Little Fighter 2 has received significant recognition and popularity since its initial release. Being the most sophisticated 2D fighting game ever built, LF2 is also extremely customizable with its data file architecture. Over the years, numerous modifications have been made, ranged from spriting, data changing to exe editing. A vast amount of related work, including comics, animations and novels, have been created by thousands of people from all over the world, creating a strong and truly amazing community.
 
 What LF2.IDE does with the game?
 --------------------------------
-A lot of things. First, you should know that LF2 game is so extensible that you can change the whole game as you wish - unless you want to change game logic itself, you need some super special hex-edit skills for that.
+A lot of things. First, you should know that LF2 game is so extensible that you can change the whole game as you wish - unless you want to change game logic itself, as the source code of LF2 is closed you need some hex editing and assembly programming skills for that.
 You can edit game characters, weapons, levels, even create your own ones and add them to the game.
 
 Why would I need this to edit the game?
@@ -23,7 +19,6 @@ Because the data files are encrypted and you would probably don't want to do the
 * Decrypt data files to a plain text file
 * Open it
 * Edit as you wish
-* Decrypt it back
-* Open the game by double-clicking it to see if everthing works fine
+* Encrypt it back
 
-LF2.IDE does all these (except checking if the code works in the game but you can set a shortcut for opening it) also it provides a lot of useful feature like syntax highlighting, auto code completion, visual helpers and a lot more that you can see if you take a look at...
+LF2.IDE makes data editing straight forward, automates the process where ever possible, provides useful visual tools that make your life easier and reduces the need of frequently executing the game to see if things are pixel perfect.

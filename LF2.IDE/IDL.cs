@@ -4,7 +4,7 @@ namespace LF2.IDE
 {
 	public class IDL
 	{
-		[DllImport("InstantDataModifier.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int InstantDataLoader(string data, int procId, int objId, int datType);
+		[DllImport("IDL.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int InstantDataLoader(sDataFile data, int procId, int objId, int datType);
 	}
 }

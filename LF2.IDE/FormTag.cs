@@ -17,14 +17,13 @@ namespace LF2.IDE
 		{
 			mainForm = main;
 			InitializeComponent();
-			drawBox.Cursor = cur_bdy;
 		}
 
 		public Stopwatch stopWatch = new Stopwatch();
 
 		MainForm mainForm;
 
-		Image blood = Properties.Resources.blood, weaponactImage, vactionImage, vactionImageMirror;
+		Image blood = Properties.Resources.bpoint, weaponactImage, vactionImage, vactionImageMirror;
 
 		static readonly Cursor
 			cur_bdy = new Cursor(Properties.Resources.bdy.GetHicon()),
@@ -32,7 +31,8 @@ namespace LF2.IDE
 			cur_w = new Cursor(Properties.Resources.wpoint.GetHicon()),
 			cur_o = new Cursor(Properties.Resources.opoint.GetHicon()),
 			cur_c = new Cursor(Properties.Resources.cpoint.GetHicon()),
-			cur_b = new Cursor(Properties.Resources.bpoint.GetHicon());
+			cur_b = new Cursor(Properties.Resources.bpoint.GetHicon()),
+			cur_center = new Cursor(Properties.Resources.center.GetHicon());
 
 		public static readonly Point[] weaponPoints =
 		{
@@ -75,197 +75,232 @@ namespace LF2.IDE
 			{ 144, 45, 42, 55 }
 		};
 
-		string opointCachePath
-		{
-			get { return Path.GetDirectoryName(Settings.Current.lfPath) + "\\opoint.cache"; }
-		}
-
-		private void Add(object sender, EventArgs e)
-		{
-			if (mainForm.ActiveDocument != null)
-			{
-				int fend = mainForm.ActiveDocument.Scintilla.Text.IndexOf("<frame_end>", mainForm.ActiveDocument.Scintilla.CurrentPos);
-				int fbegin = mainForm.ActiveDocument.Scintilla.Text.IndexOf("<frame>", mainForm.ActiveDocument.Scintilla.CurrentPos);
-				if (fend >= 0 && (fbegin < 0 || fend < fbegin))
-					mainForm.ActiveDocument.Scintilla.InsertText(fend, richTextBox.Text + "\n");
-				else
-					mainForm.ActiveDocument.Scintilla.Selection.Text = richTextBox.Text;
-			}
-		}
-
 		private void Reset_Bdy(object sender, EventArgs e)
 		{
-			bdy_x.Text = bdy_y.Text = bdy_w.Text = bdy_h.Text = "";
+			tagBox.ClearBdyList();
 		}
 
 		private void Reset_Itr(object sender, EventArgs e)
 		{
-			itr_x.Text = itr_y.Text = itr_w.Text = itr_h.Text = itr_dvx.Text = itr_dvy.Text = "";
+			tagBox.ClearItrList();
 		}
 
 		private void Reset_W(object sender, EventArgs e)
 		{
-			wpoint_x.Text = wpoint_y.Text = wpoint_dvx.Text = wpoint_dvy.Text = "";
+			tagBox.WPoint = null;
+			tagBox.Refresh();
 		}
 
-		//		private void Reset_O(object sender, EventArgs e)
-		//		{
-		//			opoint_x.Text = opoint_y.Text = opoint_dvx.Text = opoint_dvy.Text = "";
-		//		}
+		private void Reset_O(object sender, EventArgs e)
+		{
+			tagBox.OPoint = null;
+			tagBox.Refresh();
+		}
 
 		private void Reset_C(object sender, EventArgs e)
 		{
-			cpoint_y.Text = cpoint_throwvx.Text = cpoint_throwvy.Text = cpoint_x.Text = "";
+			tagBox.CPoint = null;
+			tagBox.Refresh();
 		}
 
 		private void Reset_B(object sender, EventArgs e)
 		{
-			bpoint_x.Text = bpoint_y.Text = "";
+			tagBox.BPoint = null;
+			tagBox.Refresh();
 		}
 
-		private void Generate(object sender, EventArgs e)
+		List<Rectangle> bdyRectangles = new List<Rectangle>(), itrRectangles = new List<Rectangle>();
+
+		public string Generate()
 		{
-			string txt = "";
-			try
+			bool newLineState = false;
+			StringBuilder txt = new StringBuilder();
+			foreach (var tagy in tagBox.BdyTags)
 			{
-				switch (tabControl_Tags.SelectedIndex)
+				string x = tagy.x.ToString(), y = tagy.y.ToString(), w = tagy.w.ToString(), h = tagy.h.ToString(),
+					kind = tagy.kind.ToString();
+				if (newLineState)
+					txt.AppendLine();
+				txt.Append("   bdy:\r\n      kind: ").Append(kind).Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append("\r\n   bdy_end:");
+				newLineState = true;
+			}
+			foreach (var tagy in tagBox.ItrTags)
+			{
+				string x = tagy.x.ToString(), y = tagy.y.ToString(), w = tagy.w.ToString(), h = tagy.h.ToString(),
+					dvx = tagy.dvx.ToString(), dvy = tagy.dvy.ToString(), arest = tagy.arest.ToString(), vrest = tagy.vrest.ToString(),
+					fall = tagy.fall.ToString(), bdefend = tagy.bdefend.ToString(),
+					injury = tagy.injury.ToString(), zwidth = tagy.zwidth.ToString(), effect = tagy.effect.ToString(),
+					catchingact = tagy.catchingact.ToString(), caughtact = tagy.caughtact.ToString(),
+					kind = tagy.kind.ToString();
+				if (newLineState)
+					txt.AppendLine();
+				txt.Append("   itr:\r\n      kind: ").Append(kind);
+				switch (kind)
 				{
-					case 0:
-						txt = "   bdy:\n      kind: " + bdy_kind.Text + "  x: " + bdy_x.Text + "  y: " + bdy_y.Text + "  w: " + bdy_w.Text + "  h: " + bdy_h.Text + "\n   bdy_end:";
+					case "0":
+					case "6":
+						txt.Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append("  dvx: ").Append(dvx).Append("  dvy: ").Append(y).Append((arest != "" ? "  arest: " + arest : "")).Append((vrest != "" ? "  vrest: " + vrest : "")).Append((fall != "" ? "  fall: " + fall : "")).Append((bdefend == "" ? "" : "  bdefend: " + bdefend)).Append("  injury: ").Append(injury).Append((zwidth == "" ? "" : "  zwidth: " + zwidth)).Append((effect == "" ? "" : "\r\n      effect: " + effect));
 						break;
-					case 1:
-						txt = "   itr:\n      kind: " + itr_kind.Text;
-						switch (itr_kind.Text)
-						{
-							case "0":
-							case "6":
-								txt += "  x: " + itr_x.Text + "  y: " + itr_y.Text + "  w: " + itr_w.Text + "  h: " + itr_h.Text + "  dvx: " + itr_dvx.Text + "  dvy: " + itr_dvy.Text + (itr_arest.Text != "" ? "  arest: " + itr_arest.Text : "") + (itr_vrest.Text != "" ? "  vrest: " + itr_vrest.Text : "") + (itr_fall.Text != "" ? "  fall: " + itr_fall.Text : "") + (itr_bdefend.Text == "" ? "" : "  bdefend: " + itr_bdefend.Text) + "  injury: " + itr_injury.Text + (itr_zwidth.Text == "" ? "" : "  zwidth: " + itr_zwidth.Text) + (itr_effect.Text == "" ? "" : "\n      effect: " + itr_effect.Text);
-								break;
-							case "1":
-							case "3":
-								txt += "  x: " + itr_x.Text + "  y: " + itr_y.Text + "  w: " + itr_w.Text + "  h: " + itr_h.Text + "  catchingact: " + itr_catchingact.Text + "  caughtact: " + itr_caughtact.Text;
-								break;
-							case "2":
-							case "7":
-							case "14":
-								txt += "  x: " + itr_x.Text + "  y: " + itr_y.Text + "  w: " + itr_w.Text + "  h: " + itr_h.Text + (itr_arest.Text != "" ? "  arest: " + itr_arest.Text : "") + (itr_vrest.Text != "" ? "  vrest: " + itr_vrest.Text : "") + (itr_effect.Text == "" ? "" : "\n      effect: " + itr_effect.Text);
-								break;
-							case "4":
-								txt += "  x: " + itr_x.Text + "  y: " + itr_y.Text + "  w: " + itr_w.Text + "  h: " + itr_h.Text + "  dvx: " + itr_dvx.Text + (itr_arest.Text != "" ? "  arest: " + itr_arest.Text : "") + (itr_vrest.Text != "" ? "  vrest: " + itr_vrest.Text : "") + (itr_fall.Text != "" ? "  fall: " + itr_fall.Text : "") + (itr_bdefend.Text == "" ? "" : "  bdefend: " + itr_bdefend.Text) + "  injury: " + itr_injury.Text;
-								break;
-							case "5":
-								txt += "  x: " + itr_x.Text + "  y: " + itr_y.Text + "  w: " + itr_w.Text + "  h: " + itr_h.Text + "  dvx: 8  fall: 20  bdefend: 16  injury: 789";
-								break;
-							case "10":
-							case "11":
-								txt += "  x: " + itr_x.Text + "  y: " + itr_y.Text + "  w: " + itr_w.Text + "  h: " + itr_h.Text + (itr_arest.Text != "" ? "  arest: " + itr_arest.Text : "") + (itr_vrest.Text != "" ? "  vrest: " + itr_vrest.Text : "") + "  injury: " + itr_injury.Text + (itr_zwidth.Text == "" ? "" : "  zwidth: " + itr_zwidth.Text);
-								break;
-							case "15":
-							case "16":
-								txt += "  x: " + itr_x.Text + "  y: " + itr_y.Text + "  w: " + itr_w.Text + "  h: " + itr_h.Text + "  dvx: " + itr_dvx.Text + "  dvy: " + itr_dvy.Text + (itr_arest.Text != "" ? "  arest: " + itr_arest.Text : "") + (itr_vrest.Text != "" ? "  vrest: " + itr_vrest.Text : "") + (itr_fall.Text != "" ? "  fall: " + itr_fall.Text : "") + (itr_bdefend.Text == "" ? "" : "  bdefend: " + itr_bdefend.Text) + "  injury: " + itr_injury.Text + (itr_zwidth.Text == "" ? "" : "  zwidth: " + itr_zwidth.Text);
-								break;
-							case "8":
-								txt += "  x: " + itr_x.Text + "  y: " + itr_y.Text + "  w: " + itr_w.Text + "  h: " + itr_h.Text + "  dvx: " + itr_dvx.Text + "  injury: " + itr_injury.Text;
-								break;
-							case "9":
-								txt += "  x: " + itr_x.Text + "  y: " + itr_y.Text + "  w: " + itr_w.Text + "  h: " + itr_h.Text + "  dvx: " + itr_dvx.Text + (itr_arest.Text != "" ? "  arest: " + itr_arest.Text : "") + (itr_vrest.Text != "" ? "  vrest: " + itr_vrest.Text : "") + (itr_fall.Text != "" ? "  fall: " + itr_fall.Text : "") + "  injury: " + itr_injury.Text;
-								break;
-							default:
-								if (itr_x.Text != "")
-									txt += "  x: " + itr_x.Text;
-								if (itr_y.Text != "")
-									txt += "  y: " + itr_y.Text;
-								if (itr_w.Text != "")
-									txt += "  w: " + itr_w.Text;
-								if (itr_h.Text != "")
-									txt += "  h: " + itr_h.Text;
-								if (itr_dvx.Text != "")
-									txt += "  dvx: " + itr_dvx.Text;
-								if (itr_dvy.Text != "")
-									txt += "  dvy: " + itr_dvy.Text;
-								if (itr_arest.Text != "")
-									txt += "  arest: " + itr_arest.Text;
-								if (itr_vrest.Text != "")
-									txt += "  vrest: " + itr_vrest.Text;
-								if (itr_fall.Text != "")
-									txt += "  fall: " + itr_fall.Text;
-								if (itr_bdefend.Text != "")
-									txt += "  bdefend: " + itr_bdefend.Text;
-								if (itr_injury.Text != "")
-									txt += "  injury: " + itr_injury.Text;
-								if (itr_zwidth.Text != "")
-									txt += "  zwidth: " + itr_zwidth.Text;
-								if (itr_effect.Text != "")
-									txt += "\n      effect: " + itr_effect.Text;
-								if (itr_catchingact.Text != "")
-									txt += "  catchingact: " + itr_catchingact.Text;
-								if (itr_caughtact.Text != "")
-									txt += "  caughtact: " + itr_caughtact.Text;
-								break;
-						}
-						txt += "\n   itr_end:";
+					case "1":
+					case "3":
+						txt.Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append("  catchingact: ").Append(catchingact).Append("  caughtact: ").Append(caughtact);
 						break;
-					case 2:
-						txt += "   wpoint:\n      kind: " + wpoint_kind.Text + "  x: " + wpoint_x.Text + "  y: " + wpoint_y.Text + "  weaponact: " + wpoint_weaponact.Text + "  attacking: " + wpoint_attacking.Text + "  cover: " + wpoint_cover.Text + "  dvx: " + wpoint_dvx.Text + "  dvy: " + wpoint_dvy.Text + "  dvz: " + wpoint_dvz.Text + "\n   wpoint_end:";
+					case "2":
+					case "7":
+					case "14":
+						txt.Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append((arest != "" ? "  arest: " + arest : "")).Append((vrest != "" ? "  vrest: " + vrest : "")).Append((effect == "" ? "" : "\r\n      effect: " + effect));
 						break;
-					case 3:
-						txt += "   opoint:\n      kind: " + opoint_kind.Text + "  x: " + opoint_x.Text + "  y: " + opoint_y.Text + "  action: " + opoint_action.Text + "  dvx: " + opoint_dvx.Text + "  dvy: " + opoint_dvy.Text + "  oid: " + opoint_oid.Text + "  facing: " + opoint_facing.Text + "\n   opoint_end:";
+					case "4":
+						txt.Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append("  dvx: ").Append(dvx).Append((arest != "" ? "  arest: " + arest : "")).Append((vrest != "" ? "  vrest: " + vrest : "")).Append((fall != "" ? "  fall: " + fall : "")).Append((bdefend == "" ? "" : "  bdefend: " + bdefend)).Append("  injury: ").Append(injury);
 						break;
-					case 4:
-						txt += "   cpoint:\n      kind: " + cpoint_kind.Text;
-						if (cpoint_x.Text != "")
-							txt += "  x: " + cpoint_x.Text;
-						if (cpoint_y.Text != "")
-							txt += "  y: " + cpoint_y.Text;
-						if (cpoint_injury.Text != "")
-							txt += "  injury: " + cpoint_injury.Text;
-						if (cpoint_vaction.Text != "")
-							txt += "  vaction: " + cpoint_vaction.Text;
-						if (cpoint_aaction.Text != "")
-							txt += "  aaction: " + cpoint_aaction.Text;
-						if (cpoint_taction.Text != "")
-							txt += "  taction: " + cpoint_taction.Text;
-						if (cpoint_throwvx.Text != "")
-							txt += "  throwvx: " + cpoint_throwvx.Text;
-						if (cpoint_throwvy.Text != "")
-							txt += "  throwvy: " + cpoint_throwvy.Text;
-						if (cpoint_throwvz.Text != "")
-							txt += "  throwvz: " + cpoint_throwvz.Text;
-						if (cpoint_hurtable.Text != "")
-							txt += "  hurtable: " + cpoint_hurtable.Text;
-						if (cpoint_throwinjury.Text != "")
-							txt += "  throwinjury: " + cpoint_throwinjury.Text;
-						if (cpoint_decrease.Text != "")
-							txt += "  decrease: " + cpoint_decrease.Text;
-						if (cpoint_dircontrol.Text != "")
-							txt += "  dircontrol: " + cpoint_dircontrol.Text;
-						if (cpoint_cover.Text != "")
-							txt += "  cover: " + cpoint_cover.Text;
-						if (cpoint_fronthurtact.Text != "")
-							txt += "  fronthurtact: " + cpoint_fronthurtact.Text;
-						if (cpoint_backhurtact.Text != "")
-							txt += "  backhurtact: " + cpoint_backhurtact.Text;
-						txt += "\n   cpoint_end:";
+					case "5":
+						txt.Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append("  dvx: 8  fall: 20  bdefend: 16  injury: 789");
 						break;
-					case 5:
-						txt += "   bpoint:\n      x: " + bpoint_x.Text + "  y: " + bpoint_y.Text + "\n   bpoint_end:";
+					case "10":
+					case "11":
+						txt.Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append((arest != "" ? "  arest: " + arest : "")).Append((vrest != "" ? "  vrest: " + vrest : "")).Append("  injury: ").Append(injury).Append((zwidth == "" ? "" : "  zwidth: " + zwidth));
+						break;
+					case "15":
+					case "16":
+						txt.Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append("  dvx: ").Append(dvx).Append("  dvy: ").Append(y).Append((arest != "" ? "  arest: " + arest : "")).Append((vrest != "" ? "  vrest: " + vrest : "")).Append((fall != "" ? "  fall: " + fall : "")).Append((bdefend == "" ? "" : "  bdefend: " + bdefend)).Append("  injury: ").Append(injury).Append((zwidth == "" ? "" : "  zwidth: " + zwidth));
+						break;
+					case "8":
+						txt.Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append("  dvx: ").Append(dvx).Append("  injury: ").Append(injury);
+						break;
+					case "9":
+						txt.Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append("  dvx: ").Append(dvx).Append((arest != "" ? "  arest: " + arest : "")).Append((vrest != "" ? "  vrest: " + vrest : "")).Append((fall != "" ? "  fall: " + fall : "")).Append("  injury: ").Append(injury);
+						break;
+					default:
+						if (x != "")
+							txt.Append("  x: ").Append(x);
+						if (y != "")
+							txt.Append("  y: ").Append(y);
+						if (w != "")
+							txt.Append("  w: ").Append(w);
+						if (h != "")
+							txt.Append("  h: ").Append(h);
+						if (dvx != "")
+							txt.Append("  dvx: ").Append(dvx);
+						if (y != "")
+							txt.Append("  dvy: ").Append(y);
+						if (arest != "")
+							txt.Append("  arest: ").Append(arest);
+						if (vrest != "")
+							txt.Append("  vrest: ").Append(vrest);
+						if (fall != "")
+							txt.Append("  fall: ").Append(fall);
+						if (bdefend != "")
+							txt.Append("  bdefend: ").Append(bdefend);
+						if (injury != "")
+							txt.Append("  injury: ").Append(injury);
+						if (zwidth != "")
+							txt.Append("  zwidth: ").Append(zwidth);
+						if (effect != "")
+							txt.Append("\r\n      effect: ").Append(effect);
+						if (catchingact != "")
+							txt.Append("  catchingact: ").Append(catchingact);
+						if (caughtact != "")
+							txt.Append("  caughtact: ").Append(caughtact);
 						break;
 				}
+				txt.Append("\r\n   itr_end:");
+				newLineState = true;
 			}
-			catch (Exception ex)
+			if (tagBox.WPoint != null)
 			{
-				mainForm.formEventLog.Error(ex, "ERROR");
+				var tagy = tagBox.WPoint;
+				string x = tagy.x.ToString(), y = tagy.y.ToString(),
+					dvx = tagy.dvx.ToString(), dvy = tagy.dvy.ToString(), dvz = tagy.dvz.ToString(),
+					weaponact = tagy.weaponact.ToString(),
+					attacking = tagy.attacking.ToString(),
+					cover = tagy.cover.ToString(),
+					kind = tagy.kind.ToString();
+				if (newLineState)
+					txt.AppendLine();
+				txt.Append("   wpoint:\r\n      kind: ").Append(kind).Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  weaponact: ").Append(weaponact).Append("  attacking: ").Append(attacking).Append("  cover: ").Append(cover).Append("  dvx: ").Append(dvx).Append("  dvy: ").Append(dvy).Append("  dvz: ").Append(dvz).Append("\r\n   wpoint_end:");
+				newLineState = true;
 			}
-			if (txt != "")
+			if (tagBox.OPoint != null)
 			{
-				if (richTextBox.Text == "")
-					richTextBox.Text = txt;
-				else
-					richTextBox.AppendText("\n" + txt);
+				var tagy = tagBox.OPoint;
+				string x = tagy.x.ToString(), y = tagy.y.ToString(),
+					dvx = tagy.dvx.ToString(), dvy = tagy.dvy.ToString(),
+					action = tagy.action.ToString(),
+					facing = tagy.facing.ToString(),
+					oid = tagy.oid.ToString(),
+					kind = tagy.kind.ToString();
+				if (newLineState)
+					txt.AppendLine();
+				txt.Append("   opoint:\r\n      kind: ").Append(kind).Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  action: ").Append(action).Append("  dvx: ").Append(dvx).Append("  dvy: ").Append(dvy).Append("  oid: ").Append(oid).Append("  facing: ").Append(facing).Append("\r\n   opoint_end:");
+				newLineState = true;
+			}
+			if (tagBox.CPoint != null)
+			{
+				var tagy = tagBox.CPoint;
+				string x = tagy.x.ToString(), y = tagy.y.ToString(),
+					injury = tagy.injury.ToString(),
+					vaction = tagy.vaction.ToString(),
+					taction = tagy.taction.ToString(),
+					aaction = tagy.aaction.ToString(),
+					throwvx = tagy.throwvx.ToString(),
+					throwvy = tagy.throwvy.ToString(),
+					throwvz = tagy.throwvz.ToString(),
+					hurtable = tagy.hurtable.ToString(),
+					throwinjury = tagy.throwinjury.ToString(),
+					decrease = tagy.decrease.ToString(),
+					dircontrol = tagy.dircontrol.ToString(),
+					cover = tagy.cover.ToString(),
+					fronthurtact = tagy.fronthurtact.ToString(),
+					backhurtact = tagy.backhurtact.ToString(),
+					kind = tagy.kind.ToString();
+				if (newLineState)
+					txt.AppendLine();
+				txt.Append("   cpoint:\r\n      kind: ").Append(kind);
+				if (x != "")
+					txt.Append("  x: ").Append(x);
+				if (y != "")
+					txt.Append("  y: ").Append(y);
+				if (injury != "")
+					txt.Append("  injury: ").Append(injury);
+				if (vaction != "")
+					txt.Append("  vaction: ").Append(vaction);
+				if (aaction != "")
+					txt.Append("  aaction: ").Append(aaction);
+				if (taction != "")
+					txt.Append("  taction: ").Append(taction);
+				if (throwvx != "")
+					txt.Append("  throwvx: ").Append(throwvx);
+				if (throwvy != "")
+					txt.Append("  throwvy: ").Append(throwvy);
+				if (throwvz != "")
+					txt.Append("  throwvz: ").Append(throwvz);
+				if (hurtable != "")
+					txt.Append("  hurtable: ").Append(hurtable);
+				if (throwinjury != "")
+					txt.Append("  throwinjury: ").Append(throwinjury);
+				if (decrease != "")
+					txt.Append("  decrease: ").Append(decrease);
+				if (dircontrol != "")
+					txt.Append("  dircontrol: ").Append(dircontrol);
+				if (cover != "")
+					txt.Append("  cover: ").Append(cover);
+				if (fronthurtact != "")
+					txt.Append("  fronthurtact: ").Append(fronthurtact);
+				if (backhurtact != "")
+					txt.Append("  backhurtact: ").Append(backhurtact);
+				txt.Append("\r\n   cpoint_end:");
+				newLineState = true;
+			}
+			if (tagBox.BPoint != null)
+			{
+				if (newLineState)
+					txt.AppendLine();
+				var tagy = tagBox.BPoint;
+				string x = tagy.Value.X.ToString(), y = tagy.Value.Y.ToString();
+				txt.Append("   bpoint:\r\n      x: ").Append(x).Append("  y: ").Append(y).Append("\r\n   bpoint_end:");
+			}
 
-				richTextBox.SelectionStart = richTextBox.Text.Length;
-				richTextBox.ScrollToCaret();
-			}
+			return txt.ToString();
 		}
 
 		void RichTextBoxKeyDown(object sender, KeyEventArgs e)
@@ -279,270 +314,191 @@ namespace LF2.IDE
 
 		void WeaponactChanged(object sender, EventArgs e)
 		{
-			drawBox.PointImage = weaponactImage = (Image)Properties.Resources.ResourceManager.GetObject("weapon" + wpoint_weaponact.Text);
-			if (drawBox.PointImage != null)
-				drawBox.PointImageOffset = weaponPoints[wpoint_weaponact.SelectedIndex];
+			tagBox.WPointImage = weaponactImage = (Image)Properties.Resources.ResourceManager.GetObject("weapon" + wpoint_weaponact.Text);
+			if (tagBox.WPointImage != null)
+				tagBox.WPointImageOffset = weaponPoints[wpoint_weaponact.SelectedIndex];
 			else
-				drawBox.PointImageOffset = Point.Empty;
-		}
-
-		void NewLine(object sender, EventArgs e)
-		{
-			if (mainForm.ActiveDocument != null)
-				mainForm.ActiveDocument.Scintilla.Selection.Text = (mainForm.ActiveDocument.Scintilla.EndOfLine.Mode == ScintillaNET.EndOfLineMode.LF ? "\n" : "\r\n");
+				tagBox.WPointImageOffset = Point.Empty;
 		}
 
 		void ImageIndexChanged(object sender, EventArgs e)
 		{
 			if (mainForm.lastActiveFrame != null)
-				drawBox.Image = mainForm.lastActiveFrame[mainForm.lastActiveDoc.frameIndexTag = (int)numericUpDown_ImageIndex.Value];
+				tagBox.Image = mainForm.lastActiveFrame[mainForm.lastActiveDoc.frameIndexTag = (int)numericUpDown_ImageIndex.Value];
 
 			numericUpDown_ImageIndex.Refresh();
-			drawBox.Refresh();
+			tagBox.Refresh();
 		}
 
 		void CopyToClipboard(object sender, EventArgs e)
 		{
-			if (richTextBox.Text != "")
-				Clipboard.SetText(richTextBox.Text);
-		}
-
-		void Clear(object sender, EventArgs e)
-		{
-			richTextBox.Text = "";
+			Clipboard.SetText(Generate());
 		}
 
 		void TagChanged(object sender, EventArgs e)
 		{
-			drawBox.Cover = false;
-			drawBox.PointImage = null;
-			drawBox.PointImageOffset = Point.Empty;
 			switch (tabControl_Tags.SelectedIndex)
 			{
-				case 0:
-					drawBox.RectangleColor = Color.Lime;
-					drawBox.DrawingMode = DrawBox.DrawingMode.Rectangle;
-					drawBox.DisplayMode = DrawBox.DisplayModes.Rectangle;
-					drawBox.Cursor = cur_bdy;
-					try
-					{
-						drawBox.Rectangle = new Rectangle(int.Parse(bdy_x.Text), int.Parse(bdy_y.Text), int.Parse(bdy_w.Text), int.Parse(bdy_h.Text));
-					}
-					catch { drawBox.Rectangle = Rectangle.Empty; }
+				case 0: //bdy
+					tagBox.DrawingMode = TagBox.DrawingMode.Bdy;
+					tagBox.Cursor = cur_bdy;
 					break;
-				case 1:
-					drawBox.RectangleColor = Color.Red;
-					drawBox.VectorColor = Color.Red;
-					drawBox.DrawingMode = DrawBox.DrawingMode.RectangleVector;
-					drawBox.DisplayMode = DrawBox.DisplayModes.Rectangle | DrawBox.DisplayModes.Vector;
-					drawBox.Cursor = cur_itr;
-					try
-					{
-						drawBox.Rectangle = new Rectangle(int.Parse(itr_x.Text), int.Parse(itr_y.Text), int.Parse(itr_w.Text), int.Parse(itr_h.Text));
-					}
-					catch { drawBox.Rectangle = Rectangle.Empty; }
-					try
-					{
-						drawBox.Vector = new Point(int.Parse(itr_dvx.Text), int.Parse(itr_dvy.Text));
-					}
-					catch { drawBox.Vector = Point.Empty; }
+				case 1: //itr
+					tagBox.DrawingMode = TagBox.DrawingMode.Itr;
+					tagBox.Cursor = cur_itr;
 					break;
-				case 2:
-					drawBox.Cover = (wpoint_cover.Text != "0" && wpoint_cover.Text != "");
-					drawBox.PointPenColor = Color.Blue;
-					drawBox.VectorColor = Color.Blue;
-					drawBox.DrawingMode = DrawBox.DrawingMode.PointVector;
-					drawBox.DisplayMode = DrawBox.DisplayModes.Point | DrawBox.DisplayModes.Vector;
-					drawBox.Cursor = cur_w;
-					if (wpoint_weaponact.SelectedIndex >= 0)
-					{
-						drawBox.PointImage = weaponactImage;
-						drawBox.PointImageOffset = weaponPoints[wpoint_weaponact.SelectedIndex];
-					}
-					try
-					{
-						drawBox.Point = new Point(int.Parse(wpoint_x.Text), int.Parse(wpoint_y.Text));
-					}
-					catch { drawBox.Point = Point.Empty; }
-					try
-					{
-						drawBox.Vector = new Point(int.Parse(wpoint_dvx.Text), int.Parse(wpoint_dvy.Text));
-					}
-					catch { drawBox.Vector = Point.Empty; }
+				case 2: //wpoint
+					tagBox.DrawingMode = TagBox.DrawingMode.WPoint;
+					tagBox.Cursor = cur_w;
 					break;
-				case 3:
-					drawBox.PointPenColor = Color.Purple;
-					drawBox.VectorColor = Color.Purple;
-					drawBox.DrawingMode = DrawBox.DrawingMode.PointVector;
-					drawBox.DisplayMode = DrawBox.DisplayModes.Point | DrawBox.DisplayModes.Vector;
-					drawBox.Cursor = cur_o;
-					if (opoint_oid.SelectedIndex >= 0 && opoint_action.SelectedIndex >= 0)
-					{
-						drawBox.PointImage = opointImage;
-						drawBox.PointImageOffset = opointOffset;
-					}
-					try
-					{
-						drawBox.Point = new Point(int.Parse(opoint_x.Text), int.Parse(opoint_y.Text));
-					}
-					catch { drawBox.Point = Point.Empty; }
-					try
-					{
-						drawBox.Vector = new Point(int.Parse(opoint_dvx.Text), int.Parse(opoint_dvy.Text));
-					}
-					catch { drawBox.Vector = Point.Empty; }
+				case 3: //opoint
+					tagBox.DrawingMode = TagBox.DrawingMode.OPoint;
+					tagBox.Cursor = cur_o;
 					break;
-				case 4:
-					drawBox.Cover = (cpoint_cover.Text != "0" && cpoint_cover.Text != "");
-					drawBox.PointPenColor = Color.OrangeRed;
-					drawBox.VectorColor = Color.OrangeRed;
-					drawBox.DrawingMode = DrawBox.DrawingMode.PointVector;
-					drawBox.DisplayMode = DrawBox.DisplayModes.Point | DrawBox.DisplayModes.Vector;
-					drawBox.Cursor = cur_c;
-					if (vactionImage != null)
-					{
-						if (cpoint_dircontrol.Text == "0" || cpoint_dircontrol.Text == "")
-						{
-							drawBox.PointImage = vactionImageMirror;
-							drawBox.PointImageOffset = new Point(drawBox.PointImage.Width - caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
-						}
-						else
-						{
-							drawBox.PointImage = vactionImage;
-							drawBox.PointImageOffset = new Point(caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
-						}
-					}
-					try
-					{
-						drawBox.Point = new Point(int.Parse(cpoint_x.Text), int.Parse(cpoint_y.Text));
-					}
-					catch { drawBox.Point = Point.Empty; }
-					try
-					{
-						drawBox.Vector = new Point(int.Parse(cpoint_throwvx.Text), int.Parse(cpoint_throwvy.Text));
-					}
-					catch { drawBox.Vector = Point.Empty; }
+				case 4: //cpoint
+					tagBox.DrawingMode = TagBox.DrawingMode.CPoint;
+					tagBox.Cursor = cur_c;
 					break;
-				case 5:
-					drawBox.PointPenColor = Color.Red;
-					drawBox.DrawingMode = DrawBox.DrawingMode.Point;
-					drawBox.DisplayMode = DrawBox.DisplayModes.Point;
-					drawBox.PointImage = blood;
-					drawBox.Cursor = cur_b;
-					try
-					{
-						drawBox.Point = new Point(int.Parse(bpoint_x.Text), int.Parse(bpoint_y.Text));
-					}
-					catch { drawBox.Point = Point.Empty; }
+				case 5: //bpoint
+					tagBox.DrawingMode = TagBox.DrawingMode.BPoint;
+					tagBox.Cursor = cur_b;
+					tagBox.BPointImage = Properties.Resources.bpoint;
+					tagBox.BPointImageOffset = new Point(tagBox.BPointImage.Width / 2, tagBox.BPointImage.Height / 2);
+					break;
+				case 6: //center
+					tagBox.DrawingMode = TagBox.DrawingMode.Center;
+					tagBox.Cursor = cur_center;
 					break;
 			}
 		}
 
 		void CoverChanged(object sender, EventArgs e)
 		{
-			switch (tabControl_Tags.SelectedIndex)
+			switch (tagBox.DrawingMode)
 			{
-				case 2:
-					drawBox.Cover = (wpoint_cover.Text != "0" && wpoint_cover.Text != "");
+				case TagBox.DrawingMode.WPoint:
+					tagBox.WPointCover = (wpoint_cover.Text != "0" && wpoint_cover.Text != "");
 					break;
-				case 4:
-					drawBox.Cover = (cpoint_cover.Text != "0" && cpoint_cover.Text != "");
+				case TagBox.DrawingMode.CPoint:
+					tagBox.CPointCover = (cpoint_cover.Text != "0" && cpoint_cover.Text != "");
 					break;
 			}
 		}
 
 		bool editing = false;
 
-		void DrawBoxPointChanged(object sender, EventArgs e)
+		void TagBoxPointChanged(object sender, EventArgs e)
 		{
 			editing = true;
-			switch (tabControl_Tags.SelectedIndex)
+			switch (tagBox.DrawingMode)
 			{
-				case 2:
-					wpoint_x.Text = drawBox.Point.X.ToString();
-					wpoint_y.Text = drawBox.Point.Y.ToString();
+				case TagBox.DrawingMode.WPoint:
+					wpoint_x.Text = tagBox.WPointPoint.Value.X.ToString();
+					wpoint_y.Text = tagBox.WPointPoint.Value.Y.ToString();
 					wpoint_x.Refresh();
 					wpoint_y.Refresh();
 					break;
-				case 3:
-					opoint_x.Text = drawBox.Point.X.ToString();
-					opoint_y.Text = drawBox.Point.Y.ToString();
+				case TagBox.DrawingMode.OPoint:
+					opoint_x.Text = tagBox.OPointPoint.Value.X.ToString();
+					opoint_y.Text = tagBox.OPointPoint.Value.Y.ToString();
 					opoint_x.Refresh();
 					opoint_y.Refresh();
 					break;
-				case 4:
-					cpoint_x.Text = drawBox.Point.X.ToString();
-					cpoint_y.Text = drawBox.Point.Y.ToString();
+				case TagBox.DrawingMode.CPoint:
+					cpoint_x.Text = tagBox.CPointPoint.Value.X.ToString();
+					cpoint_y.Text = tagBox.CPointPoint.Value.Y.ToString();
 					cpoint_x.Refresh();
 					cpoint_y.Refresh();
 					break;
-				case 5:
-					bpoint_x.Text = drawBox.Point.X.ToString();
-					bpoint_y.Text = drawBox.Point.Y.ToString();
+				case TagBox.DrawingMode.BPoint:
+					bpoint_x.Text = tagBox.BPoint.Value.X.ToString();
+					bpoint_y.Text = tagBox.BPoint.Value.Y.ToString();
 					bpoint_x.Refresh();
 					bpoint_y.Refresh();
 					break;
+				case TagBox.DrawingMode.Center:
+					centerx.Text = tagBox.Center.Value.X.ToString();
+					centery.Text = tagBox.Center.Value.Y.ToString();
+					centerx.Refresh();
+					centery.Refresh();
+					break;
 			}
 			editing = false;
-			drawBox.Refresh();
+			tagBox.Refresh();
 		}
 
-		void DrawBoxVectorChanged(object sender, EventArgs e)
+		void TagBoxVectorChanged(object sender, EventArgs e)
 		{
 			editing = true;
-			switch (tabControl_Tags.SelectedIndex)
+			switch (tagBox.DrawingMode)
 			{
-				case 1:
-					itr_dvx.Text = drawBox.Vector.X.ToString();
-					itr_dvy.Text = drawBox.Vector.Y.ToString();
+				case TagBox.DrawingMode.Itr:
+					if (tagBox.ActiveItr == null)
+						break;
+					Point itr = tagBox.ActiveItr.Vector;
+					itr_dvx.Text = itr.X.ToString();
+					itr_dvy.Text = itr.Y.ToString();
 					itr_dvx.Refresh();
 					itr_dvy.Refresh();
 					break;
-				case 2:
-					wpoint_dvx.Text = drawBox.Vector.X.ToString();
-					wpoint_dvy.Text = drawBox.Vector.Y.ToString();
+				case TagBox.DrawingMode.WPoint:
+					if (tagBox.WPointVector == null)
+						break;
+					Point w = tagBox.WPointVector.Value;
+					wpoint_dvx.Text = w.X.ToString();
+					wpoint_dvy.Text = w.Y.ToString();
 					wpoint_dvx.Refresh();
 					wpoint_dvy.Refresh();
 					break;
-				case 3:
-					opoint_dvx.Text = drawBox.Vector.X.ToString();
-					opoint_dvy.Text = drawBox.Vector.Y.ToString();
+				case TagBox.DrawingMode.OPoint:
+					if (tagBox.OPointVector == null)
+						break;
+					Point o = tagBox.OPointVector.Value;
+					opoint_dvx.Text = o.X.ToString();
+					opoint_dvy.Text = o.Y.ToString();
 					opoint_dvx.Refresh();
 					opoint_dvy.Refresh();
 					break;
-				case 4:
-					cpoint_throwvx.Text = drawBox.Vector.X.ToString();
-					cpoint_throwvy.Text = drawBox.Vector.Y.ToString();
+				case TagBox.DrawingMode.CPoint:
+					if (tagBox.CPointVector == null)
+						break;
+					Point c = tagBox.CPointVector.Value;
+					cpoint_throwvx.Text = c.X.ToString();
+					cpoint_throwvy.Text = c.Y.ToString();
 					cpoint_throwvx.Refresh();
 					cpoint_throwvy.Refresh();
 					break;
 			}
 			editing = false;
-			drawBox.Refresh();
+			tagBox.Refresh();
 		}
 
-		void DrawBoxRectangleChanged(object sender, EventArgs e)
+		void TagBoxRectangleChanged(object sender, EventArgs e)
 		{
-			if (drawBox.Rectangle.IsEmpty) return;
-
 			editing = true;
-			switch (tabControl_Tags.SelectedIndex)
+			switch (tagBox.DrawingMode)
 			{
-				case 0:
-					bdy_x.Text = drawBox.Rectangle.X.ToString();
-					bdy_y.Text = drawBox.Rectangle.Y.ToString();
-					bdy_w.Text = drawBox.Rectangle.Width.ToString();
-					bdy_h.Text = drawBox.Rectangle.Height.ToString();
+				case TagBox.DrawingMode.Bdy:
+					if (tagBox.ActiveBdy == null)
+						break;
+					Rectangle bdy = tagBox.ActiveRectangle;
+					bdy_x.Text = bdy.X.ToString();
+					bdy_y.Text = bdy.Y.ToString();
+					bdy_w.Text = bdy.Width.ToString();
+					bdy_h.Text = bdy.Height.ToString();
 					bdy_x.Refresh();
 					bdy_y.Refresh();
 					bdy_w.Refresh();
 					bdy_h.Refresh();
 					break;
-				case 1:
-					itr_x.Text = drawBox.Rectangle.X.ToString();
-					itr_y.Text = drawBox.Rectangle.Y.ToString();
-					itr_w.Text = drawBox.Rectangle.Width.ToString();
-					itr_h.Text = drawBox.Rectangle.Height.ToString();
+				case TagBox.DrawingMode.Itr:
+					if (tagBox.ActiveItr == null)
+						break;
+					Rectangle itr = tagBox.ActiveRectangle;
+					itr_x.Text = itr.X.ToString();
+					itr_y.Text = itr.Y.ToString();
+					itr_w.Text = itr.Width.ToString();
+					itr_h.Text = itr.Height.ToString();
 					itr_x.Refresh();
 					itr_y.Refresh();
 					itr_w.Refresh();
@@ -550,7 +506,7 @@ namespace LF2.IDE
 					break;
 			}
 			editing = false;
-			drawBox.Refresh();
+			tagBox.Refresh();
 		}
 
 		void BdyRectangleChanged(object sender, EventArgs e)
@@ -558,7 +514,7 @@ namespace LF2.IDE
 			if (editing) return;
 			try
 			{
-				drawBox.Rectangle = new Rectangle(int.Parse(bdy_x.Text), int.Parse(bdy_y.Text), int.Parse(bdy_w.Text), int.Parse(bdy_h.Text));
+				tagBox.ActiveRectangle = new Rectangle(int.Parse(bdy_x.Text), int.Parse(bdy_y.Text), int.Parse(bdy_w.Text), int.Parse(bdy_h.Text));
 			}
 			catch { }
 		}
@@ -568,7 +524,7 @@ namespace LF2.IDE
 			if (editing) return;
 			try
 			{
-				drawBox.Rectangle = new Rectangle(int.Parse(itr_x.Text), int.Parse(itr_y.Text), int.Parse(itr_w.Text), int.Parse(itr_h.Text));
+				tagBox.ActiveRectangle = new Rectangle(int.Parse(itr_x.Text), int.Parse(itr_y.Text), int.Parse(itr_w.Text), int.Parse(itr_h.Text));
 			}
 			catch { }
 		}
@@ -578,7 +534,7 @@ namespace LF2.IDE
 			if (editing) return;
 			try
 			{
-				drawBox.Vector = new Point(int.Parse(itr_dvx.Text), int.Parse(itr_dvy.Text));
+				tagBox.ActiveItrVector = new Point(int.Parse(itr_dvx.Text), int.Parse(itr_dvy.Text));
 			}
 			catch { }
 		}
@@ -588,7 +544,7 @@ namespace LF2.IDE
 			if (editing) return;
 			try
 			{
-				drawBox.Point = new Point(int.Parse(wpoint_x.Text), int.Parse(wpoint_y.Text));
+				tagBox.WPointPoint = new Point(int.Parse(wpoint_x.Text), int.Parse(wpoint_y.Text));
 			}
 			catch { }
 		}
@@ -598,7 +554,7 @@ namespace LF2.IDE
 			if (editing) return;
 			try
 			{
-				drawBox.Vector = new Point(int.Parse(wpoint_dvx.Text), int.Parse(wpoint_dvy.Text));
+				tagBox.WPointVector = new Point(int.Parse(wpoint_dvx.Text), int.Parse(wpoint_dvy.Text));
 			}
 			catch { }
 		}
@@ -608,7 +564,7 @@ namespace LF2.IDE
 			if (editing) return;
 			try
 			{
-				drawBox.Point = new Point(int.Parse(opoint_x.Text), int.Parse(opoint_y.Text));
+				tagBox.OPointPoint = new Point(int.Parse(opoint_x.Text), int.Parse(opoint_y.Text));
 			}
 			catch { }
 		}
@@ -618,7 +574,7 @@ namespace LF2.IDE
 			if (editing) return;
 			try
 			{
-				drawBox.Vector = new Point(int.Parse(opoint_dvx.Text), int.Parse(opoint_dvy.Text));
+				tagBox.OPointVector = new Point(int.Parse(opoint_dvx.Text), int.Parse(opoint_dvy.Text));
 			}
 			catch { }
 		}
@@ -628,7 +584,7 @@ namespace LF2.IDE
 			if (editing) return;
 			try
 			{
-				drawBox.Point = new Point(int.Parse(cpoint_x.Text), int.Parse(cpoint_y.Text));
+				tagBox.CPointPoint = new Point(int.Parse(cpoint_x.Text), int.Parse(cpoint_y.Text));
 			}
 			catch { }
 		}
@@ -638,7 +594,7 @@ namespace LF2.IDE
 			if (editing) return;
 			try
 			{
-				drawBox.Vector = new Point(int.Parse(cpoint_throwvx.Text), int.Parse(cpoint_throwvy.Text));
+				tagBox.CPointVector = new Point(int.Parse(cpoint_throwvx.Text), int.Parse(cpoint_throwvy.Text));
 			}
 			catch { }
 		}
@@ -648,7 +604,7 @@ namespace LF2.IDE
 			if (editing) return;
 			try
 			{
-				drawBox.Point = new Point(int.Parse(bpoint_x.Text), int.Parse(bpoint_y.Text));
+				tagBox.BPoint = new Point(int.Parse(bpoint_x.Text), int.Parse(bpoint_y.Text));
 			}
 			catch { }
 		}
@@ -659,22 +615,22 @@ namespace LF2.IDE
 			vactionImageMirror = (Image)(vactionImage = (Image)Properties.Resources.ResourceManager.GetObject("caught" + caughtPoints[cpoint_vaction.SelectedIndex, 1])).Clone();
 			if (vactionImage == null)
 			{
-				drawBox.PointImage = null;
-				drawBox.PointImageOffset = Point.Empty;
+				tagBox.CPointImage = null;
+				tagBox.CPointImageOffset = Point.Empty;
 				return;
 			}
 			vactionImageMirror.RotateFlip(RotateFlipType.RotateNoneFlipX);
 			if (dir)
 			{
-				drawBox.PointImage = vactionImageMirror;
-				drawBox.PointImageOffset = new Point(drawBox.PointImage.Width - caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
+				tagBox.CPointImage = vactionImageMirror;
+				tagBox.CPointImageOffset = new Point(vactionImageMirror.Width - caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
 			}
 			else
 			{
-				drawBox.PointImage = vactionImage;
-				drawBox.PointImageOffset = new Point(caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
+				tagBox.CPointImage = vactionImage;
+				tagBox.CPointImageOffset = new Point(caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
 			}
-			drawBox.Refresh();
+			tagBox.Refresh();
 		}
 
 		void DircontrolChanged(object sender, EventArgs e)
@@ -684,18 +640,16 @@ namespace LF2.IDE
 
 			if (cpoint_dircontrol.Text == "0" || cpoint_dircontrol.Text == "")
 			{
-				drawBox.PointImage = vactionImageMirror;
-				drawBox.PointImageOffset = new Point(drawBox.PointImage.Width - caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
+				tagBox.CPointImage = vactionImageMirror;
+				tagBox.CPointImageOffset = new Point(vactionImageMirror.Width - caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
 			}
 			else
 			{
-				drawBox.PointImage = vactionImage;
-				drawBox.PointImageOffset = new Point(caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
+				tagBox.CPointImage = vactionImage;
+				tagBox.CPointImageOffset = new Point(caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
 			}
 
 		}
-
-		// TODO: Instead of adding image data to "opoint.cache", reference their file name and make them load itself with protobuf assigments
 
 		public List<Obj> opointCache = new List<Obj>(128);
 
@@ -902,7 +856,7 @@ namespace LF2.IDE
 		{
 			if (e.Error != null)
 			{
-				mainForm.formEventLog.Error(e.Error, "Opoint Cache Creator Error");
+				mainForm.formEventLog.Error(e.Error, "Opoint Caching Error");
 			}
 			else if (!e.Cancelled && e.Result != null)
 			{
@@ -914,7 +868,7 @@ namespace LF2.IDE
 				progressBar_CacheCreation.Value = 100;
 				label_CacheCreationProgress.Text = "data\\...";
 
-				mainForm.formEventLog.Log("Cache Creation: " + stopWatch.Elapsed, true);
+				mainForm.formEventLog.Log("Opoint Cache Created: " + stopWatch.Elapsed, true);
 			}
 			button_CreateOpointCache.Text = cacheButtonString;
 			stopWatch.Reset();
@@ -934,9 +888,9 @@ namespace LF2.IDE
 				opoint_action.Items.Add(o.frames[i].id);
 			x = opoint_action.SelectedIndex = 0;
 			pic = o.frames[x].pic;
-			drawBox.PointImage = opointImage = ((pic != 999 && o.bmpList.ContainsKey(pic)) ? o.bmpList[pic] : null);
-			drawBox.PointImageOffset = opointOffset = o.frames[x].center;
-			drawBox.Refresh();
+			tagBox.OPointImage = opointImage = ((pic != 999 && o.bmpList.ContainsKey(pic)) ? o.bmpList[pic] : null);
+			tagBox.OPointImageOffset = opointOffset = o.frames[x].center;
+			tagBox.Refresh();
 		}
 
 		Image opointImage;
@@ -953,9 +907,81 @@ namespace LF2.IDE
 			if (x < 0) return;
 			Obj o = opointCache[id];
 			pic = o.frames[x].pic;
-			drawBox.PointImage = opointImage = ((pic != 999 && o.bmpList.ContainsKey(pic)) ? o.bmpList[pic] : null);
-			drawBox.PointImageOffset = opointOffset = o.frames[x].center;
-			drawBox.Refresh();
+			tagBox.OPointImage = opointImage = ((pic != 999 && o.bmpList.ContainsKey(pic)) ? o.bmpList[pic] : null);
+			tagBox.OPointImageOffset = opointOffset = o.frames[x].center;
+			tagBox.Refresh();
+		}
+
+		private void button_AddBdy_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void FormTag_KeyDown(object sender, KeyEventArgs e)
+		{
+			tagBox.ControlKey = e.Control;
+			tagBox.ShiftKey = e.Shift;
+			tagBox.Refresh();
+			tagBox.ControlKey = e.Control;
+			tagBox.ShiftKey = e.Shift;
+			tagBox.Refresh();
+		}
+
+		private void FormTag_KeyUp(object sender, KeyEventArgs e)
+		{
+			tagBox.ShiftKey = e.Shift;
+			tagBox.ControlKey = e.Control;
+			tagBox.Refresh();
+			tagBox.ShiftKey = e.Shift;
+			tagBox.ControlKey = e.Control;
+			tagBox.Refresh();
+		}
+
+		private void FormTag_Load(object sender, EventArgs e)
+		{
+			TagChanged(tabControl_Tags, EventArgs.Empty);
+		}
+
+		private void checkBox_tag_CheckedChanged(object sender, EventArgs e)
+		{
+			if (checkBox_bdy.Checked)
+				tagBox.DisplayModes |= TagBox.DisplayModes.Bdy;
+			else
+				tagBox.DisplayModes &= ~TagBox.DisplayModes.Bdy;
+			if (checkBox_itr.Checked)
+				tagBox.DisplayModes |= TagBox.DisplayModes.Itr;
+			else
+				tagBox.DisplayModes &= ~TagBox.DisplayModes.Itr;
+			if (checkBox_w.Checked)
+				tagBox.DisplayModes |= TagBox.DisplayModes.WPoint;
+			else
+				tagBox.DisplayModes &= ~TagBox.DisplayModes.WPoint;
+			if (checkBox_o.Checked)
+				tagBox.DisplayModes |= TagBox.DisplayModes.OPoint;
+			else
+				tagBox.DisplayModes &= ~TagBox.DisplayModes.OPoint;
+			if (checkBox_c.Checked)
+				tagBox.DisplayModes |= TagBox.DisplayModes.CPoint;
+			else
+				tagBox.DisplayModes &= ~TagBox.DisplayModes.CPoint;
+			if (checkBox_b.Checked)
+				tagBox.DisplayModes |= TagBox.DisplayModes.BPoint;
+			else
+				tagBox.DisplayModes &= ~TagBox.DisplayModes.BPoint;
+			if (checkBox_center.Checked)
+				tagBox.DisplayModes |= TagBox.DisplayModes.Center;
+			else
+				tagBox.DisplayModes &= ~TagBox.DisplayModes.Center;
+		}
+
+		private void CenterChanged(object sender, EventArgs e)
+		{
+			if (editing) return;
+			try
+			{
+				tagBox.Center = new Point(int.Parse(centerx.Text), int.Parse(centery.Text));
+			}
+			catch { }
 		}
 	}
 }

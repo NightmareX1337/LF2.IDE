@@ -1,44 +1,48 @@
-<!--Do not change language names-->
+<!--DO NOT MODIFY UNLESS YOU KNOW WHAT YOU ARE DOING-->
 <ScintillaNET>
 	<Language Name="default">
 		<Styles>
 			<Style Name="LINENUMBER" ForeColor="DarkBlue"/>
 		</Styles>
 	</Language>
-	<Language Name="dat">
+	<Language Name="object_dat">
 		<AutoComplete>
 			<List>
-aaction action arest attacking background background_end backhurtact bdefend bdy bdy_end bmp_begin bmp_end
-boss bound bpoint bpoint_end catchingact caughtact centerx centery col cover cpoint cpoint_end dash_distance
-dash_distancez dash_height decrease dircontrol dvx dvy dvz effect email end entry facing fall file
-file_editing file_editing_end frame frame_end fronthurtact head heavy_running_speed heavy_running_speedz
-heavy_walking_speed heavy_walking_speedz height hit_a hit_d hit_Da hit_Dj hit_Fa hit_Fj hit_j hit_ja hit_Ua hit_Uj
-hp hurtable id injury itr itr_end jump_distance jump_distancez jump_height kind layer layer_end loop mp music name
-next object object_end oid opoint opoint_end phase phase_end pic ratio rect row rowing_distance rowing_height
-running_frame_rate running_speed running_speedz shadow shadowsize small soldier sound stage stage_end state
-taction throwinjury throwvx throwvy throwvz times transparency type vaction vrest wait walking_frame_rate
-walking_speed walking_speedz weapon_broken_sound weapon_drop_hurt weapon_drop_sound weapon_hit_sound
-weapon_hp weapon_strength_list weapon_strength_list_end weaponact when_clear_goto_phase width wpoint
-wpoint_end zboundary zwidth
+        frame frame_end bmp_begin bmp_end weapon_strength_list weapon_strength_list_end object object_end
+        
+        bdy bdy_end wpoint wpoint_end itr itr_end cpoint cpoint_end bpoint bpoint_end opoint opoint_end
+        
+        name head small file x y w h row col walking_frame_rate walking_speed walking_speedz
+			  running_frame_rate running_speed running_speedz heavy_walking_speed heavy_walking_speedz
+			  heavy_running_speed heavy_running_speedz jump_height jump_distance jump_distancez dash_height
+			  dash_distance dash_distancez rowing_height rowing_distance kind pic state wait next dvx dvy dvz centerx
+			  centery sound hit_Fa hit_Ua hit_Da hit_Fj hit_Uj hit_Dj hit_a hit_d hit_j hit_ja arest vrest fall bdefend injury
+			  zwidth effect catchingact caughtact weaponact attacking cover action oid facing vaction aaction taction
+			  throwvx throwvy throwvz hurtable throwinjury decrease dircontrol fronthurtact backhurtact
+			  weapon_hit_sound weapon_drop_sound weapon_broken_sound weapon_hp entry
+			  weapon_drop_hurt id mp
 			</List>
 		</AutoComplete>
 		<Lexer LexerName="vb" WordChars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_" LineCommentPrefix="#">
-			<Keywords List="0" Inherit="False">frame frame_end bmp_begin bmp_end weapon_strength_list weapon_strength_list_end stage
-			stage_end phase phase_end object object_end file_editing file_editing_end background background_end
-			No Yes email boss soldier end</Keywords>
-			<Keywords List="1" Inherit="False">bdy bdy_end wpoint wpoint_end itr itr_end cpoint cpoint_end bpoint bpoint_end opoint
-			opoint_end layer layer_end</Keywords>
-			<Keywords List="2" Inherit="False">name head small file x y w h row col walking_frame_rate walking_speed walking_speedz
-			running_frame_rate running_speed running_speedz heavy_walking_speed heavy_walking_speedz
-			heavy_running_speed heavy_running_speedz jump_height jump_distance jump_distancez dash_height
-			dash_distance dash_distancez rowing_height rowing_distance kind pic state wait next dvx dvy dvz centerx
-			centery sound hit_fa hit_ua hit_da hit_fj hit_uj hit_dj hit_a hit_d hit_j hit_ja arest vrest fall bdefend injury
-			zwidth effect catchingact caughtact weaponact attacking cover action oid facing vaction aaction taction
-			throwvx throwvy throwvz hurtable throwinjury decrease dircontrol fronthurtact backhurtact width height loop rect zboundary
-			shadow shadowsize transparency weapon_hit_sound weapon_drop_sound weapon_broken_sound weapon_hp entry
-			weapon_drop_hurt id type bound music hp times ratio when_clear_goto_phase reserve mp</Keywords>
+			<Keywords List="0" Inherit="False">
+        frame frame_end bmp_begin bmp_end weapon_strength_list weapon_strength_list_end object object_end
+      </Keywords>
+			<Keywords List="1" Inherit="False">
+        bdy bdy_end wpoint wpoint_end itr itr_end cpoint cpoint_end bpoint bpoint_end opoint opoint_end
+      </Keywords>
+			<Keywords List="2" Inherit="False">
+        name head small file x y w h row col walking_frame_rate walking_speed walking_speedz
+			  running_frame_rate running_speed running_speedz heavy_walking_speed heavy_walking_speedz
+			  heavy_running_speed heavy_running_speedz jump_height jump_distance jump_distancez dash_height
+			  dash_distance dash_distancez rowing_height rowing_distance kind pic state wait next dvx dvy dvz centerx
+			  centery sound hit_fa hit_ua hit_da hit_fj hit_uj hit_dj hit_a hit_d hit_j hit_ja arest vrest fall bdefend injury
+			  zwidth effect catchingact caughtact weaponact attacking cover action oid facing vaction aaction taction
+			  throwvx throwvy throwvz hurtable throwinjury decrease dircontrol fronthurtact backhurtact
+			  weapon_hit_sound weapon_drop_sound weapon_broken_sound weapon_hp entry
+			  weapon_drop_hurt id mp
+      </Keywords>
 		</Lexer>
-		<Indentation TabWidth="3" UseTabs="False" SmartIndenType="cpp"/>
+		<Indentation TabWidth="3" UseTabs="False" SmartIndentType="cpp"/>
 		<Styles>
 			<Style Name="DOCUMENT_DEFAULT" FontName="Courier New" Size="10"/>
 			<Style Name="NUMBER" ForeColor="Black" BackColor="White"/>
@@ -120,13 +124,6 @@ wpoint_end zboundary zwidth
 <Snippet Shortcut="bpoint" IsSurroundsWith="True">bpoint:
       x: $x$  y: $y$
    bpoint_end:$end$</Snippet>
-<Snippet Shortcut="stage" IsSurroundsWith="True">&lt;stage&gt; id: $id$  #$comment$
-        $end$
-&lt;stage&gt;</Snippet>
-<Snippet Shortcut="phase" IsSurroundsWith="True">&lt;phase&gt; bound: $bnd$ # $comment$
-                $end$
-        &lt;phase_end&gt;</Snippet>
-<Snippet Shortcut="phase_item" IsSurroundsWith="True">id: $id$  x: $x$ #$comment$$end$</Snippet>
 <Snippet Shortcut="weapon_strength_list" IsSurroundsWith="True">&lt;weapon_strength_list&gt;
    
 &lt;weapon_strength_list_end&gt;$end$</Snippet>
@@ -174,27 +171,113 @@ weapon_broken_sound: data\$094$.wav
 <Snippet Shortcut="bmp" IsSurroundsWith="True">&lt;bmp_begin&gt;
 $end$
 &lt;bmp_end&gt;</Snippet>
-<Snippet Shortcut="bg" IsSurroundsWith="True">name: $Template$
-width: $1600$   zboundary: $370$ $510$
-shadow: bg\$template\0\shadow.bmp$  shadowsize: $37$ $9$$end$</Snippet>
-<Snippet Shortcut="layer" IsSurroundsWith="True">layer:
-  bg\$template\0\pic0.bmp$
-  transparency: $tr$ width: $967 $ x: $0$  y: $128$
-layer_end$end$</Snippet>
 <Snippet Shortcut="file" IsSurroundsWith="True">file($0$-$69$): sprite\$template\0.bmp$  w: $w$  h: $h$  row: $10$  col: $7$$end$</Snippet>
 </Snippets>
 	</Language>
-	<Language Name="txt">
+  <Language Name="stage_dat">
+    <AutoComplete>
+      <List>
+        stage stage_end phase phase_end boss soldier end
+        id bound music hp times ratio when_clear_goto_phase reserve mp act
+      </List>
+    </AutoComplete>
+    <Lexer LexerName="vb" WordChars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_" LineCommentPrefix="#">
+      <Keywords List="0" Inherit="False">
+        stage stage_end phase phase_end boss soldier end
+      </Keywords>
+      <Keywords List="1" Inherit="False" />
+      <Keywords List="2" Inherit="False">
+        id bound music hp times ratio when_clear_goto_phase reserve mp act
+      </Keywords>
+    </Lexer>
+    <Indentation TabWidth="3" UseTabs="False" SmartIndentType="cpp"/>
+    <Styles>
+      <Style Name="DOCUMENT_DEFAULT" FontName="Courier New" Size="10"/>
+      <Style Name="NUMBER" ForeColor="Black" BackColor="White"/>
+      <Style Name="COMMENT" ForeColor="Black" BackColor="White"/>
+      <Style Name="OPERATOR" ForeColor="Blue" BackColor="White"/>
+      <Style Name="STRINGEOL" ForeColor="LimeGreen" BackColor="White"/>
+      <Style Name="STRING" ForeColor="Black" BackColor="White"/>
+      <Style Name="CONSTANT" ForeColor="Black" BackColor="White"/>
+      <Style Name="PREPROCESSOR" ForeColor="Black" BackColor="White"/>
+      <Style Name="KEYWORD" ForeColor="Blue" BackColor="White"/>
+      <Style Name="KEYWORD2" ForeColor="Green" BackColor="White"/>
+      <Style Name="KEYWORD3" ForeColor="DarkRed" BackColor="White"/>
+    </Styles>
+    <Snippets>
+      <Snippet Shortcut="stage" IsSurroundsWith="True">
+        &lt;stage&gt; id: $id$  #$comment$
+        $end$
+        &lt;stage&gt;
+      </Snippet>
+      <Snippet Shortcut="phase" IsSurroundsWith="True">
+        &lt;phase&gt; bound: $bnd$ # $comment$
+        $end$
+        &lt;phase_end&gt;
+      </Snippet>
+      <Snippet Shortcut="phase_item" IsSurroundsWith="True">id: $id$  x: $x$ #$comment$$end$</Snippet>
+    </Snippets>
+  </Language>
+  <Language Name="bg_dat">
+    <AutoComplete>
+      <List>
+        layer layer_end
+        name x y width loop rect zboundary shadow shadowsize transparency cc c1 c2
+      </List>
+    </AutoComplete>
+    <Lexer LexerName="vb" WordChars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_" LineCommentPrefix="#">
+      <Keywords List="0" Inherit="False" />
+      <Keywords List="1" Inherit="False">
+        layer layer_end
+      </Keywords>
+      <Keywords List="2" Inherit="False">
+        name x y width loop rect zboundary shadow shadowsize transparency cc c1 c2
+      </Keywords>
+    </Lexer>
+    <Indentation TabWidth="3" UseTabs="False" SmartIndentType="cpp"/>
+    <Styles>
+      <Style Name="DOCUMENT_DEFAULT" FontName="Courier New" Size="10"/>
+      <Style Name="NUMBER" ForeColor="Black" BackColor="White"/>
+      <Style Name="COMMENT" ForeColor="Black" BackColor="White"/>
+      <Style Name="OPERATOR" ForeColor="Blue" BackColor="White"/>
+      <Style Name="STRINGEOL" ForeColor="LimeGreen" BackColor="White"/>
+      <Style Name="STRING" ForeColor="Black" BackColor="White"/>
+      <Style Name="CONSTANT" ForeColor="Black" BackColor="White"/>
+      <Style Name="PREPROCESSOR" ForeColor="Black" BackColor="White"/>
+      <Style Name="KEYWORD" ForeColor="Blue" BackColor="White"/>
+      <Style Name="KEYWORD2" ForeColor="Green" BackColor="White"/>
+      <Style Name="KEYWORD3" ForeColor="DarkRed" BackColor="White"/>
+    </Styles>
+    <Snippets>
+      <Snippet Shortcut="bg" IsSurroundsWith="True">
+        name: $Template$
+        width: $1600$   zboundary: $370$ $510$
+        shadow: bg\$template\0\shadow.bmp$  shadowsize: $37$ $9$$end$
+      </Snippet>
+      <Snippet Shortcut="layer" IsSurroundsWith="True">
+        layer:
+        bg\$template\0\pic0.bmp$
+        transparency: $tr$ width: $967 $ x: $0$  y: $128$
+        layer_end$end$
+      </Snippet>
+    </Snippets>
+  </Language>
+	<Language Name="data_txt">
 		<AutoComplete>
 			<List>
-background background_end file file_editing file_editing_end id object object_end type
-			</List>
+        background background_end file_editing file_editing_end object object_end
+        file id type
+      </List>
 		</AutoComplete>
 		<Lexer LexerName="vb" WordChars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_" LineCommentPrefix="#">
-			<Keywords List="0" Inherit="False">background background_end file_editing file_editing_end object object_end</Keywords>
-			<Keywords List="2" Inherit="False">file id type</Keywords>
+			<Keywords List="0" Inherit="False">
+        background background_end file_editing file_editing_end object object_end
+      </Keywords>
+			<Keywords List="2" Inherit="False">
+        file id type
+      </Keywords>
 		</Lexer>
-		<Indentation TabWidth="1" UseTabs="False" SmartIndenType="cpp"/>
+		<Indentation TabWidth="1" UseTabs="False" SmartIndentType="cpp"/>
 		<Styles>
 			<Style Name="DOCUMENT_DEFAULT" FontName="Courier New" Size="10"/>
 			<Style Name="NUMBER" ForeColor="Black" BackColor="White"/>

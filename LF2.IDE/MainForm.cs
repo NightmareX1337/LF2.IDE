@@ -27,38 +27,9 @@ namespace LF2.IDE
 
 			this.args = args;
 
-			try
-			{
-				Settings.Current.Reload();
-				showAllCharsToolStripButton.Checked = Settings.Current.showEndOfLineChars || Settings.Current.showWhiteSpaces;
-				checkUpdatesAutoToolStripMenuItem.Checked = Settings.Current.checkUpdatesAuto;
-				if (Settings.Current.lineWrappingMode == ScintillaNET.LineWrappingMode.None)
-				{
-					textWrapToolStripButton.Checked = false;
-					textWrapToolStripButton.Image = imageList.Images[0];
-				}
-				else if (Settings.Current.lineWrappingMode == ScintillaNET.LineWrappingMode.Word)
-				{
-					textWrapToolStripButton.Checked = true;
-					textWrapToolStripButton.Image = imageList.Images[0];
-				}
-				else if (Settings.Current.lineWrappingMode == ScintillaNET.LineWrappingMode.Char)
-				{
-					textWrapToolStripButton.Checked = true;
-					textWrapToolStripButton.Image = imageList.Images[1];
-				}
-				textWrapToolStripButton.ToolTipText = "Wrap: " + Settings.Current.lineWrappingMode.ToString();
-				syntaxLanguageToolStripComboBox.Text = Settings.Current.lang;
-				tabWidthToolStripComboBox.Text = Settings.Current.tabWidth.ToString();
-				updateHistory();
-			}
-			catch (Exception ex)
-			{
-				formEventLog = new FormEventLog();
-				formEventLog.Error(ex, "Settings Designer Error");
-			}
-
 			bool isLoaded = false;
+
+			DesingSettings();
 
 			if (!File.Exists(Program.dockingPath))
 			{
@@ -68,7 +39,7 @@ namespace LF2.IDE
 				formFrame = new FormFrame(this);
 				formShape = new FormShape(this);
 				solutionExplorer = new SolutionExplorer(this);
-				media = new MediaPlayer();
+				media = new MediaPanel();
 			}
 			else
 			{
@@ -93,7 +64,7 @@ namespace LF2.IDE
 				media.Show(dockPanel);
 				formEventLog.Show(dockPanel);
 				solutionExplorer.Show(dockPanel);
-				formTag.AutoHidePortion = 450;
+				formTag.AutoHidePortion = 500;
 				formFrame.AutoHidePortion = 300;
 				formShape.AutoHidePortion = 300;
 				media.AutoHidePortion = 300;
@@ -101,7 +72,7 @@ namespace LF2.IDE
 				solutionExplorer.AutoHidePortion = 300;
 			}
 
-			formEventLog.Log("Initialized: " + stopWatch.Elapsed, false);
+			formEventLog.Log("Initialized: " + stopWatch.Elapsed, true);
 			stopWatch.Restart();
 		}
 
@@ -109,7 +80,7 @@ namespace LF2.IDE
 		public FormFrame formFrame;
 		public FormShape formShape;
 		public SolutionExplorer solutionExplorer;
-		public MediaPlayer media;
+		public MediaPanel media;
 		public FormEventLog formEventLog;
 
 		public static Plugger<Plugin> Plugins = new Plugger<Plugin>();
@@ -135,7 +106,7 @@ namespace LF2.IDE
 					formTag.numericUpDown_ImageIndex.Maximum =
 					formFrame.numericUpDown_imageIndex.Maximum =
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
-					formTag.drawBox.Image =
+					formTag.tagBox.Image =
 					formFrame.drawBox.Image =
 					formShape.drawBox.Image = lastActiveFrame[0];
 				}
@@ -150,10 +121,7 @@ namespace LF2.IDE
 				formTag.StartCaching();
 			}
 
-			//CSScript.Evaluator.CompilerSettings.AssemblyReferences.AddRange(from a in Assembly.GetExecutingAssembly().GetReferencedAssemblies() select a.FullName);
-			//CSScript.Evaluator.CompilerSettings.Unsafe = true;
-
-			formEventLog.Log("MainForm Loaded: " + stopWatch.Elapsed, false);
+			formEventLog.Log("MainForm Loaded: " + stopWatch.Elapsed, true);
 			stopWatch.Reset();
 
 			backgroundWorker_Util.RunWorkerAsync();
@@ -162,39 +130,18 @@ namespace LF2.IDE
 
 		public WeifenLuo.WinFormsUI.Docking.DockPanel DockPanel { get { return dockPanel; } }
 
-		public void implementSettings()
+		private void DesingSettings()
 		{
-			foreach (DocumentForm df in dockPanel.Documents)
+			try
 			{
-				df.Scintilla.EndOfLine.IsVisible = Settings.Current.showEndOfLineChars;
-				df.Scintilla.LineWrapping.Mode = Settings.Current.lineWrappingMode;
-				df.Scintilla.Whitespace.Mode = Settings.Current.showWhiteSpaces ? ScintillaNET.WhitespaceMode.VisibleAlways : ScintillaNET.WhitespaceMode.Invisible;
-
-				switch (Path.GetExtension(df.TabText.TrimEnd(' ', '*')))
-				{
-					case ".dat":
-						df.SetLanguage("dat");
-						break;
-					case ".txt":
-						df.SetLanguage("txt");
-						break;
-					case ".as":
-						df.SetLanguage("as");
-						break;
-					case ".xml":
-						df.SetLanguage("xml");
-						break;
-					case ".html":
-					case ".htm":
-						df.SetLanguage("html");
-						break;
-					case ".cs":
-						df.SetLanguage("cs");
-						break;
-					default:
-						df.SetLanguage(Settings.Current.lang);
-						break;
-				}
+				Settings.Current.Reload();
+				checkUpdatesAutoToolStripMenuItem.Checked = Settings.Current.checkUpdatesAuto;
+				updateHistory();
+			}
+			catch (Exception ex)
+			{
+				formEventLog = new FormEventLog();
+				formEventLog.Error(ex, "Settings Designer Error");
 			}
 		}
 
@@ -203,7 +150,8 @@ namespace LF2.IDE
 			ffPersist = typeof(FormFrame).FullName,
 			fsPersist = typeof(FormShape).FullName,
 			sePersist = typeof(SolutionExplorer).FullName,
-			mpPersist = typeof(MediaPlayer).FullName;
+			mpPersist = typeof(MediaPanel).FullName,
+			docPersist = typeof(DocumentForm).FullName;
 
 		WeifenLuo.WinFormsUI.Docking.DockContent DockingDeserializer(string persistString)
 		{
@@ -218,15 +166,41 @@ namespace LF2.IDE
 			else if (persistString == sePersist)
 				return solutionExplorer = new SolutionExplorer(this);
 			else if (persistString == mpPersist)
-				return media = new MediaPlayer();
-			else return null;
+				return media = new MediaPanel();
+			else if (persistString == docPersist && Settings.Current.saveDocStates)
+			{
+				DocSet ds = Settings.Current.documentSettings[docLoop++];
+				DocumentForm df = Open(ds.filePath, true);
+				df.Scintilla.Lines.FirstVisibleIndex = ds.firstVisibleLine;
+				df.Scintilla.Selection.Start = ds.selectionStart;
+				df.Scintilla.Selection.End = ds.selectionEnd;
+				df.Scintilla.EndOfLine.IsVisible = ds.showEndOfLineChars;
+				df.Scintilla.Whitespace.Mode = ds.showWhiteSpaces ? ScintillaNET.WhitespaceMode.VisibleAlways : ScintillaNET.WhitespaceMode.Invisible;
+				return df;
+			}
+			else
+				return null;
 		}
+		int docLoop = 0;
 
 		public DocumentForm ActiveDocument { get { return dockPanel.ActiveDocument as DocumentForm; } }
 
 		private void UnhandledError(object sender, System.Threading.ThreadExceptionEventArgs e)
 		{
 			formEventLog.Error(e.Exception, "UNHANDLED ERROR");
+		}
+
+		public void ErrorBlast(object sender, EventArgs e)
+		{
+			ErrorBlast(0);
+		}
+
+		private void ErrorBlast(int i)
+		{
+			if (i < 15)
+				ErrorBlast(i + 1);
+			else
+				throw new ApplicationException("Debug purpose exception");
 		}
 
 		private void TemplateClicked(object sender, EventArgs e)
@@ -278,8 +252,10 @@ namespace LF2.IDE
 			this.Close();
 		}
 
+		List<DocumentForm> toClose;
 		private void MainForm_Closing(object sender, FormClosingEventArgs e)
 		{
+			toClose = new List<DocumentForm>(16);
 			foreach (DocumentForm doc in dockPanel.Documents)
 			{
 				if (doc.Scintilla.Modified)
@@ -303,8 +279,17 @@ namespace LF2.IDE
 					{
 						// Try to save before closing
 						e.Cancel = !doc.Save();
-						return;
+						if (e.Cancel)
+							return;
 					}
+					else if(dr == DialogResult.No)
+					{
+						toClose.Add(doc);
+					}
+				}
+				else if(!File.Exists(doc.FilePath))
+				{
+					toClose.Add(doc);
 				}
 			}
 		}
@@ -439,8 +424,7 @@ namespace LF2.IDE
 		void SettingsToolStripButton_Click(object sender, EventArgs e)
 		{
 			FormSettings fs = new FormSettings();
-			if (fs.ShowDialog() == DialogResult.OK)
-				implementSettings();
+			fs.ShowDialog();
 		}
 
 		void NewToolStripButton_Click(object sender, EventArgs e)
@@ -498,6 +482,32 @@ namespace LF2.IDE
 
 		void MainFormForm_Closed(object sender, FormClosedEventArgs e)
 		{
+			foreach (DocumentForm doc in toClose)
+			{
+				doc.Scintilla.Modified = false;
+				doc.Close();
+			}
+			if(Settings.Current.saveDocStates)
+			{
+				Settings.Current.documentSettings = new List<DocSet>(dockPanel.DocumentsCount);
+				foreach (var doc in dockPanel.Documents)
+				{
+					DocumentForm df = doc as DocumentForm;
+					if (!File.Exists(df.FilePath))
+						continue;
+					Settings.Current.documentSettings.Add(
+						new DocSet()
+						{
+							filePath = df.FilePath,
+							firstVisibleLine = df.Scintilla.Lines.FirstVisibleIndex,
+							lineWrappingMode = df.Scintilla.LineWrapping.Mode,
+							selectionStart = df.Scintilla.Selection.Start,
+							selectionEnd = df.Scintilla.Selection.End,
+							showEndOfLineChars = df.Scintilla.EndOfLine.IsVisible,
+							showWhiteSpaces = df.Scintilla.Whitespace.Mode == ScintillaNET.WhitespaceMode.VisibleAlways
+						});
+				}
+			}
 			Settings.Current.Save();
 			try
 			{
@@ -525,6 +535,24 @@ namespace LF2.IDE
 		{
 			if (ActiveDocument != null)
 			{
+				if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.None)
+				{
+					textWrapToolStripButton.Checked = false;
+					textWrapToolStripButton.Image = imageList.Images[0];
+				}
+				else if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.Word)
+				{
+					textWrapToolStripButton.Checked = true;
+					textWrapToolStripButton.Image = imageList.Images[0];
+				}
+				else if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.Char)
+				{
+					textWrapToolStripButton.Checked = true;
+					textWrapToolStripButton.Image = imageList.Images[1];
+				}
+				textWrapToolStripButton.ToolTipText = "Wrap: " + ActiveDocument.Scintilla.LineWrapping.Mode.ToString();
+				showAllCharsToolStripButton.Checked = ActiveDocument.Scintilla.EndOfLine.IsVisible || ActiveDocument.Scintilla.Whitespace.Mode == ScintillaNET.WhitespaceMode.VisibleAlways;
+
 				toolStripIncrementalSearcher.Scintilla = ActiveDocument.Scintilla;
 				if (ActiveDocument.frames != null)
 				{
@@ -536,7 +564,7 @@ namespace LF2.IDE
 					formTag.numericUpDown_ImageIndex.Value = lastActiveDoc.frameIndexTag;
 					formFrame.numericUpDown_imageIndex.Value = lastActiveDoc.frameIndexFrame;
 					formShape.numericUpDown_ImageIndex.Value = lastActiveDoc.frameIndexShape;
-					formTag.drawBox.Image = lastActiveFrame[lastActiveDoc.frameIndexTag];
+					formTag.tagBox.Image = lastActiveFrame[lastActiveDoc.frameIndexTag];
 					formFrame.drawBox.Image = lastActiveFrame[lastActiveDoc.frameIndexFrame];
 					formShape.drawBox.Image = lastActiveFrame[lastActiveDoc.frameIndexShape];
 				}
@@ -707,14 +735,6 @@ namespace LF2.IDE
 		{
 			OpenWithText(Properties.Resources.DataAlgorithm, "DataAlgorithm.cs");
 		}
-
-		void ToolStripComboBox2TextChanged(object sender, EventArgs e)
-		{
-			Settings.Current.lang = syntaxLanguageToolStripComboBox.Text == "" ? "default" : syntaxLanguageToolStripComboBox.Text;
-			implementSettings();
-			dockPanel.Refresh();
-		}
-
 		void ToolStripButtonzinClick(object sender, EventArgs e)
 		{
 			if (ActiveDocument != null)
@@ -729,32 +749,30 @@ namespace LF2.IDE
 
 		void ToolStripButtonwwClick(object sender, EventArgs e)
 		{
-			if (Settings.Current.lineWrappingMode == ScintillaNET.LineWrappingMode.None)
+			if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.None)
 			{
-				Settings.Current.lineWrappingMode = ScintillaNET.LineWrappingMode.Word;
+				ActiveDocument.Scintilla.LineWrapping.Mode = ScintillaNET.LineWrappingMode.Word;
 				textWrapToolStripButton.Checked = true;
 				textWrapToolStripButton.Image = imageList.Images[0];
 			}
-			else if (Settings.Current.lineWrappingMode == ScintillaNET.LineWrappingMode.Word)
+			else if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.Word)
 			{
-				Settings.Current.lineWrappingMode = ScintillaNET.LineWrappingMode.Char;
+				ActiveDocument.Scintilla.LineWrapping.Mode = ScintillaNET.LineWrappingMode.Char;
 				textWrapToolStripButton.Checked = true;
 				textWrapToolStripButton.Image = imageList.Images[1];
 			}
-			else if (Settings.Current.lineWrappingMode == ScintillaNET.LineWrappingMode.Char)
+			else if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.Char)
 			{
-				Settings.Current.lineWrappingMode = ScintillaNET.LineWrappingMode.None;
+				ActiveDocument.Scintilla.LineWrapping.Mode = ScintillaNET.LineWrappingMode.None;
 				textWrapToolStripButton.Checked = false;
 				textWrapToolStripButton.Image = imageList.Images[0];
 			}
-			textWrapToolStripButton.ToolTipText = "Wrap: " + Settings.Current.lineWrappingMode.ToString();
-			implementSettings();
+			textWrapToolStripButton.ToolTipText = "Wrap: " + ActiveDocument.Scintilla.LineWrapping.Mode.ToString();
 		}
 
 		void ToolStripButtoneolClick(object sender, EventArgs e)
 		{
-			Settings.Current.showEndOfLineChars = Settings.Current.showWhiteSpaces = showAllCharsToolStripButton.Checked;
-			implementSettings();
+			ActiveDocument.Scintilla.Whitespace.Mode = showAllCharsToolStripButton.Checked ? ScintillaNET.WhitespaceMode.VisibleAlways : ScintillaNET.WhitespaceMode.Invisible;
 		}
 
 		void ToolStripButtonFClick(object sender, EventArgs e)
@@ -869,16 +887,6 @@ namespace LF2.IDE
 			toolStripIncrementalSearcher.Enabled = quickToolStripButton.Checked;
 		}
 
-		void TabStripComboBoxTextChanged(object sender, EventArgs e)
-		{
-			try
-			{
-				Settings.Current.tabWidth = int.Parse(tabWidthToolStripComboBox.Text);
-				implementSettings();
-			}
-			catch { }
-		}
-
 		void ErrorLogToolStripMenuItemClick(object sender, EventArgs e)
 		{
 			formEventLog.Show();
@@ -960,7 +968,7 @@ namespace LF2.IDE
 					formFrame.numericUpDown_imageIndex.Maximum =
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
 					formTag.numericUpDown_ImageIndex.Value = formFrame.numericUpDown_imageIndex.Value = formShape.numericUpDown_ImageIndex.Value = 0;
-					formTag.drawBox.Image =
+					formTag.tagBox.Image =
 					formFrame.drawBox.Image =
 					formShape.drawBox.Image = lastActiveFrame[0];
 				}
@@ -996,7 +1004,7 @@ namespace LF2.IDE
 					formFrame.numericUpDown_imageIndex.Maximum =
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
 					formTag.numericUpDown_ImageIndex.Value = formFrame.numericUpDown_imageIndex.Value = formShape.numericUpDown_ImageIndex.Value = 0;
-					formTag.drawBox.Image =
+					formTag.tagBox.Image =
 					formFrame.drawBox.Image =
 					formShape.drawBox.Image = lastActiveFrame[0];
 				}
@@ -1069,11 +1077,12 @@ namespace LF2.IDE
 			OpenWithImage(e.Data.GetData(DataFormats.FileDrop) as string[], false);
 		}
 
-		public void Open(string file, bool updateHistory)
+		public DocumentForm Open(string file, bool updateHistory)
 		{
+			DocumentForm doc;
 			if (file.EndsWith(".dat"))
 			{
-				DocumentForm doc = new DocumentForm(this);
+				doc = new DocumentForm(this);
 				doc.Scintilla.AppendText(LF2DataUtil.Decrypt(file));
 				doc.Scintilla.UndoRedo.EmptyUndoBuffer();
 				doc.Scintilla.Modified = false;
@@ -1083,16 +1092,18 @@ namespace LF2.IDE
 			}
 			else
 			{
-				DocumentForm doc = new DocumentForm(this);
+				doc = new DocumentForm(this);
+				doc.FilePath = file;
+				doc.TabText = Path.GetFileName(file);
 				doc.Scintilla.AppendText(File.ReadAllText(file, Encoding.Default));
 				doc.Scintilla.UndoRedo.EmptyUndoBuffer();
 				doc.Scintilla.Modified = false;
-				doc.TabText = Path.GetFileName(file);
-				doc.FilePath = file;
 				doc.Show(dockPanel);
 			}
 			addToHistory(file);
-			if (updateHistory) this.updateHistory();
+			if (updateHistory)
+				this.updateHistory();
+			return doc;
 		}
 
 		public void Open(IEnumerable<string> files)
@@ -1165,14 +1176,21 @@ namespace LF2.IDE
 			if (arg) argsToolStripMenuItem.ShowDropDown();
 		}
 
-		public void OpenWithText(string text, string title)
+		public void OpenWithText(string text, string title, bool modified = false)
 		{
 			DocumentForm doc = new DocumentForm(this);
+
+			doc.FilePath = null;
+
+			if (!string.IsNullOrEmpty(title))
+				doc.TabText = title;
+
 			doc.Scintilla.AppendText(text);
 			doc.Scintilla.UndoRedo.EmptyUndoBuffer();
-			doc.Scintilla.Modified = false;
-			if (title != null) doc.TabText = title;
-			doc.FilePath = null;
+
+			if (!string.IsNullOrEmpty(text))
+				doc.Scintilla.Modified = modified;
+
 			doc.Show(dockPanel);
 		}
 
@@ -1196,8 +1214,13 @@ namespace LF2.IDE
 		public UpdateState CheckForUpdates()
 		{
 			WebClient wc = new WebClient();
-			Match match = Regex.Match(wc.DownloadString(Program.webPage), "{#UpdateCheckerArea:(.*):#}");
-			Version version = new Version(match.Groups[1].Value), current = new Version(AboutForm.AssemblyVersion);
+			string ver = wc.DownloadString(Program.updateInfoLink);
+
+			string[] vs = AboutForm.AssemblyVersion.Split('.');
+			int[] v = { int.Parse(vs[0]), int.Parse(vs[1]) };
+
+			Version version = new Version(ver),
+				current = new Version(v[0], v[1]);
 
 			if (current > version)
 				return UpdateState.Developer;
@@ -1256,7 +1279,7 @@ namespace LF2.IDE
 				if (notify)
 					formEventLog.Error(error, "Update Checking Error");
 				else
-					formEventLog.Log("Update check failed", false);
+					formEventLog.Log("Update Check Failed", true);
 			}
 			else if (e.Result is UpdateInfo)
 			{
@@ -1266,7 +1289,7 @@ namespace LF2.IDE
 					if (updateInfo.notify)
 						MessageBox.Show(this, "I believe you have the lastest version :)", "Update Checker");
 					else
-						formEventLog.Log("No update detected", false);
+						formEventLog.Log("Everthing looks up-to-date", true);
 				}
 				else
 				{
@@ -1278,9 +1301,9 @@ namespace LF2.IDE
 					else
 					{
 						if (updateInfo.notify)
-							MessageBox.Show(this, "Somehow, it appears that your current version is even higher than the lastest one", "Update Checker");
+							MessageBox.Show(this, "Somehow, it appears that your current version is even higher than the latest one", "Update Checker");
 						else
-							formEventLog.Log("Somehow, it appears that your current version is even higher than the lastest one", "Update Checker", false);
+							formEventLog.Log("Somehow, it appears that your current version is even higher than the latest one", "Update Checker", false);
 					}
 				}
 			}
@@ -1352,32 +1375,32 @@ namespace LF2.IDE
 		{
 			Stopwatch sw = Stopwatch.StartNew();
 			if (Directory.Exists(Program.utilDir))
-			{
 				UtilManager.GetUtils(Program.utilDir);
-				formEventLog.Log("Data Utils Loaded: " + sw.Elapsed, false);
-			}
+			e.Result = sw.Elapsed;
 			sw.Reset();
 		}
 
 		private void backgroundWorker_Util_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			UtilManager.UtilLock = false;
+			TimeSpan ts = (TimeSpan)e.Result;
+			formEventLog.Log("Data Utils Loaded: " + ts, true);
 		}
 
 		private void backgroundWorker_Plugin_DoWork(object sender, DoWorkEventArgs e)
 		{
 			Stopwatch sw = Stopwatch.StartNew();
 			if (Directory.Exists(Program.plugDir))
-			{
 				Plugins.PlugOn(Program.plugDir);
-				formEventLog.Log("Plugins Loaded: " + sw.Elapsed, false);
-			}
+			e.Result = sw.Elapsed;
 			sw.Reset();
 		}
 
 		private void backgroundWorker_Plugin_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			PluginLock = false;
+			TimeSpan ts = (TimeSpan)e.Result;
+			formEventLog.Log("Plugins Loaded: " + ts, true);
 			try
 			{
 				foreach (string plugin in Settings.Current.activePlugins)
@@ -1404,6 +1427,13 @@ namespace LF2.IDE
 		private void toolStripButtonFolding_CheckedChanged(object sender, EventArgs e)
 		{
 			toolStrip_Fold.Visible = toolStripButtonFolding.Checked;
+		}
+
+		private void MainForm_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Control && (e.KeyCode == Keys.F4 || e.KeyCode == Keys.W))
+				if (ActiveDocument != null)
+					ActiveDocument.Close();
 		}
 	}
 }

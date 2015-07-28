@@ -17,7 +17,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <SignAssembly>False</SignAssembly>
+    <SignAssembly>true</SignAssembly>
     <DelaySign>False</DelaySign>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
@@ -42,7 +42,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NoWin32Manifest>False</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,7 +54,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -66,7 +65,7 @@
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -131,23 +130,28 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>LF2.IDE.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AxInterop.WMPLib">
-      <HintPath>..\assemblies\WMPLib\AxInterop.WMPLib.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\assemblies\protobuf-net.dll</HintPath>
+    <Reference Include="AxInterop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\WMPLib\signed\AxInterop.WMPLib.dll</HintPath>
     </Reference>
     <Reference Include="CSScriptLibrary">
-      <HintPath>..\assemblies\CSScriptLibrary\CSScriptLibrary.dll</HintPath>
+      <HintPath>..\Assemblies\CSScriptLibrary\CSScriptLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Interop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\assemblies\WMPLib\Interop.WMPLib.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\Assemblies\WMPLib\signed\Interop.WMPLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="protobuf-net">
+      <HintPath>..\assemblies\protobuf-net\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="ScintillaNET">
-      <HintPath>..\assemblies\ScintillaNET v2.5.2\ScintillaNET.dll</HintPath>
+      <HintPath>..\Assemblies\ScintillaNET v2.5.2\ScintillaNET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -155,7 +159,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="WeifenLuo.WinFormsUI.Docking">
-      <HintPath>..\assemblies\WeifenLuo.WinFormsUI.Docking\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+      <HintPath>..\Assemblies\WeifenLuo.WinFormsUI.Docking\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +168,9 @@
     </Compile>
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TagBox.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="IDL.cs" />
     <Compile Include="sGame.cs" />
@@ -259,13 +266,14 @@
     <Compile Include="FormShape.Designer.cs">
       <DependentUpon>FormShape.cs</DependentUpon>
     </Compile>
-    <Compile Include="MediaPlayer.cs">
+    <Compile Include="MediaPanel.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MediaPlayer.Designer.cs">
-      <DependentUpon>MediaPlayer.cs</DependentUpon>
+    <Compile Include="MediaPanel.Designer.cs">
+      <DependentUpon>MediaPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="IconLib.cs" />
+    <None Include="LF2.IDE.snk" />
     <None Include="Plugins\ExamplePlugin.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -323,8 +331,8 @@
     <EmbeddedResource Include="FormShape.resx">
       <DependentUpon>FormShape.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MediaPlayer.resx">
-      <DependentUpon>MediaPlayer.cs</DependentUpon>
+    <EmbeddedResource Include="MediaPanel.resx">
+      <DependentUpon>MediaPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PreviewForm.resx">
       <DependentUpon>PreviewForm.cs</DependentUpon>
@@ -381,11 +389,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\assemblies\ScintillaNET v2.5.2\SciLexer.dll">
+    <None Include="..\Assemblies\ScintillaNET v2.5.2\SciLexer.dll">
       <Link>SciLexer.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\assemblies\ScintillaNET v2.5.2\SciLexer64.dll">
+    <None Include="..\Assemblies\ScintillaNET v2.5.2\SciLexer64.dll">
       <Link>SciLexer64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -419,6 +427,7 @@
     <Content Include="Resources\check.bmp" />
     <Content Include="Resources\Cursors\bdy.png" />
     <Content Include="Resources\Cursors\bpoint.png" />
+    <None Include="Resources\Cursors\center.png" />
     <Content Include="Resources\Cursors\cpoint.png" />
     <Content Include="Resources\Cursors\itr.png" />
     <Content Include="Resources\Cursors\opoint.png" />

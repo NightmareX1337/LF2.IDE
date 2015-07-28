@@ -25,7 +25,6 @@ namespace LF2.IDE
 
 		private MainForm mainForm;
 
-
 		public string FilePath
 		{
 			get { return _filePath; }
@@ -201,7 +200,7 @@ namespace LF2.IDE
 						SetLanguage("cs");
 						break;
 					default:
-						SetLanguage(Settings.Current.lang);
+						SetLanguage("default");
 						break;
 				}
 
@@ -214,6 +213,8 @@ namespace LF2.IDE
 
 		private void scintilla_ModifiedChanged(object sender, EventArgs e)
 		{
+			//if (!File.Exists(FilePath))
+			//	Scintilla.Modified = true;
 			AddOrRemoveAsteric();
 		}
 
@@ -231,11 +232,8 @@ namespace LF2.IDE
 
 		void DocumentFormLoad(object sender, EventArgs e)
 		{
-			Scintilla.EndOfLine.IsVisible = Settings.Current.showEndOfLineChars;
-			Scintilla.LineWrapping.Mode = Settings.Current.lineWrappingMode;
-			Scintilla.Whitespace.Mode = Settings.Current.showWhiteSpaces ? ScintillaNET.WhitespaceMode.VisibleAlways : ScintillaNET.WhitespaceMode.Invisible;
 			ToolTipText = _filePath == null ? TabText : _filePath;
-			switch (Path.GetExtension(TabText))
+			switch (Path.GetExtension(TabText.TrimEnd(' ', '*')))
 			{
 				case ".dat":
 					SetLanguage("dat");
@@ -257,7 +255,7 @@ namespace LF2.IDE
 					SetLanguage("cs");
 					break;
 				default:
-					SetLanguage(Settings.Current.lang);
+					SetLanguage("default");
 					break;
 			}
 			scintilla.NativeInterface.SendMessageDirect(2516, true);
@@ -339,60 +337,79 @@ namespace LF2.IDE
 				this.Scintilla.Snippets.List.Clear();
 				this.Scintilla.AutoComplete.List.Clear();
 				this.Scintilla.ConfigurationManager.Language = "default";
-				this.Scintilla.ConfigurationManager.Language = language;
-				if (language == "dat")
+				switch(language)
 				{
-					Scintilla.Indentation.UseTabs = false;
-					Scintilla.Indentation.TabWidth = Settings.Current.tabWidth;
-					Scintilla.EndOfLine.Mode = EndOfLineMode.LF;
-					this.Icon = Properties.Resources.DocumentDAT;
-					auto = true;
-					smart = true;
-				}
-				else if (language == "txt")
-				{
-					Scintilla.Indentation.UseTabs = false;
-					Scintilla.Indentation.TabWidth = Settings.Current.tabWidth;
-					Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
-					this.Icon = Properties.Resources.DocumentDAT;
-					auto = true;
-					smart = true;
-				}
-				else if (language == "as")
-				{
-					Scintilla.Indentation.UseTabs = true;
-					Scintilla.Indentation.TabWidth = 4;
-					Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
-					this.Icon = Properties.Resources.DocumentAS;
-					auto = false;
-					smart = true;
-				}
-				else if (language == "cs")
-				{
-					Scintilla.Indentation.UseTabs = true;
-					Scintilla.Indentation.TabWidth = 4;
-					Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
-					this.Icon = Properties.Resources.DocumentCS;
-					auto = false;
-					smart = true;
-				}
-				else if (language == "xml" || language == "html")
-				{
-					Scintilla.Indentation.UseTabs = false;
-					Scintilla.Indentation.TabWidth = 2;
-					Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
-					this.Icon = Properties.Resources.DocumentXML;
-					auto = false;
-					smart = true;
-				}
-				else
-				{
-					Scintilla.Indentation.UseTabs = false;
-					Scintilla.Indentation.TabWidth = Settings.Current.tabWidth;
-					Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
-					this.Icon = Properties.Resources.Document;
-					auto = false;
-					smart = false;
+					case "default":
+						goto default;
+					case "dat":
+						Scintilla.Indentation.UseTabs = false;
+						if (Scintilla.Text.Contains("<stage>"))
+						{
+							Scintilla.Indentation.TabWidth = 8;
+							this.Scintilla.ConfigurationManager.Language = "stage_dat";
+						}
+						else if (Scintilla.Text.Contains("layer:"))
+						{
+							Scintilla.Indentation.TabWidth = 2;
+							this.Scintilla.ConfigurationManager.Language = "bg_dat";
+						}
+						else
+						{
+							Scintilla.Indentation.TabWidth = 3;
+							this.Scintilla.ConfigurationManager.Language = "object_dat";
+						}
+						Scintilla.EndOfLine.Mode = EndOfLineMode.LF;
+						this.Icon = Properties.Resources.DocumentDAT;
+						auto = true;
+						smart = true;
+						break;
+					case "txt":
+						if (TabText.TrimEnd(' ', '*') != "data.txt")
+							goto default;
+						Scintilla.Indentation.UseTabs = false;
+						Scintilla.Indentation.TabWidth = 1;
+						Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
+						this.Icon = Properties.Resources.DocumentDAT;
+						auto = true;
+						smart = true;
+						this.Scintilla.ConfigurationManager.Language = "data_txt";
+						break;
+					case "as":
+						Scintilla.Indentation.UseTabs = true;
+						Scintilla.Indentation.TabWidth = 4;
+						Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
+						this.Icon = Properties.Resources.DocumentAS;
+						auto = false;
+						smart = true;
+						this.Scintilla.ConfigurationManager.Language = language;
+						break;
+					case "cs":
+						Scintilla.Indentation.UseTabs = true;
+						Scintilla.Indentation.TabWidth = 4;
+						Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
+						this.Icon = Properties.Resources.DocumentCS;
+						auto = false;
+						smart = true;
+						this.Scintilla.ConfigurationManager.Language = language;
+						break;
+					case "html":
+					case "xml":
+						Scintilla.Indentation.UseTabs = false;
+						Scintilla.Indentation.TabWidth = 2;
+						Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
+						this.Icon = Properties.Resources.DocumentXML;
+						auto = false;
+						smart = true;
+						this.Scintilla.ConfigurationManager.Language = language;
+						break;
+					default:
+						Scintilla.Indentation.UseTabs = true;
+						Scintilla.Indentation.TabWidth = 4;
+						Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
+						this.Icon = Properties.Resources.Document;
+						auto = false;
+						smart = false;
+						break;
 				}
 				Scintilla.AutoComplete.List.Sort();
 			}
@@ -418,7 +435,7 @@ namespace LF2.IDE
 					}
 				}
 			}
-			if (e.Ch == '\n' && smart)
+			if (Scintilla.EndOfLine.EolString[Scintilla.EndOfLine.EolString.Length - 1] == e.Ch && smart)
 			{
 				scintilla.Lines.Current.Indentation = scintilla.Lines.Current.Previous.Indentation;
 				scintilla.CurrentPos = scintilla.Lines.Current.IndentPosition;
@@ -458,5 +475,21 @@ namespace LF2.IDE
 		}
 
 		#endregion Methods
+
+		private void scintilla_SelectionChanged(object sender, EventArgs e)
+		{
+			toolStripStatusLabel_Line.Text = (scintilla.Lines.Current.Number + 1).ToString();
+			toolStripStatusLabel_Col.Text = (scintilla.GetColumn(scintilla.Caret.Position) + 1).ToString();
+			toolStripStatusLabel_Ch.Text = (scintilla.Caret.Position - scintilla.Lines.Current.StartPosition + 1).ToString();
+			toolStripStatusLabel_SelLen.Text = (scintilla.Selection.Length).ToString();
+			int sel = scintilla.Selection.Range.EndingLine.Number - scintilla.Selection.Range.StartingLine.Number;
+			toolStripStatusLabel_SelLines.Text = (scintilla.Selection.Length > 0 ? sel : 0).ToString();
+		}
+
+		private void scintilla_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Insert)
+				toolStripStatusLabel_InsOvr.Text = scintilla.OverType ? "INS" : "OVR";
+		}
 	}
 }

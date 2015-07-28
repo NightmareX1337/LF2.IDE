@@ -46,11 +46,9 @@
 			this.label_c_injury = new System.Windows.Forms.Label();
 			this.label_c_dircontrol = new System.Windows.Forms.Label();
 			this.label_c_y = new System.Windows.Forms.Label();
-			this.button_NewLine = new System.Windows.Forms.Button();
 			this.label_b_y = new System.Windows.Forms.Label();
 			this.label_b_x = new System.Windows.Forms.Label();
 			this.tabControl3 = new System.Windows.Forms.TabControl();
-			this.button_Insert = new System.Windows.Forms.Button();
 			this.bpoint_x = new System.Windows.Forms.TextBox();
 			this.bpoint_y = new System.Windows.Forms.TextBox();
 			this.label_c_decrease = new System.Windows.Forms.Label();
@@ -82,10 +80,8 @@
 			this.label_o_y = new System.Windows.Forms.Label();
 			this.label_o_x = new System.Windows.Forms.Label();
 			this.label_o_dvx = new System.Windows.Forms.Label();
-			this.button_Generate = new System.Windows.Forms.Button();
 			this.numericUpDown_ImageIndex = new System.Windows.Forms.NumericUpDown();
 			this.button_Clip = new System.Windows.Forms.Button();
-			this.richTextBox = new System.Windows.Forms.RichTextBox();
 			this.tabControl_Tags = new System.Windows.Forms.TabControl();
 			this.tabPage_bdy = new System.Windows.Forms.TabPage();
 			this.label_bdyHint = new System.Windows.Forms.Label();
@@ -176,12 +172,23 @@
 			this.label_o_facing = new System.Windows.Forms.Label();
 			this.label_o_oid = new System.Windows.Forms.Label();
 			this.label_o_dvy = new System.Windows.Forms.Label();
+			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.toolTip_Hint = new System.Windows.Forms.ToolTip(this.components);
-			this.button_Clear = new System.Windows.Forms.Button();
-			this.splitContainer = new System.Windows.Forms.SplitContainer();
-			this.drawBox = new DrawBox.DrawBox();
 			this.backgroundWorker_CreateOpointCache = new System.ComponentModel.BackgroundWorker();
 			this.backgroundWorker_Refresh = new System.ComponentModel.BackgroundWorker();
+			this.checkBox_bdy = new System.Windows.Forms.CheckBox();
+			this.checkBox_itr = new System.Windows.Forms.CheckBox();
+			this.checkBox_w = new System.Windows.Forms.CheckBox();
+			this.checkBox_o = new System.Windows.Forms.CheckBox();
+			this.checkBox_c = new System.Windows.Forms.CheckBox();
+			this.checkBox_b = new System.Windows.Forms.CheckBox();
+			this.checkBox_center = new System.Windows.Forms.CheckBox();
+			this.tagBox = new TagBox.TagBox();
+			this.centery = new System.Windows.Forms.TextBox();
+			this.button_centerReset = new System.Windows.Forms.Button();
+			this.centerx = new System.Windows.Forms.TextBox();
+			this.label_center_y = new System.Windows.Forms.Label();
+			this.label_center_x = new System.Windows.Forms.Label();
 			this.tabPage_b.SuspendLayout();
 			this.tabPage_c.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_ImageIndex)).BeginInit();
@@ -191,10 +198,7 @@
 			this.tabPage_w.SuspendLayout();
 			this.tabPage_o.SuspendLayout();
 			this.groupBox_OpointPanel.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
-			this.splitContainer.Panel1.SuspendLayout();
-			this.splitContainer.Panel2.SuspendLayout();
-			this.splitContainer.SuspendLayout();
+			this.tabPage1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// cpoint_decrease
@@ -338,20 +342,6 @@
 			this.label_c_y.TabIndex = 10;
 			this.label_c_y.Text = "y :";
 			// 
-			// button_NewLine
-			// 
-			this.button_NewLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.button_NewLine.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-			this.button_NewLine.Location = new System.Drawing.Point(415, 32);
-			this.button_NewLine.Name = "button_NewLine";
-			this.button_NewLine.Size = new System.Drawing.Size(24, 23);
-			this.button_NewLine.TabIndex = 104;
-			this.button_NewLine.Text = "NL";
-			this.toolTip_Hint.SetToolTip(this.button_NewLine, "Insert new line to document");
-			this.button_NewLine.UseCompatibleTextRendering = true;
-			this.button_NewLine.UseVisualStyleBackColor = true;
-			this.button_NewLine.Click += new System.EventHandler(this.NewLine);
-			// 
 			// label_b_y
 			// 
 			this.label_b_y.AutoSize = true;
@@ -379,18 +369,6 @@
 			this.tabControl3.Size = new System.Drawing.Size(828, 484);
 			this.tabControl3.TabIndex = 4;
 			this.tabControl3.TabStop = false;
-			// 
-			// button_Insert
-			// 
-			this.button_Insert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.button_Insert.Location = new System.Drawing.Point(415, 3);
-			this.button_Insert.Name = "button_Insert";
-			this.button_Insert.Size = new System.Drawing.Size(24, 23);
-			this.button_Insert.TabIndex = 103;
-			this.button_Insert.Text = "+";
-			this.toolTip_Hint.SetToolTip(this.button_Insert, "Insert tags to frame");
-			this.button_Insert.UseCompatibleTextRendering = true;
-			this.button_Insert.Click += new System.EventHandler(this.Add);
 			// 
 			// bpoint_x
 			// 
@@ -458,7 +436,7 @@
 			this.tabPage_b.Location = new System.Drawing.Point(4, 22);
 			this.tabPage_b.Name = "tabPage_b";
 			this.tabPage_b.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage_b.Size = new System.Drawing.Size(268, 293);
+			this.tabPage_b.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_b.TabIndex = 5;
 			this.tabPage_b.Text = "b";
 			// 
@@ -643,7 +621,7 @@
 			this.tabPage_c.Location = new System.Drawing.Point(4, 22);
 			this.tabPage_c.Name = "tabPage_c";
 			this.tabPage_c.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage_c.Size = new System.Drawing.Size(268, 293);
+			this.tabPage_c.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_c.TabIndex = 4;
 			this.tabPage_c.Text = "c";
 			// 
@@ -725,20 +703,9 @@
 			this.label_o_dvx.TabIndex = 2;
 			this.label_o_dvx.Text = "dvx :";
 			// 
-			// button_Generate
-			// 
-			this.button_Generate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.button_Generate.Location = new System.Drawing.Point(11, 299);
-			this.button_Generate.Name = "button_Generate";
-			this.button_Generate.Size = new System.Drawing.Size(64, 23);
-			this.button_Generate.TabIndex = 100;
-			this.button_Generate.Text = "Generate";
-			this.button_Generate.UseVisualStyleBackColor = true;
-			this.button_Generate.Click += new System.EventHandler(this.Generate);
-			// 
 			// numericUpDown_ImageIndex
 			// 
-			this.numericUpDown_ImageIndex.Location = new System.Drawing.Point(11, 11);
+			this.numericUpDown_ImageIndex.Location = new System.Drawing.Point(12, 12);
 			this.numericUpDown_ImageIndex.Maximum = new decimal(new int[] {
             0,
             0,
@@ -753,32 +720,16 @@
 			// 
 			// button_Clip
 			// 
-			this.button_Clip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.button_Clip.Location = new System.Drawing.Point(112, 299);
+			this.button_Clip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.button_Clip.Location = new System.Drawing.Point(117, 431);
 			this.button_Clip.Name = "button_Clip";
 			this.button_Clip.Size = new System.Drawing.Size(41, 23);
 			this.button_Clip.TabIndex = 101;
 			this.button_Clip.TabStop = false;
 			this.button_Clip.Text = "Clip";
-			this.toolTip_Hint.SetToolTip(this.button_Clip, "Copy to Clipboard");
+			this.toolTip_Hint.SetToolTip(this.button_Clip, "Copy generated data to clipboard");
 			this.button_Clip.UseVisualStyleBackColor = true;
 			this.button_Clip.Click += new System.EventHandler(this.CopyToClipboard);
-			// 
-			// richTextBox
-			// 
-			this.richTextBox.AcceptsTab = true;
-			this.richTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.richTextBox.EnableAutoDragDrop = true;
-			this.richTextBox.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-			this.richTextBox.Location = new System.Drawing.Point(3, 3);
-			this.richTextBox.Name = "richTextBox";
-			this.richTextBox.Size = new System.Drawing.Size(406, 89);
-			this.richTextBox.TabIndex = 0;
-			this.richTextBox.TabStop = false;
-			this.richTextBox.Text = "";
-			this.richTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichTextBoxKeyDown);
 			// 
 			// tabControl_Tags
 			// 
@@ -790,10 +741,11 @@
 			this.tabControl_Tags.Controls.Add(this.tabPage_o);
 			this.tabControl_Tags.Controls.Add(this.tabPage_c);
 			this.tabControl_Tags.Controls.Add(this.tabPage_b);
-			this.tabControl_Tags.Location = new System.Drawing.Point(163, 3);
+			this.tabControl_Tags.Controls.Add(this.tabPage1);
+			this.tabControl_Tags.Location = new System.Drawing.Point(164, 4);
 			this.tabControl_Tags.Name = "tabControl_Tags";
 			this.tabControl_Tags.SelectedIndex = 0;
-			this.tabControl_Tags.Size = new System.Drawing.Size(276, 319);
+			this.tabControl_Tags.Size = new System.Drawing.Size(318, 450);
 			this.tabControl_Tags.TabIndex = 2;
 			this.tabControl_Tags.TabStop = false;
 			this.tabControl_Tags.SelectedIndexChanged += new System.EventHandler(this.TagChanged);
@@ -816,7 +768,7 @@
 			this.tabPage_bdy.Location = new System.Drawing.Point(4, 22);
 			this.tabPage_bdy.Name = "tabPage_bdy";
 			this.tabPage_bdy.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage_bdy.Size = new System.Drawing.Size(268, 293);
+			this.tabPage_bdy.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_bdy.TabIndex = 0;
 			this.tabPage_bdy.Text = "bdy";
 			// 
@@ -969,7 +921,7 @@
 			this.tabPage_itr.Location = new System.Drawing.Point(4, 22);
 			this.tabPage_itr.Name = "tabPage_itr";
 			this.tabPage_itr.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage_itr.Size = new System.Drawing.Size(268, 293);
+			this.tabPage_itr.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_itr.TabIndex = 1;
 			this.tabPage_itr.Text = "itr";
 			// 
@@ -1315,7 +1267,7 @@
 			this.tabPage_w.Location = new System.Drawing.Point(4, 22);
 			this.tabPage_w.Name = "tabPage_w";
 			this.tabPage_w.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage_w.Size = new System.Drawing.Size(268, 293);
+			this.tabPage_w.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_w.TabIndex = 2;
 			this.tabPage_w.Text = "w";
 			// 
@@ -1551,7 +1503,7 @@
 			this.tabPage_o.Location = new System.Drawing.Point(4, 22);
 			this.tabPage_o.Name = "tabPage_o";
 			this.tabPage_o.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage_o.Size = new System.Drawing.Size(268, 293);
+			this.tabPage_o.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_o.TabIndex = 3;
 			this.tabPage_o.Text = "o";
 			// 
@@ -1565,7 +1517,7 @@
 			this.groupBox_OpointPanel.Controls.Add(this.button_CreateOpointCache);
 			this.groupBox_OpointPanel.Location = new System.Drawing.Point(6, 137);
 			this.groupBox_OpointPanel.Name = "groupBox_OpointPanel";
-			this.groupBox_OpointPanel.Size = new System.Drawing.Size(256, 150);
+			this.groupBox_OpointPanel.Size = new System.Drawing.Size(298, 192);
 			this.groupBox_OpointPanel.TabIndex = 56;
 			this.groupBox_OpointPanel.TabStop = false;
 			this.groupBox_OpointPanel.Text = "Opoint Viewer";
@@ -1576,7 +1528,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.progressBar_CacheCreation.Location = new System.Drawing.Point(6, 48);
 			this.progressBar_CacheCreation.Name = "progressBar_CacheCreation";
-			this.progressBar_CacheCreation.Size = new System.Drawing.Size(244, 23);
+			this.progressBar_CacheCreation.Size = new System.Drawing.Size(286, 23);
 			this.progressBar_CacheCreation.TabIndex = 11;
 			// 
 			// label_CacheCreationProgress
@@ -1715,6 +1667,21 @@
 			this.label_o_dvy.TabIndex = 2;
 			this.label_o_dvy.Text = "dvy :";
 			// 
+			// tabPage1
+			// 
+			this.tabPage1.Controls.Add(this.centery);
+			this.tabPage1.Controls.Add(this.button_centerReset);
+			this.tabPage1.Controls.Add(this.centerx);
+			this.tabPage1.Controls.Add(this.label_center_y);
+			this.tabPage1.Controls.Add(this.label_center_x);
+			this.tabPage1.Location = new System.Drawing.Point(4, 22);
+			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage1.Size = new System.Drawing.Size(310, 424);
+			this.tabPage1.TabIndex = 6;
+			this.tabPage1.Text = "center";
+			this.tabPage1.UseVisualStyleBackColor = true;
+			// 
 			// toolTip_Hint
 			// 
 			this.toolTip_Hint.AutoPopDelay = 30000;
@@ -1724,79 +1691,6 @@
 			this.toolTip_Hint.UseAnimation = false;
 			this.toolTip_Hint.UseFading = false;
 			// 
-			// button_Clear
-			// 
-			this.button_Clear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.button_Clear.Location = new System.Drawing.Point(78, 299);
-			this.button_Clear.Name = "button_Clear";
-			this.button_Clear.Size = new System.Drawing.Size(28, 23);
-			this.button_Clear.TabIndex = 102;
-			this.button_Clear.TabStop = false;
-			this.button_Clear.Text = "C";
-			this.toolTip_Hint.SetToolTip(this.button_Clear, "Clear");
-			this.button_Clear.UseVisualStyleBackColor = true;
-			this.button_Clear.Click += new System.EventHandler(this.Clear);
-			// 
-			// splitContainer
-			// 
-			this.splitContainer.BackColor = System.Drawing.SystemColors.ControlDark;
-			this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer.Location = new System.Drawing.Point(0, 0);
-			this.splitContainer.Name = "splitContainer";
-			this.splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
-			// 
-			// splitContainer.Panel1
-			// 
-			this.splitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
-			this.splitContainer.Panel1.Controls.Add(this.drawBox);
-			this.splitContainer.Panel1.Controls.Add(this.numericUpDown_ImageIndex);
-			this.splitContainer.Panel1.Controls.Add(this.button_Clip);
-			this.splitContainer.Panel1.Controls.Add(this.button_Generate);
-			this.splitContainer.Panel1.Controls.Add(this.button_Clear);
-			this.splitContainer.Panel1.Controls.Add(this.tabControl_Tags);
-			// 
-			// splitContainer.Panel2
-			// 
-			this.splitContainer.Panel2.BackColor = System.Drawing.SystemColors.Control;
-			this.splitContainer.Panel2.Controls.Add(this.richTextBox);
-			this.splitContainer.Panel2.Controls.Add(this.button_NewLine);
-			this.splitContainer.Panel2.Controls.Add(this.button_Insert);
-			this.splitContainer.Size = new System.Drawing.Size(442, 424);
-			this.splitContainer.SplitterDistance = 325;
-			this.splitContainer.TabIndex = 0;
-			this.splitContainer.TabStop = false;
-			// 
-			// drawBox
-			// 
-			this.drawBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.drawBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("drawBox.BackgroundImage")));
-			this.drawBox.Center = new System.Drawing.Point(-1, -1);
-			this.drawBox.DisplayMode = DrawBox.DisplayModes.Rectangle;
-			this.drawBox.DrawingMode = DrawBox.DrawingMode.Rectangle;
-			this.drawBox.ImageIndent = 1;
-			this.drawBox.Location = new System.Drawing.Point(11, 37);
-			this.drawBox.Name = "drawBox";
-			this.drawBox.PictureMode = DrawBox.PictureMode.CenterImage;
-			this.drawBox.Point = new System.Drawing.Point(-1, -1);
-			this.drawBox.Rectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
-			this.drawBox.RectangleBrushColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
-			this.drawBox.RectanglePenColor = System.Drawing.Color.Lime;
-			this.drawBox.ShowBoundToolTip = true;
-			this.drawBox.ShowCoordinateToolTip = true;
-			this.drawBox.Size = new System.Drawing.Size(146, 256);
-			this.drawBox.Smoothing = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-			this.drawBox.TabIndex = 105;
-			this.drawBox.Table = new System.Drawing.Point(-1, -1);
-			this.drawBox.TabStop = false;
-			this.drawBox.Trancparency = true;
-			this.drawBox.Vector = new System.Drawing.Point(-1, -1);
-			this.drawBox.VectorDivision = 3;
-			this.drawBox.PointChanged += new System.EventHandler(this.DrawBoxPointChanged);
-			this.drawBox.VectorChanged += new System.EventHandler(this.DrawBoxVectorChanged);
-			this.drawBox.RectangleChanged += new System.EventHandler(this.DrawBoxRectangleChanged);
-			// 
 			// backgroundWorker_CreateOpointCache
 			// 
 			this.backgroundWorker_CreateOpointCache.WorkerReportsProgress = true;
@@ -1805,14 +1699,194 @@
 			this.backgroundWorker_CreateOpointCache.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.OpointCacheCreatorProgressChanged);
 			this.backgroundWorker_CreateOpointCache.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.OpointCacheCreatorRunWorkerCompleted);
 			// 
+			// checkBox_bdy
+			// 
+			this.checkBox_bdy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBox_bdy.AutoSize = true;
+			this.checkBox_bdy.Checked = true;
+			this.checkBox_bdy.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.checkBox_bdy.Location = new System.Drawing.Point(190, 8);
+			this.checkBox_bdy.Name = "checkBox_bdy";
+			this.checkBox_bdy.Size = new System.Drawing.Size(15, 14);
+			this.checkBox_bdy.TabIndex = 106;
+			this.checkBox_bdy.UseVisualStyleBackColor = true;
+			this.checkBox_bdy.CheckedChanged += new System.EventHandler(this.checkBox_tag_CheckedChanged);
+			// 
+			// checkBox_itr
+			// 
+			this.checkBox_itr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBox_itr.AutoSize = true;
+			this.checkBox_itr.Checked = true;
+			this.checkBox_itr.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.checkBox_itr.Location = new System.Drawing.Point(232, 8);
+			this.checkBox_itr.Name = "checkBox_itr";
+			this.checkBox_itr.Size = new System.Drawing.Size(15, 14);
+			this.checkBox_itr.TabIndex = 106;
+			this.checkBox_itr.UseVisualStyleBackColor = true;
+			this.checkBox_itr.CheckedChanged += new System.EventHandler(this.checkBox_tag_CheckedChanged);
+			// 
+			// checkBox_w
+			// 
+			this.checkBox_w.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBox_w.AutoSize = true;
+			this.checkBox_w.Checked = true;
+			this.checkBox_w.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.checkBox_w.Location = new System.Drawing.Point(274, 8);
+			this.checkBox_w.Name = "checkBox_w";
+			this.checkBox_w.Size = new System.Drawing.Size(15, 14);
+			this.checkBox_w.TabIndex = 107;
+			this.checkBox_w.UseVisualStyleBackColor = true;
+			this.checkBox_w.CheckedChanged += new System.EventHandler(this.checkBox_tag_CheckedChanged);
+			// 
+			// checkBox_o
+			// 
+			this.checkBox_o.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBox_o.AutoSize = true;
+			this.checkBox_o.Checked = true;
+			this.checkBox_o.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.checkBox_o.Location = new System.Drawing.Point(316, 8);
+			this.checkBox_o.Name = "checkBox_o";
+			this.checkBox_o.Size = new System.Drawing.Size(15, 14);
+			this.checkBox_o.TabIndex = 108;
+			this.checkBox_o.UseVisualStyleBackColor = true;
+			this.checkBox_o.CheckedChanged += new System.EventHandler(this.checkBox_tag_CheckedChanged);
+			// 
+			// checkBox_c
+			// 
+			this.checkBox_c.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBox_c.AutoSize = true;
+			this.checkBox_c.Checked = true;
+			this.checkBox_c.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.checkBox_c.Location = new System.Drawing.Point(358, 8);
+			this.checkBox_c.Name = "checkBox_c";
+			this.checkBox_c.Size = new System.Drawing.Size(15, 14);
+			this.checkBox_c.TabIndex = 109;
+			this.checkBox_c.UseVisualStyleBackColor = true;
+			this.checkBox_c.CheckedChanged += new System.EventHandler(this.checkBox_tag_CheckedChanged);
+			// 
+			// checkBox_b
+			// 
+			this.checkBox_b.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBox_b.AutoSize = true;
+			this.checkBox_b.Checked = true;
+			this.checkBox_b.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.checkBox_b.Location = new System.Drawing.Point(400, 8);
+			this.checkBox_b.Name = "checkBox_b";
+			this.checkBox_b.Size = new System.Drawing.Size(15, 14);
+			this.checkBox_b.TabIndex = 110;
+			this.checkBox_b.UseVisualStyleBackColor = true;
+			this.checkBox_b.CheckedChanged += new System.EventHandler(this.checkBox_tag_CheckedChanged);
+			// 
+			// checkBox_center
+			// 
+			this.checkBox_center.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBox_center.AutoSize = true;
+			this.checkBox_center.Checked = true;
+			this.checkBox_center.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.checkBox_center.Location = new System.Drawing.Point(463, 8);
+			this.checkBox_center.Name = "checkBox_center";
+			this.checkBox_center.Size = new System.Drawing.Size(15, 14);
+			this.checkBox_center.TabIndex = 110;
+			this.checkBox_center.UseVisualStyleBackColor = true;
+			this.checkBox_center.CheckedChanged += new System.EventHandler(this.checkBox_tag_CheckedChanged);
+			// 
+			// tagBox
+			// 
+			this.tagBox.ActiveBdyIndex = null;
+			this.tagBox.ActiveItrIndex = null;
+			this.tagBox.ActiveItrVector = new System.Drawing.Point(0, 0);
+			this.tagBox.ActivePoint = new System.Drawing.Point(0, 0);
+			this.tagBox.ActiveVector = null;
+			this.tagBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tagBox.BackgroundImage = global::LF2.IDE.Properties.Resources.check;
+			this.tagBox.BackgroundInterpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			this.tagBox.ControlKey = false;
+			this.tagBox.DisplayModes = ((TagBox.DisplayModes)(((((((TagBox.DisplayModes.Bdy | TagBox.DisplayModes.Itr) 
+            | TagBox.DisplayModes.WPoint) 
+            | TagBox.DisplayModes.OPoint) 
+            | TagBox.DisplayModes.CPoint) 
+            | TagBox.DisplayModes.BPoint) 
+            | TagBox.DisplayModes.Center)));
+			this.tagBox.DrawingMode = TagBox.DrawingMode.Bdy;
+			this.tagBox.Location = new System.Drawing.Point(12, 38);
+			this.tagBox.Name = "tagBox";
+			this.tagBox.PictureMode = TagBox.PictureMode.CenterImage;
+			this.tagBox.ShiftKey = false;
+			this.tagBox.ShowBoundToolTip = true;
+			this.tagBox.ShowCoordinateSystem = true;
+			this.tagBox.ShowCoordinateToolTip = true;
+			this.tagBox.Size = new System.Drawing.Size(146, 387);
+			this.tagBox.Smoothing = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+			this.tagBox.TabIndex = 111;
+			this.tagBox.TabStop = false;
+			this.tagBox.Trancparency = true;
+			this.tagBox.VectorDivision = 4;
+			this.tagBox.ActiveRectangleChanged += new System.EventHandler(this.TagBoxRectangleChanged);
+			this.tagBox.ActivePointChanged += new System.EventHandler(this.TagBoxPointChanged);
+			this.tagBox.ActiveVectorChanged += new System.EventHandler(this.TagBoxVectorChanged);
+			// 
+			// centery
+			// 
+			this.centery.Location = new System.Drawing.Point(30, 32);
+			this.centery.Name = "centery";
+			this.centery.Size = new System.Drawing.Size(55, 20);
+			this.centery.TabIndex = 29;
+			this.centery.TextChanged += new System.EventHandler(this.CenterChanged);
+			// 
+			// button_centerReset
+			// 
+			this.button_centerReset.Location = new System.Drawing.Point(6, 58);
+			this.button_centerReset.Name = "button_centerReset";
+			this.button_centerReset.Size = new System.Drawing.Size(79, 23);
+			this.button_centerReset.TabIndex = 30;
+			this.button_centerReset.Text = "Reset";
+			this.button_centerReset.UseVisualStyleBackColor = true;
+			// 
+			// centerx
+			// 
+			this.centerx.Location = new System.Drawing.Point(30, 6);
+			this.centerx.Name = "centerx";
+			this.centerx.Size = new System.Drawing.Size(55, 20);
+			this.centerx.TabIndex = 28;
+			this.centerx.TextChanged += new System.EventHandler(this.CenterChanged);
+			// 
+			// label_center_y
+			// 
+			this.label_center_y.AutoSize = true;
+			this.label_center_y.Location = new System.Drawing.Point(6, 35);
+			this.label_center_y.Name = "label_center_y";
+			this.label_center_y.Size = new System.Drawing.Size(18, 13);
+			this.label_center_y.TabIndex = 32;
+			this.label_center_y.Text = "y :";
+			// 
+			// label_center_x
+			// 
+			this.label_center_x.AutoSize = true;
+			this.label_center_x.Location = new System.Drawing.Point(6, 9);
+			this.label_center_x.Name = "label_center_x";
+			this.label_center_x.Size = new System.Drawing.Size(18, 13);
+			this.label_center_x.TabIndex = 31;
+			this.label_center_x.Text = "x :";
+			// 
 			// FormTag
 			// 
-			this.AcceptButton = this.button_Generate;
 			this.AutoHidePortion = 450D;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(442, 424);
-			this.Controls.Add(this.splitContainer);
+			this.ClientSize = new System.Drawing.Size(484, 466);
+			this.Controls.Add(this.tagBox);
+			this.Controls.Add(this.checkBox_center);
+			this.Controls.Add(this.checkBox_b);
+			this.Controls.Add(this.checkBox_c);
+			this.Controls.Add(this.checkBox_o);
+			this.Controls.Add(this.checkBox_w);
+			this.Controls.Add(this.checkBox_itr);
+			this.Controls.Add(this.checkBox_bdy);
+			this.Controls.Add(this.numericUpDown_ImageIndex);
+			this.Controls.Add(this.button_Clip);
+			this.Controls.Add(this.tabControl_Tags);
 			this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
             | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
             | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
@@ -1821,6 +1895,7 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
 			this.HideOnClose = true;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.KeyPreview = true;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "FormTag";
@@ -1830,6 +1905,9 @@
 			this.TabText = "Tag";
 			this.Text = "Tag";
 			this.ToolTipText = "Tag Generator";
+			this.Load += new System.EventHandler(this.FormTag_Load);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormTag_KeyDown);
+			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormTag_KeyUp);
 			this.tabPage_b.ResumeLayout(false);
 			this.tabPage_b.PerformLayout();
 			this.tabPage_c.ResumeLayout(false);
@@ -1846,25 +1924,20 @@
 			this.tabPage_o.PerformLayout();
 			this.groupBox_OpointPanel.ResumeLayout(false);
 			this.groupBox_OpointPanel.PerformLayout();
-			this.splitContainer.Panel1.ResumeLayout(false);
-			this.splitContainer.Panel2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
-			this.splitContainer.ResumeLayout(false);
+			this.tabPage1.ResumeLayout(false);
+			this.tabPage1.PerformLayout();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 		public System.ComponentModel.BackgroundWorker backgroundWorker_Refresh;
-		public DrawBox.DrawBox drawBox;
 		public System.Windows.Forms.NumericUpDown numericUpDown_ImageIndex;
-		public System.Windows.Forms.RichTextBox richTextBox;
 		public System.Windows.Forms.Label label_CacheCreationProgress;
 		public System.Windows.Forms.ProgressBar progressBar_CacheCreation;
 		public System.Windows.Forms.GroupBox groupBox_OpointPanel;
 		public System.ComponentModel.BackgroundWorker backgroundWorker_CreateOpointCache;
 		public System.Windows.Forms.ComboBox opoint_action;
 		public System.Windows.Forms.Button button_CreateOpointCache;
-		public System.Windows.Forms.SplitContainer splitContainer;
-		public System.Windows.Forms.Button button_Clear;
 		public System.Windows.Forms.ToolTip toolTip_Hint;
 		public System.Windows.Forms.Label label_oHint;
 		public System.Windows.Forms.Label label_wHint;
@@ -1873,8 +1946,6 @@
 		public System.Windows.Forms.Label label_itrHint;
 		public System.Windows.Forms.Button button_Clip;
 		public System.Windows.Forms.TabControl tabControl3;
-		public System.Windows.Forms.Button button_Insert;
-		public System.Windows.Forms.Button button_NewLine;
 		public System.Windows.Forms.Label label_b_x;
 		public System.Windows.Forms.Label label_b_y;
 		public System.Windows.Forms.TextBox bpoint_x;
@@ -2004,6 +2075,19 @@
 		public System.Windows.Forms.Button button_bdyReset;
 		public System.Windows.Forms.TabPage tabPage_bdy;
 		public System.Windows.Forms.TabControl tabControl_Tags;
-		public System.Windows.Forms.Button button_Generate;
+		public System.Windows.Forms.CheckBox checkBox_bdy;
+		public System.Windows.Forms.CheckBox checkBox_itr;
+		public System.Windows.Forms.CheckBox checkBox_w;
+		public System.Windows.Forms.CheckBox checkBox_o;
+		public System.Windows.Forms.CheckBox checkBox_c;
+		public System.Windows.Forms.CheckBox checkBox_b;
+		private System.Windows.Forms.TabPage tabPage1;
+		public System.Windows.Forms.CheckBox checkBox_center;
+		public TagBox.TagBox tagBox;
+		public System.Windows.Forms.TextBox centery;
+		public System.Windows.Forms.Button button_centerReset;
+		public System.Windows.Forms.TextBox centerx;
+		public System.Windows.Forms.Label label_center_y;
+		public System.Windows.Forms.Label label_center_x;
 	}
 }

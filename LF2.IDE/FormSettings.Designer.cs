@@ -56,6 +56,7 @@
 			this.columnHeader_Web = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.groupBox_EditorSettings = new System.Windows.Forms.GroupBox();
 			this.checkBox_AutoComplete = new System.Windows.Forms.CheckBox();
+			this.checkBox_SaveDocStates = new System.Windows.Forms.CheckBox();
 			this.groupBox_Cryptology.SuspendLayout();
 			this.groupBox_DataUtil.SuspendLayout();
 			this.groupBox_Debugger.SuspendLayout();
@@ -215,7 +216,7 @@
 			this.groupBox_Debugger.Controls.Add(this.label_LF2Path);
 			this.groupBox_Debugger.Controls.Add(this.textBox_Path);
 			this.groupBox_Debugger.Controls.Add(this.button_BlaBlaBlah);
-			this.groupBox_Debugger.Location = new System.Drawing.Point(12, 379);
+			this.groupBox_Debugger.Location = new System.Drawing.Point(12, 393);
 			this.groupBox_Debugger.Name = "groupBox_Debugger";
 			this.groupBox_Debugger.Size = new System.Drawing.Size(760, 50);
 			this.groupBox_Debugger.TabIndex = 5;
@@ -225,7 +226,7 @@
 			// button_OK
 			// 
 			this.button_OK.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.button_OK.Location = new System.Drawing.Point(314, 438);
+			this.button_OK.Location = new System.Drawing.Point(314, 452);
 			this.button_OK.Name = "button_OK";
 			this.button_OK.Size = new System.Drawing.Size(75, 23);
 			this.button_OK.TabIndex = 60;
@@ -238,7 +239,7 @@
 			// 
 			this.button_Cancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.button_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.button_Cancel.Location = new System.Drawing.Point(395, 438);
+			this.button_Cancel.Location = new System.Drawing.Point(395, 452);
 			this.button_Cancel.Name = "button_Cancel";
 			this.button_Cancel.Size = new System.Drawing.Size(75, 23);
 			this.button_Cancel.TabIndex = 65;
@@ -253,7 +254,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox_PluginManager.Controls.Add(this.label_PluginWarning);
 			this.groupBox_PluginManager.Controls.Add(this.listView_Plugins);
-			this.groupBox_PluginManager.Location = new System.Drawing.Point(12, 208);
+			this.groupBox_PluginManager.Location = new System.Drawing.Point(12, 222);
 			this.groupBox_PluginManager.Name = "groupBox_PluginManager";
 			this.groupBox_PluginManager.Size = new System.Drawing.Size(760, 165);
 			this.groupBox_PluginManager.TabIndex = 66;
@@ -334,10 +335,14 @@
 			// 
 			// groupBox_EditorSettings
 			// 
+			this.groupBox_EditorSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox_EditorSettings.Controls.Add(this.checkBox_SaveDocStates);
 			this.groupBox_EditorSettings.Controls.Add(this.checkBox_AutoComplete);
 			this.groupBox_EditorSettings.Location = new System.Drawing.Point(12, 147);
 			this.groupBox_EditorSettings.Name = "groupBox_EditorSettings";
-			this.groupBox_EditorSettings.Size = new System.Drawing.Size(760, 55);
+			this.groupBox_EditorSettings.Size = new System.Drawing.Size(760, 69);
 			this.groupBox_EditorSettings.TabIndex = 67;
 			this.groupBox_EditorSettings.TabStop = false;
 			this.groupBox_EditorSettings.Text = "Editor Settings";
@@ -347,10 +352,20 @@
 			this.checkBox_AutoComplete.AutoSize = true;
 			this.checkBox_AutoComplete.Location = new System.Drawing.Point(6, 19);
 			this.checkBox_AutoComplete.Name = "checkBox_AutoComplete";
-			this.checkBox_AutoComplete.Size = new System.Drawing.Size(95, 17);
+			this.checkBox_AutoComplete.Size = new System.Drawing.Size(193, 17);
 			this.checkBox_AutoComplete.TabIndex = 0;
-			this.checkBox_AutoComplete.Text = "Auto-Complete";
+			this.checkBox_AutoComplete.Text = "Trigger auto complete automatically";
 			this.checkBox_AutoComplete.UseVisualStyleBackColor = true;
+			// 
+			// checkBox_SaveDocStates
+			// 
+			this.checkBox_SaveDocStates.AutoSize = true;
+			this.checkBox_SaveDocStates.Location = new System.Drawing.Point(6, 42);
+			this.checkBox_SaveDocStates.Name = "checkBox_SaveDocStates";
+			this.checkBox_SaveDocStates.Size = new System.Drawing.Size(174, 17);
+			this.checkBox_SaveDocStates.TabIndex = 0;
+			this.checkBox_SaveDocStates.Text = "Reload previous files on startup";
+			this.checkBox_SaveDocStates.UseVisualStyleBackColor = true;
 			// 
 			// FormSettings
 			// 
@@ -358,7 +373,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.button_Cancel;
-			this.ClientSize = new System.Drawing.Size(784, 470);
+			this.ClientSize = new System.Drawing.Size(784, 484);
 			this.Controls.Add(this.groupBox_EditorSettings);
 			this.Controls.Add(this.groupBox_PluginManager);
 			this.Controls.Add(this.button_Cancel);
@@ -417,5 +432,6 @@
 		private System.Windows.Forms.ColumnHeader columnHeader_Description;
 		private System.Windows.Forms.GroupBox groupBox_EditorSettings;
 		private System.Windows.Forms.CheckBox checkBox_AutoComplete;
+		private System.Windows.Forms.CheckBox checkBox_SaveDocStates;
 	}
 }

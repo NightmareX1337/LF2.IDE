@@ -29,21 +29,21 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin5 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-			WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin5 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-			WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient13 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient29 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-			WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin5 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-			WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient30 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-			WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient14 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient31 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-			WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient32 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient33 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-			WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient15 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient34 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient35 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+			WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+			WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+			WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+			WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+			WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+			WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+			WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+			WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+			WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.openFileDialogData = new System.Windows.Forms.OpenFileDialog();
 			this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
@@ -138,12 +138,7 @@
 			this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.checkUpdatesAutoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator_Options = new System.Windows.Forms.ToolStripSeparator();
-			this.syntaxLanguageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.syntaxLanguageToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
 			this.languageConfigurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator_Options2 = new System.Windows.Forms.ToolStripSeparator();
-			this.tabWidthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.tabWidthToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
 			this.spriteToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.transparencyToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pixelFormatterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -157,6 +152,8 @@
 			this.webToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.goToDownloadPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.createErrorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator_Help = new System.Windows.Forms.ToolStripSeparator();
 			this.dataAlgorithmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -201,52 +198,52 @@
 			this.dockPanel.Name = "dockPanel";
 			this.dockPanel.ShowDocumentIcon = true;
 			this.dockPanel.Size = new System.Drawing.Size(1184, 461);
-			dockPanelGradient13.EndColor = System.Drawing.SystemColors.ControlLight;
-			dockPanelGradient13.StartColor = System.Drawing.SystemColors.ControlLight;
-			autoHideStripSkin5.DockStripGradient = dockPanelGradient13;
-			tabGradient29.EndColor = System.Drawing.SystemColors.Control;
-			tabGradient29.StartColor = System.Drawing.SystemColors.Control;
-			tabGradient29.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-			autoHideStripSkin5.TabGradient = tabGradient29;
-			autoHideStripSkin5.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-			dockPanelSkin5.AutoHideStripSkin = autoHideStripSkin5;
-			tabGradient30.EndColor = System.Drawing.SystemColors.ControlLightLight;
-			tabGradient30.StartColor = System.Drawing.SystemColors.ControlLightLight;
-			tabGradient30.TextColor = System.Drawing.SystemColors.ControlText;
-			dockPaneStripGradient5.ActiveTabGradient = tabGradient30;
-			dockPanelGradient14.EndColor = System.Drawing.SystemColors.Control;
-			dockPanelGradient14.StartColor = System.Drawing.SystemColors.Control;
-			dockPaneStripGradient5.DockStripGradient = dockPanelGradient14;
-			tabGradient31.EndColor = System.Drawing.SystemColors.ControlLight;
-			tabGradient31.StartColor = System.Drawing.SystemColors.ControlLight;
-			tabGradient31.TextColor = System.Drawing.SystemColors.ControlText;
-			dockPaneStripGradient5.InactiveTabGradient = tabGradient31;
-			dockPaneStripSkin5.DocumentGradient = dockPaneStripGradient5;
-			dockPaneStripSkin5.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-			tabGradient32.EndColor = System.Drawing.SystemColors.ActiveCaption;
-			tabGradient32.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-			tabGradient32.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-			tabGradient32.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
-			dockPaneStripToolWindowGradient5.ActiveCaptionGradient = tabGradient32;
-			tabGradient33.EndColor = System.Drawing.SystemColors.Control;
-			tabGradient33.StartColor = System.Drawing.SystemColors.Control;
-			tabGradient33.TextColor = System.Drawing.SystemColors.ControlText;
-			dockPaneStripToolWindowGradient5.ActiveTabGradient = tabGradient33;
-			dockPanelGradient15.EndColor = System.Drawing.SystemColors.ControlLight;
-			dockPanelGradient15.StartColor = System.Drawing.SystemColors.ControlLight;
-			dockPaneStripToolWindowGradient5.DockStripGradient = dockPanelGradient15;
-			tabGradient34.EndColor = System.Drawing.SystemColors.InactiveCaption;
-			tabGradient34.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-			tabGradient34.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-			tabGradient34.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
-			dockPaneStripToolWindowGradient5.InactiveCaptionGradient = tabGradient34;
-			tabGradient35.EndColor = System.Drawing.Color.Transparent;
-			tabGradient35.StartColor = System.Drawing.Color.Transparent;
-			tabGradient35.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-			dockPaneStripToolWindowGradient5.InactiveTabGradient = tabGradient35;
-			dockPaneStripSkin5.ToolWindowGradient = dockPaneStripToolWindowGradient5;
-			dockPanelSkin5.DockPaneStripSkin = dockPaneStripSkin5;
-			this.dockPanel.Skin = dockPanelSkin5;
+			dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
+			dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
+			autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
+			tabGradient1.EndColor = System.Drawing.SystemColors.Control;
+			tabGradient1.StartColor = System.Drawing.SystemColors.Control;
+			tabGradient1.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+			autoHideStripSkin1.TabGradient = tabGradient1;
+			autoHideStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+			dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
+			tabGradient2.EndColor = System.Drawing.SystemColors.ControlLightLight;
+			tabGradient2.StartColor = System.Drawing.SystemColors.ControlLightLight;
+			tabGradient2.TextColor = System.Drawing.SystemColors.ControlText;
+			dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
+			dockPanelGradient2.EndColor = System.Drawing.SystemColors.Control;
+			dockPanelGradient2.StartColor = System.Drawing.SystemColors.Control;
+			dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
+			tabGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
+			tabGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
+			tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
+			dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
+			dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
+			dockPaneStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+			tabGradient4.EndColor = System.Drawing.SystemColors.ActiveCaption;
+			tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+			tabGradient4.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
+			tabGradient4.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
+			dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
+			tabGradient5.EndColor = System.Drawing.SystemColors.Control;
+			tabGradient5.StartColor = System.Drawing.SystemColors.Control;
+			tabGradient5.TextColor = System.Drawing.SystemColors.ControlText;
+			dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
+			dockPanelGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
+			dockPanelGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
+			dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
+			tabGradient6.EndColor = System.Drawing.SystemColors.InactiveCaption;
+			tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+			tabGradient6.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
+			tabGradient6.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
+			dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
+			tabGradient7.EndColor = System.Drawing.Color.Transparent;
+			tabGradient7.StartColor = System.Drawing.Color.Transparent;
+			tabGradient7.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+			dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
+			dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
+			dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
+			this.dockPanel.Skin = dockPanelSkin1;
 			this.dockPanel.TabIndex = 0;
 			this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.DockPanelActiveDocumentChanged);
 			// 
@@ -858,7 +855,7 @@
 			this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
 			this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.newToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.newToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.newToolStripMenuItem.Text = "&New";
 			this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripButton_Click);
 			// 
@@ -868,7 +865,7 @@
 			this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
 			this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.openToolStripMenuItem.Text = "&Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripButton_Click);
 			// 
@@ -876,14 +873,14 @@
 			// 
 			this.openRecentToolStripMenuItem.Enabled = false;
 			this.openRecentToolStripMenuItem.Name = "openRecentToolStripMenuItem";
-			this.openRecentToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.openRecentToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.openRecentToolStripMenuItem.Text = "Open Recent";
 			// 
 			// clearRecentHistoryToolStripMenuItem
 			// 
 			this.clearRecentHistoryToolStripMenuItem.Enabled = false;
 			this.clearRecentHistoryToolStripMenuItem.Name = "clearRecentHistoryToolStripMenuItem";
-			this.clearRecentHistoryToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.clearRecentHistoryToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.clearRecentHistoryToolStripMenuItem.Text = "Clear Recent History";
 			this.clearRecentHistoryToolStripMenuItem.Click += new System.EventHandler(this.clearRecentHistoryToolStripMenuItem_Click);
 			// 
@@ -893,22 +890,22 @@
 			this.reopenToolStripMenuItem.Name = "reopenToolStripMenuItem";
 			this.reopenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.O)));
-			this.reopenToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.reopenToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.reopenToolStripMenuItem.Text = "Reopen";
 			this.reopenToolStripMenuItem.Click += new System.EventHandler(this.ToolStripButtonReopenClick);
 			// 
 			// closeToolStripMenuItem
 			// 
 			this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-			this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F4)));
-			this.closeToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.closeToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+F4, Ctrl+W";
+			this.closeToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.closeToolStripMenuItem.Text = "&Close";
 			this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItemClick);
 			// 
 			// toolStripSeparator_File
 			// 
 			this.toolStripSeparator_File.Name = "toolStripSeparator_File";
-			this.toolStripSeparator_File.Size = new System.Drawing.Size(186, 6);
+			this.toolStripSeparator_File.Size = new System.Drawing.Size(190, 6);
 			// 
 			// saveToolStripMenuItem
 			// 
@@ -916,7 +913,7 @@
 			this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.saveToolStripMenuItem.Text = "&Save";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripButton_Click);
 			// 
@@ -926,7 +923,7 @@
 			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
 			this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
             | System.Windows.Forms.Keys.S)));
-			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.saveAsToolStripMenuItem.Text = "Save &As";
 			this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveasToolStripButton_Click);
 			// 
@@ -936,21 +933,21 @@
 			this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
 			this.saveAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-			this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.saveAllToolStripMenuItem.Text = "Save All";
 			this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllToolStripButton_Click);
 			// 
 			// toolStripSeparator_File2
 			// 
 			this.toolStripSeparator_File2.Name = "toolStripSeparator_File2";
-			this.toolStripSeparator_File2.Size = new System.Drawing.Size(186, 6);
+			this.toolStripSeparator_File2.Size = new System.Drawing.Size(190, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
 			this.exitToolStripMenuItem.ShortcutKeyDisplayString = "Alt+F4";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.exitToolStripMenuItem.Text = "E&xit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
 			// 
@@ -1112,10 +1109,7 @@
             this.settingsToolStripMenuItem,
             this.checkUpdatesAutoToolStripMenuItem,
             this.toolStripSeparator_Options,
-            this.syntaxLanguageToolStripMenuItem,
-            this.languageConfigurationToolStripMenuItem,
-            this.toolStripSeparator_Options2,
-            this.tabWidthToolStripMenuItem});
+            this.languageConfigurationToolStripMenuItem});
 			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
 			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
 			this.optionsToolStripMenuItem.Text = "&Options";
@@ -1142,62 +1136,12 @@
 			this.toolStripSeparator_Options.Name = "toolStripSeparator_Options";
 			this.toolStripSeparator_Options.Size = new System.Drawing.Size(227, 6);
 			// 
-			// syntaxLanguageToolStripMenuItem
-			// 
-			this.syntaxLanguageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.syntaxLanguageToolStripComboBox});
-			this.syntaxLanguageToolStripMenuItem.Name = "syntaxLanguageToolStripMenuItem";
-			this.syntaxLanguageToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-			this.syntaxLanguageToolStripMenuItem.Text = "Synta&x Language ";
-			// 
-			// syntaxLanguageToolStripComboBox
-			// 
-			this.syntaxLanguageToolStripComboBox.Items.AddRange(new object[] {
-            "default",
-            "dat",
-            "txt",
-            "as",
-            "xml",
-            "html",
-            "cs"});
-			this.syntaxLanguageToolStripComboBox.Name = "syntaxLanguageToolStripComboBox";
-			this.syntaxLanguageToolStripComboBox.Size = new System.Drawing.Size(121, 23);
-			this.syntaxLanguageToolStripComboBox.Text = "default";
-			this.syntaxLanguageToolStripComboBox.ToolTipText = "Used on unknown extentions";
-			this.syntaxLanguageToolStripComboBox.TextChanged += new System.EventHandler(this.ToolStripComboBox2TextChanged);
-			// 
 			// languageConfigurationToolStripMenuItem
 			// 
 			this.languageConfigurationToolStripMenuItem.Name = "languageConfigurationToolStripMenuItem";
 			this.languageConfigurationToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
 			this.languageConfigurationToolStripMenuItem.Text = "&Language Configuration";
 			this.languageConfigurationToolStripMenuItem.Click += new System.EventHandler(this.LanguageSettingsToolStripMenuItemClick);
-			// 
-			// toolStripSeparator_Options2
-			// 
-			this.toolStripSeparator_Options2.Name = "toolStripSeparator_Options2";
-			this.toolStripSeparator_Options2.Size = new System.Drawing.Size(227, 6);
-			// 
-			// tabWidthToolStripMenuItem
-			// 
-			this.tabWidthToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tabWidthToolStripComboBox});
-			this.tabWidthToolStripMenuItem.Name = "tabWidthToolStripMenuItem";
-			this.tabWidthToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-			this.tabWidthToolStripMenuItem.Text = "&Tab Width";
-			// 
-			// tabWidthToolStripComboBox
-			// 
-			this.tabWidthToolStripComboBox.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "8"});
-			this.tabWidthToolStripComboBox.Name = "tabWidthToolStripComboBox";
-			this.tabWidthToolStripComboBox.Size = new System.Drawing.Size(75, 23);
-			this.tabWidthToolStripComboBox.Text = "3";
-			this.tabWidthToolStripComboBox.TextChanged += new System.EventHandler(this.TabStripComboBoxTextChanged);
 			// 
 			// spriteToolsToolStripMenuItem
 			// 
@@ -1276,6 +1220,8 @@
             this.webToolStripMenuItem,
             this.checkForUpdatesToolStripMenuItem,
             this.goToDownloadPageToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.createErrorToolStripMenuItem,
             this.toolStripSeparator_Help,
             this.dataAlgorithmToolStripMenuItem,
             this.aboutToolStripMenuItem});
@@ -1303,6 +1249,18 @@
 			this.goToDownloadPageToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
 			this.goToDownloadPageToolStripMenuItem.Text = "&Go to Download Page";
 			this.goToDownloadPageToolStripMenuItem.Click += new System.EventHandler(this.DownloadPageToolStripMenuItemClick);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(186, 6);
+			// 
+			// createErrorToolStripMenuItem
+			// 
+			this.createErrorToolStripMenuItem.Name = "createErrorToolStripMenuItem";
+			this.createErrorToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.createErrorToolStripMenuItem.Text = "Create Error";
+			this.createErrorToolStripMenuItem.Click += new System.EventHandler(this.ErrorBlast);
 			// 
 			// toolStripSeparator_Help
 			// 
@@ -1437,8 +1395,8 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1184, 512);
 			this.Controls.Add(this.dockPanel);
-			this.Controls.Add(this.toolStrip_Fold);
 			this.Controls.Add(this.jumpToToolStrip);
+			this.Controls.Add(this.toolStrip_Fold);
 			this.Controls.Add(this.mainToolStrip);
 			this.Controls.Add(this.mainMenuStrip);
 			this.HelpButton = true;
@@ -1456,6 +1414,7 @@
 			this.ResizeEnd += new System.EventHandler(this.MainFormResizeEnd);
 			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainFormDragDrop);
 			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainFormDragEnter);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
 			this.mainToolStrip.ResumeLayout(false);
 			this.mainToolStrip.PerformLayout();
 			this.jumpToToolStrip.ResumeLayout(false);
@@ -1493,7 +1452,6 @@
 		public System.Windows.Forms.ToolStripMenuItem resetAllZoomToolStripMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem resetCurrentZoomToolStripMenuItem;
 		public System.Windows.Forms.ToolStripDropDownButton resetZoomToolStripDropDownButton;
-		public System.Windows.Forms.ToolStripComboBox tabWidthToolStripComboBox;
 		public System.Windows.Forms.ImageList imageList;
 		public System.Windows.Forms.ToolStripButton quickToolStripButton;
 		public System.Windows.Forms.ToolStripMenuItem showSolutionWindowToolStripMenuItem;
@@ -1512,11 +1470,7 @@
 		public System.Windows.Forms.ToolStripMenuItem saveAllToolStripMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem dataAlgorithmToolStripMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem reopenToolStripMenuItem;
-		public System.Windows.Forms.ToolStripMenuItem tabWidthToolStripMenuItem;
-		public System.Windows.Forms.ToolStripSeparator toolStripSeparator_Options2;
 		public System.Windows.Forms.ToolStripButton saveAsToolStripButton;
-		public System.Windows.Forms.ToolStripComboBox syntaxLanguageToolStripComboBox;
-		public System.Windows.Forms.ToolStripMenuItem syntaxLanguageToolStripMenuItem;
 		public System.Windows.Forms.ToolStripSeparator toolStripSeparator_Options;
 		public System.Windows.Forms.ToolStripButton showAllCharsToolStripButton;
 		public System.Windows.Forms.ToolStripButton textWrapToolStripButton;
@@ -1594,6 +1548,8 @@
 		private System.ComponentModel.BackgroundWorker backgroundWorker_Plugin;
 		private System.Windows.Forms.ToolStripButton toolStripButtonFolding;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		public System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.ToolStripMenuItem createErrorToolStripMenuItem;
 		/*private System.Windows.Forms.ToolStripMenuItem batToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem batToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem brokenweaponToolStripMenuItem;

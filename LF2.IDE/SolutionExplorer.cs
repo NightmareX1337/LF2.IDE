@@ -50,17 +50,18 @@ namespace LF2.IDE
 			if (Directory.Exists(target))
 			{
 				stopWatch.Restart();
-				populateTreeView.RunWorkerAsync(target);
+				populateTreeView.RunWorkerAsync(target + '|' + filterToolStripComboBox.Text);
 			}
 		}
 
 		void PopulateTreeViewDoWork(object sender, DoWorkEventArgs e)
 		{
-			DirectoryInfo info = new DirectoryInfo(e.Argument as string);
+			string[] arg = (e.Argument as string).Split('|');
+			DirectoryInfo info = new DirectoryInfo(arg[0]);
 			TreeNode rootNode = new TreeNode(info.Name, 0, 1);
 			rootNode.Tag = info;
-			GetEverything(info.GetDirectories(), rootNode);
-			foreach (FileInfo file in info.GetFiles(filterToolStripComboBox.Text))
+			GetEverything(info.GetDirectories(), rootNode, arg[1]);
+			foreach (FileInfo file in info.GetFiles(arg[1]))
 			{
 				if (populateTreeView.CancellationPending)
 					break;
@@ -78,11 +79,11 @@ namespace LF2.IDE
 			TreeNode rootNode = e.Result as TreeNode;
 			treeView.Nodes.Add(rootNode);
 			refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-			mainForm.formEventLog.Log("Solution Explorer Load (" + filterToolStripComboBox.Text + "): " + stopWatch.Elapsed, true);
+			mainForm.formEventLog.Log("Solution Explorer Refreshed (" + filterToolStripComboBox.Text + "): " + stopWatch.Elapsed, true);
 			stopWatch.Reset();
 		}
 
-		private void GetEverything(DirectoryInfo[] subDirs, TreeNode nodeToAddTo)
+		private void GetEverything(DirectoryInfo[] subDirs, TreeNode nodeToAddTo, string filter)
 		{
 			TreeNode aNode;
 			DirectoryInfo[] subSubDirs;
@@ -95,10 +96,10 @@ namespace LF2.IDE
 				subSubDirs = subDir.GetDirectories();
 				if (subSubDirs.Length != 0)
 				{
-					GetEverything(subSubDirs, aNode);
+					GetEverything(subSubDirs, aNode, filter);
 				}
 				nodeToAddTo.Nodes.Add(aNode);
-				foreach (FileInfo file in subDir.GetFiles(filterToolStripComboBox.Text))
+				foreach (FileInfo file in subDir.GetFiles(filter))
 				{
 					if (populateTreeView.CancellationPending)
 						return;
@@ -296,7 +297,7 @@ namespace LF2.IDE
 		{
 			try
 			{
-				if (e.Label.IndexOfAny(illegalChars) != -1)
+				if (string.IsNullOrWhiteSpace(e.Label) || e.Label.IndexOfAny(illegalChars) != -1)
 				{
 					e.CancelEdit = true;
 					return;
@@ -335,7 +336,7 @@ namespace LF2.IDE
 							DirectoryInfo dir = new DirectoryInfo(fms);
 							node.Tag = dir;
 							node.Nodes.Clear();
-							GetEverything(dir.GetDirectories(), node);
+							GetEverything(dir.GetDirectories(), node, filterToolStripComboBox.Text);
 							foreach (FileInfo file in dir.GetFiles(filterToolStripComboBox.Text))
 							{
 								int img = iconListManager.AddFileIcon(file.FullName);
@@ -1181,7 +1182,7 @@ namespace LF2.IDE
 							case ".wmf":
 								Image img = Image.FromFile(nodeFileInfo.FullName);
 								if (preview.IsDisposed) preview = new PreviewForm();
-								preview.Set(img, p, 1000);
+								preview.Set(img, p, 1500);
 								if (!preview.Visible) preview.Show(this);
 								break;
 						}

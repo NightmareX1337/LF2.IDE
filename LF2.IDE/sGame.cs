@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 [StructLayout(LayoutKind.Sequential)]
-struct sOpoint
+public struct sOpoint
 {
 	int kind;
 	int x;
@@ -15,14 +15,14 @@ struct sOpoint
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct sBpoint
+public struct sBpoint
 {
 	int x;
 	int y;
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct sCpoint
+public struct sCpoint
 {
 	int kind;
 	int x;
@@ -50,7 +50,7 @@ struct sCpoint
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct sWpoint
+public struct sWpoint
 {
 	int kind;
 	int x;
@@ -64,7 +64,7 @@ struct sWpoint
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct sItr
+public struct sItr
 {
 	int kind;
 	int x;
@@ -85,7 +85,7 @@ struct sItr
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct sBdy
+public struct sBdy
 {
 	int kind;
 	int x;
@@ -95,7 +95,7 @@ struct sBdy
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct sFrame
+public struct sFrame
 {
 	char exists;
 	int pic;
@@ -142,7 +142,7 @@ struct sFrame
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct sDataFile
+public struct sDataFile
 {
 	int walking_frame_rate;
 	double walking_speed;
@@ -188,7 +188,7 @@ struct sDataFile
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct sSpawn
+public struct sSpawn
 {
 	int id;
 	int x;
@@ -203,7 +203,7 @@ struct sSpawn
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct sPhase
+public struct sPhase
 {
 	int bound;
 	string music;
@@ -214,14 +214,14 @@ struct sPhase
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct sStage
+public struct sStage
 {
 	int phase_count;
 	sPhase[] phases;
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct sBackground
+public struct sBackground
 {
 	int bg_width;
 	int bg_zwidth1;
@@ -238,12 +238,4 @@ struct sBackground
 	int[] layer_x;
 	int[] layer_y;
 	int[] layer_height;
-}
-
-[StructLayout(LayoutKind.Sequential)]
-struct sFileManager
-{
-	sDataFile[] datas;
-	sStage[] stages;
-	sBackground[] backgrounds;
 }

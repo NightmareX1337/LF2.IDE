@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LF2.IDE</RootNamespace>
-    <AssemblyName>LF2.IDE</AssemblyName>
+    <AssemblyName>LF2 IDE</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>Main.ico</ApplicationIcon>
@@ -147,9 +147,6 @@
       <HintPath>..\Assemblies\WMPLib\signed\Interop.WMPLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="protobuf-net">
-      <HintPath>..\assemblies\protobuf-net\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="ScintillaNET">
       <HintPath>..\Assemblies\ScintillaNET v2.5.2\ScintillaNET.dll</HintPath>
     </Reference>
@@ -174,7 +171,6 @@
     </Compile>
     <Compile Include="IDL.cs" />
     <Compile Include="sGame.cs" />
-    <Compile Include="SpriteSheet.cs" />
     <None Include="DataUtils\UnsafeLF2DataAlgorithm.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -203,13 +203,18 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.drawBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("drawBox.BackgroundImage")));
+			this.drawBox.ControlKey = false;
 			this.drawBox.DisplayMode = DrawBox.DisplayModes.Point;
 			this.drawBox.DrawingMode = DrawBox.DrawingMode.Point;
 			this.drawBox.ImageIndent = 1;
 			this.drawBox.Location = new System.Drawing.Point(12, 12);
+			this.drawBox.MultiRectangleMode = false;
 			this.drawBox.Name = "drawBox";
+			this.drawBox.OneRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
 			this.drawBox.PictureMode = DrawBox.PictureMode.CenterImage;
 			this.drawBox.Rectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+			this.drawBox.Rectangles = ((System.Collections.Generic.List<System.Drawing.Rectangle>)(resources.GetObject("drawBox.Rectangles")));
+			this.drawBox.ShiftKey = false;
 			this.drawBox.ShowBoundToolTip = true;
 			this.drawBox.ShowCoordinateSystem = true;
 			this.drawBox.ShowCoordinateToolTip = true;
@@ -218,7 +223,7 @@
 			this.drawBox.TabIndex = 6;
 			this.drawBox.TabStop = false;
 			this.drawBox.Trancparency = true;
-			this.drawBox.VectorDivision = 3;
+			this.drawBox.VectorDivision = 4;
 			this.drawBox.PointChanged += new System.EventHandler(this.AutoGenerate);
 			this.drawBox.VectorChanged += new System.EventHandler(this.AutoGenerate);
 			this.drawBox.RectangleChanged += new System.EventHandler(this.AutoGenerate);

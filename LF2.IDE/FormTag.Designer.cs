@@ -173,7 +173,14 @@
 			this.label_o_oid = new System.Windows.Forms.Label();
 			this.label_o_dvy = new System.Windows.Forms.Label();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.centery = new System.Windows.Forms.TextBox();
+			this.button_centerReset = new System.Windows.Forms.Button();
+			this.centerx = new System.Windows.Forms.TextBox();
+			this.label_center_y = new System.Windows.Forms.Label();
+			this.label_center_x = new System.Windows.Forms.Label();
 			this.toolTip_Hint = new System.Windows.Forms.ToolTip(this.components);
+			this.checkBoxLinkage = new System.Windows.Forms.CheckBox();
+			this.imageList = new System.Windows.Forms.ImageList(this.components);
 			this.backgroundWorker_CreateOpointCache = new System.ComponentModel.BackgroundWorker();
 			this.backgroundWorker_Refresh = new System.ComponentModel.BackgroundWorker();
 			this.checkBox_bdy = new System.Windows.Forms.CheckBox();
@@ -184,11 +191,6 @@
 			this.checkBox_b = new System.Windows.Forms.CheckBox();
 			this.checkBox_center = new System.Windows.Forms.CheckBox();
 			this.tagBox = new TagBox.TagBox();
-			this.centery = new System.Windows.Forms.TextBox();
-			this.button_centerReset = new System.Windows.Forms.Button();
-			this.centerx = new System.Windows.Forms.TextBox();
-			this.label_center_y = new System.Windows.Forms.Label();
-			this.label_center_x = new System.Windows.Forms.Label();
 			this.tabPage_b.SuspendLayout();
 			this.tabPage_c.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_ImageIndex)).BeginInit();
@@ -628,6 +630,7 @@
 			// label_cHint
 			// 
 			this.label_cHint.AutoSize = true;
+			this.label_cHint.BackColor = System.Drawing.Color.PaleGreen;
 			this.label_cHint.Location = new System.Drawing.Point(172, 9);
 			this.label_cHint.Name = "label_cHint";
 			this.label_cHint.Size = new System.Drawing.Size(26, 13);
@@ -771,10 +774,12 @@
 			this.tabPage_bdy.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_bdy.TabIndex = 0;
 			this.tabPage_bdy.Text = "bdy";
+			this.tabPage_bdy.UseVisualStyleBackColor = true;
 			// 
 			// label_bdyHint
 			// 
 			this.label_bdyHint.AutoSize = true;
+			this.label_bdyHint.BackColor = System.Drawing.Color.PaleGreen;
 			this.label_bdyHint.Location = new System.Drawing.Point(137, 9);
 			this.label_bdyHint.Name = "label_bdyHint";
 			this.label_bdyHint.Size = new System.Drawing.Size(26, 13);
@@ -928,6 +933,7 @@
 			// label_itrHint
 			// 
 			this.label_itrHint.AutoSize = true;
+			this.label_itrHint.BackColor = System.Drawing.Color.PaleGreen;
 			this.label_itrHint.Location = new System.Drawing.Point(172, 9);
 			this.label_itrHint.Name = "label_itrHint";
 			this.label_itrHint.Size = new System.Drawing.Size(26, 13);
@@ -1301,6 +1307,7 @@
 			// label_wHint
 			// 
 			this.label_wHint.AutoSize = true;
+			this.label_wHint.BackColor = System.Drawing.Color.PaleGreen;
 			this.label_wHint.Location = new System.Drawing.Point(142, 9);
 			this.label_wHint.Name = "label_wHint";
 			this.label_wHint.Size = new System.Drawing.Size(26, 13);
@@ -1556,6 +1563,7 @@
 			// label_oHint
 			// 
 			this.label_oHint.AutoSize = true;
+			this.label_oHint.BackColor = System.Drawing.Color.PaleGreen;
 			this.label_oHint.Location = new System.Drawing.Point(120, 9);
 			this.label_oHint.Name = "label_oHint";
 			this.label_oHint.Size = new System.Drawing.Size(26, 13);
@@ -1682,6 +1690,49 @@
 			this.tabPage1.Text = "center";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
+			// centery
+			// 
+			this.centery.Location = new System.Drawing.Point(30, 32);
+			this.centery.Name = "centery";
+			this.centery.Size = new System.Drawing.Size(55, 20);
+			this.centery.TabIndex = 29;
+			this.centery.TextChanged += new System.EventHandler(this.CenterChanged);
+			// 
+			// button_centerReset
+			// 
+			this.button_centerReset.Location = new System.Drawing.Point(6, 58);
+			this.button_centerReset.Name = "button_centerReset";
+			this.button_centerReset.Size = new System.Drawing.Size(79, 23);
+			this.button_centerReset.TabIndex = 30;
+			this.button_centerReset.Text = "Reset";
+			this.button_centerReset.UseVisualStyleBackColor = true;
+			// 
+			// centerx
+			// 
+			this.centerx.Location = new System.Drawing.Point(30, 6);
+			this.centerx.Name = "centerx";
+			this.centerx.Size = new System.Drawing.Size(55, 20);
+			this.centerx.TabIndex = 28;
+			this.centerx.TextChanged += new System.EventHandler(this.CenterChanged);
+			// 
+			// label_center_y
+			// 
+			this.label_center_y.AutoSize = true;
+			this.label_center_y.Location = new System.Drawing.Point(6, 35);
+			this.label_center_y.Name = "label_center_y";
+			this.label_center_y.Size = new System.Drawing.Size(18, 13);
+			this.label_center_y.TabIndex = 32;
+			this.label_center_y.Text = "y :";
+			// 
+			// label_center_x
+			// 
+			this.label_center_x.AutoSize = true;
+			this.label_center_x.Location = new System.Drawing.Point(6, 9);
+			this.label_center_x.Name = "label_center_x";
+			this.label_center_x.Size = new System.Drawing.Size(18, 13);
+			this.label_center_x.TabIndex = 31;
+			this.label_center_x.Text = "x :";
+			// 
 			// toolTip_Hint
 			// 
 			this.toolTip_Hint.AutoPopDelay = 30000;
@@ -1690,6 +1741,30 @@
 			this.toolTip_Hint.ReshowDelay = 100;
 			this.toolTip_Hint.UseAnimation = false;
 			this.toolTip_Hint.UseFading = false;
+			// 
+			// checkBoxLinkage
+			// 
+			this.checkBoxLinkage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBoxLinkage.Appearance = System.Windows.Forms.Appearance.Button;
+			this.checkBoxLinkage.ImageIndex = 1;
+			this.checkBoxLinkage.ImageList = this.imageList;
+			this.checkBoxLinkage.Location = new System.Drawing.Point(12, 431);
+			this.checkBoxLinkage.Name = "checkBoxLinkage";
+			this.checkBoxLinkage.Size = new System.Drawing.Size(99, 23);
+			this.checkBoxLinkage.TabIndex = 112;
+			this.checkBoxLinkage.Text = "Link with Editor";
+			this.checkBoxLinkage.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this.toolTip_Hint.SetToolTip(this.checkBoxLinkage, "Apply changes immediately");
+			this.checkBoxLinkage.UseVisualStyleBackColor = true;
+			this.checkBoxLinkage.CheckedChanged += new System.EventHandler(this.checkBoxLinkage_CheckedChanged);
+			// 
+			// imageList
+			// 
+			this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
+			this.imageList.TransparentColor = System.Drawing.Color.Transparent;
+			this.imageList.Images.SetKeyName(0, "link.png");
+			this.imageList.Images.SetKeyName(1, "link_break.png");
 			// 
 			// backgroundWorker_CreateOpointCache
 			// 
@@ -1826,49 +1901,7 @@
 			this.tagBox.ActiveRectangleChanged += new System.EventHandler(this.TagBoxRectangleChanged);
 			this.tagBox.ActivePointChanged += new System.EventHandler(this.TagBoxPointChanged);
 			this.tagBox.ActiveVectorChanged += new System.EventHandler(this.TagBoxVectorChanged);
-			// 
-			// centery
-			// 
-			this.centery.Location = new System.Drawing.Point(30, 32);
-			this.centery.Name = "centery";
-			this.centery.Size = new System.Drawing.Size(55, 20);
-			this.centery.TabIndex = 29;
-			this.centery.TextChanged += new System.EventHandler(this.CenterChanged);
-			// 
-			// button_centerReset
-			// 
-			this.button_centerReset.Location = new System.Drawing.Point(6, 58);
-			this.button_centerReset.Name = "button_centerReset";
-			this.button_centerReset.Size = new System.Drawing.Size(79, 23);
-			this.button_centerReset.TabIndex = 30;
-			this.button_centerReset.Text = "Reset";
-			this.button_centerReset.UseVisualStyleBackColor = true;
-			// 
-			// centerx
-			// 
-			this.centerx.Location = new System.Drawing.Point(30, 6);
-			this.centerx.Name = "centerx";
-			this.centerx.Size = new System.Drawing.Size(55, 20);
-			this.centerx.TabIndex = 28;
-			this.centerx.TextChanged += new System.EventHandler(this.CenterChanged);
-			// 
-			// label_center_y
-			// 
-			this.label_center_y.AutoSize = true;
-			this.label_center_y.Location = new System.Drawing.Point(6, 35);
-			this.label_center_y.Name = "label_center_y";
-			this.label_center_y.Size = new System.Drawing.Size(18, 13);
-			this.label_center_y.TabIndex = 32;
-			this.label_center_y.Text = "y :";
-			// 
-			// label_center_x
-			// 
-			this.label_center_x.AutoSize = true;
-			this.label_center_x.Location = new System.Drawing.Point(6, 9);
-			this.label_center_x.Name = "label_center_x";
-			this.label_center_x.Size = new System.Drawing.Size(18, 13);
-			this.label_center_x.TabIndex = 31;
-			this.label_center_x.Text = "x :";
+			this.tagBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tagBox_MouseUp);
 			// 
 			// FormTag
 			// 
@@ -1876,6 +1909,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(484, 466);
+			this.Controls.Add(this.checkBoxLinkage);
 			this.Controls.Add(this.tagBox);
 			this.Controls.Add(this.checkBox_center);
 			this.Controls.Add(this.checkBox_b);
@@ -2089,5 +2123,7 @@
 		public System.Windows.Forms.TextBox centerx;
 		public System.Windows.Forms.Label label_center_y;
 		public System.Windows.Forms.Label label_center_x;
+		private System.Windows.Forms.CheckBox checkBoxLinkage;
+		private System.Windows.Forms.ImageList imageList;
 	}
 }

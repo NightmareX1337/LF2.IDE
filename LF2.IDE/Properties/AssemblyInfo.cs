@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("LF2.IDE")]
-[assembly: AssemblyDescription("A Visual Editor for LF2 Data Files")]
+[assembly: AssemblyDescription("LF2 Integrated Development Environment")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("NightmareX")]
 [assembly: AssemblyProduct("LF2.IDE")]
@@ -34,4 +34,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.0.*")]
 [assembly: AssemblyFileVersion("2.0")]
-[assembly: AssemblyInformationalVersion("2.0")]
+[assembly: AssemblyInformationalVersion("v2.0")]

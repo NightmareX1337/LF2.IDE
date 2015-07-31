@@ -9,7 +9,6 @@ using System.IO;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Microsoft.VisualBasic.ApplicationServices;
-using ProtoBuf.Meta;
 
 namespace LF2.IDE
 {

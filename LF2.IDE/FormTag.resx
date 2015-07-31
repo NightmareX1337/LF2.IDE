@@ -155,6 +155,38 @@ This is why all of the other following tags (not the coordinates!) are always 0 
 With kind 2 you activate light weapons which are hold on hand afterwards
 (before you force the character to let the old weapon fall with wpoint / kind: 3).</value>
   </data>
+  <metadata name="imageList.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>752, 3</value>
+  </metadata>
+  <data name="imageList.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
+        LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
+        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAQ
+        BQAAAk1TRnQBSQFMAgEBAgEAASgBAAEoAQABEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
+        AwABEAMAAQEBAAEgBgABEFoAAwIBAwJSAWIBzAMoATwIAAELAQ4BmgH/CAADIwEzAlUBWgG3AwIBA9gA
+        Ay0BRQE9AT4BewHqAygBPAQAAQoBDwGjAf8EAAMjATMBQAFEAXwB5wMwAUvgAAMrAUIBSAFJAXIB3gMH
+        AQkDPAFmAwkBDAFHAUkBdgHhAzEBTugAAwQBBgwAAxABFZwAA04BlgNQAf8DUAH/A1AB/wNQAf8DTgGW
+        CAADTgGWA1AB/wNQAf8DUAH/A1AB/wNOAZYIAANOAZYDUAH/A1AB/wNQAf8DUAH/A04BlgQAA04BlgNQ
+        Af8DUAH/A1AB/wNQAf8DTgGWiAADTgGWA1wB/wPXAf8D5AH/A+QB/wPXAf8DXAH/A04BlgNOAZYDXAH/
+        A9cB/wPkAf8D5AH/A9cB/wNcAf8DTgGWA04BlgNcAf8D1wH/A+QB/wPkAf8D6wH/A1wB/wQAA1wB/wPr
+        Af8D5AH/A+QB/wPXAf8DXAH/A04BloQAA2oB/wPRAf8DagH/A2oB/wNkAf8DYAH/A2AB/wNgAf8DYAH/
+        A2AB/wNgAf8DZAH/A2oB/wNqAf8D0QH/A2oB/wNqAf8D0QH/A2oB/wNqAf8DagH/A2oB/wNOAZYEAANO
+        AZYDagH/A2oB/wNqAf8DagH/A9EB/wNqAf+EAAN5Af8D3QH/A3kB/wQAA4gB/wP0Af8D8QH/A/EB/wPx
+        Af8D8QH/A/QB/wOIAf8EAAN5Af8D3QH/A3kB/wN5Af8D3QH/A3kB/yQAA3kB/wPdAf8DeQH/hAADjAH/
+        A+8B/wOMAf8DjAH/A5gB/wOhAf8DoQH/A6EB/wOhAf8DoQH/A6EB/wOYAf8DjAH/A4wB/wPvAf8DjAH/
+        A4wB/wPvAf8DjAH/A4wB/wOMAf8DjAH/A04BlgQAA04BlgOMAf8DjAH/A4wB/wOMAf8D7wH/A4wB/4QA
+        A04BlgOYAf8D9AH/A/EB/wPxAf8D9AH/A5gB/wNOAZYDTgGWA5gB/wP0Af8D8QH/A/EB/wP0Af8DmAH/
+        A04BlgNOAZYDmAH/A/QB/wPxAf8D8QH/A/QB/wOYAf8EAAOYAf8D9AH/A/EB/wPxAf8D9AH/A5gB/wNO
+        AZaIAANOAZYDoQH/A6EB/wOhAf8DoQH/A04BlggAA04BlgOhAf8DoQH/A6EB/wOhAf8DTgGWCAADTgGW
+        A6EB/wOhAf8DoQH/A6EB/wNOAZYEAANOAZYDoQH/A6EB/wOhAf8DoQH/A04BltwAAw0BEgwAAwsBD+gA
+        AzEBTgFIAUkBbAHeAwcBCQNOAZkDCQEMAkQBdAHkAy4BSOAAAzEBTgFAAUQBfAHnAyEBMAQAAQoBDwGj
+        Af8EAAMkATYBPQE+AXsB6gMuAUjYAAMCAQMCVAFeAcADIQEwCAABCAEQAawB/wgAAyQBNgJUAV0BvQMC
+        AQPoAAM8AWagAAFCAU0BPgcAAT4DAAEoAwABQAMAARADAAEBAQABAQUAAYAXAAP/AQAC/wHGAccEAAL/
+        AeIBjwQAAv8B8AEfBAAC/wH7Ab8EAAOBAQMGAAIBBgACAQQAARABCAEfAfEGAAIBBgACAQQAA4EBAwQA
+        Av8B+wG/BAAC/wHwAR8EAAL/AeIBjwQAAv8BxgHHBAAC/wH+Af8EAAs=
+</value>
+  </data>
   <metadata name="backgroundWorker_CreateOpointCache.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>282, 3</value>
   </metadata>

@@ -1110,7 +1110,7 @@ namespace DrawBox
 			e.Graphics.TranslateTransform(matrix.X, matrix.Y);
 
 			if (HasFlag(displayMode, DisplayModes.Center) && trancparency)
-				e.Graphics.FillEllipse(centerBrush, center.X - 17, center.Y - 4, 35, 7);
+				e.Graphics.FillEllipse(centerBrush, center.X - 18, center.Y - 4, 35, 7);
 
 			if (HasFlag(displayMode, DisplayModes.Point) && pointImage != null && cover)
 			{

@@ -21,8 +21,6 @@ namespace LF2.IDE
 			decryptionKey = "odBearBecauseHeIsVeryGoodSiuHungIsAGo",
 			dataUtil = null;
 
-		//TODO: make these per-document sensitive
-
 		public bool checkUpdatesAuto = true,
 			autoComplete = true,
 			saveDocStates = true;

@@ -983,5 +983,77 @@ namespace LF2.IDE
 			}
 			catch { }
 		}
+
+		private void checkBoxLinkage_CheckedChanged(object sender, EventArgs e)
+		{
+			checkBoxLinkage.ImageIndex = checkBoxLinkage.Checked ? 0 : 1;
+		}
+
+		private bool SyncChanges()
+		{
+			DocumentForm theDoc = mainForm.ActiveDocument;
+			if (theDoc == null)
+				return false;
+			int fs = theDoc.Scintilla.Text.LastIndexOf("<frame>", theDoc.Scintilla.Lines.Current.EndPosition);
+			if (fs < 0)
+				return false;
+			int fe = theDoc.Scintilla.Text.IndexOf("<frame_end>", fs);
+			if (fe < 0)
+				return false;
+			var fr = theDoc.Scintilla.GetRange(fs, fe);
+			return false;
+		}
+
+		static readonly List<char> tokenDelim = new List<char>(new char[]{ ' ', '\t', '\r', '\n' }),
+			tokemDelimEnd = new List<char>(new char[]{ '>', ':' }),
+			tokenDelimBegin = new List<char>(new char[]{ '<' });
+
+		public string[] TokenizeFrame(string frame)
+		{
+			List<string> tokens = new List<string>(128);
+			bool spaceState = false;
+			int tokenStart = 0;
+			for (int i = 0; i < frame.Length; i++)
+			{
+				if (tokemDelimEnd.Contains(frame[i]))
+				{
+					if (spaceState)
+					{
+						tokenStart = i;
+					}
+					else
+					{
+						tokens.Add(frame.Substring(tokenStart, i - tokenStart));
+					}
+				}
+				if (char.IsWhiteSpace(frame[i]))
+				{
+					if (spaceState)
+					{
+						
+					}
+					else
+					{
+
+					}
+				}
+				if (!char.IsWhiteSpace(frame[i]))
+				{
+					if (spaceState)
+					{
+						
+					}
+					else
+					{
+
+					}
+				}
+			}
+			return tokens.ToArray();
+		}
+
+		private void tagBox_MouseUp(object sender, MouseEventArgs e)
+		{
+		}
 	}
 }

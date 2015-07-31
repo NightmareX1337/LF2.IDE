@@ -4,7 +4,7 @@
 <DockPanel FormatVersion="1.0" DockLeftPortion="300" DockRightPortion="440" DockTopPortion="335" DockBottomPortion="350" ActiveDocumentPane="-1" ActivePane="-1">
   <Contents Count="6">
     <Content ID="0" PersistString="LF2.IDE.FormTag" AutoHidePortion="500" IsHidden="False" IsFloat="False" />
-    <Content ID="1" PersistString="LF2.IDE.FormFrame" AutoHidePortion="300" IsHidden="False" IsFloat="False" />
+    <Content ID="1" PersistString="LF2.IDE.FormFrame" AutoHidePortion="350" IsHidden="False" IsFloat="False" />
     <Content ID="2" PersistString="LF2.IDE.FormShape" AutoHidePortion="300" IsHidden="False" IsFloat="False" />
     <Content ID="3" PersistString="LF2.IDE.MediaPanel" AutoHidePortion="300" IsHidden="False" IsFloat="False" />
     <Content ID="4" PersistString="LF2.IDE.FormEventLog" AutoHidePortion="250" IsHidden="False" IsFloat="False" />

@@ -104,7 +104,7 @@ namespace LF2.IDE
 				if (lastActiveFrame != null && lastActiveFrame.Length > 0)
 				{
 					formTag.numericUpDown_ImageIndex.Maximum =
-					formFrame.numericUpDown_imageIndex.Maximum =
+					formFrame.numericUpDown_pic.Maximum =
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
 					formTag.tagBox.Image =
 					formFrame.drawBox.Image =
@@ -559,10 +559,10 @@ namespace LF2.IDE
 					lastActiveDoc = ActiveDocument;
 					lastActiveFrame = lastActiveDoc.frames;
 					formTag.numericUpDown_ImageIndex.Maximum =
-					formFrame.numericUpDown_imageIndex.Maximum =
+					formFrame.numericUpDown_pic.Maximum =
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
 					formTag.numericUpDown_ImageIndex.Value = lastActiveDoc.frameIndexTag;
-					formFrame.numericUpDown_imageIndex.Value = lastActiveDoc.frameIndexFrame;
+					formFrame.numericUpDown_pic.Value = lastActiveDoc.frameIndexFrame;
 					formShape.numericUpDown_ImageIndex.Value = lastActiveDoc.frameIndexShape;
 					formTag.tagBox.Image = lastActiveFrame[lastActiveDoc.frameIndexTag];
 					formFrame.drawBox.Image = lastActiveFrame[lastActiveDoc.frameIndexFrame];
@@ -965,9 +965,9 @@ namespace LF2.IDE
 				if (lastActiveFrame != null && lastActiveFrame.Length > 0)
 				{
 					formTag.numericUpDown_ImageIndex.Maximum =
-					formFrame.numericUpDown_imageIndex.Maximum =
+					formFrame.numericUpDown_pic.Maximum =
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
-					formTag.numericUpDown_ImageIndex.Value = formFrame.numericUpDown_imageIndex.Value = formShape.numericUpDown_ImageIndex.Value = 0;
+					formTag.numericUpDown_ImageIndex.Value = formFrame.numericUpDown_pic.Value = formShape.numericUpDown_ImageIndex.Value = 0;
 					formTag.tagBox.Image =
 					formFrame.drawBox.Image =
 					formShape.drawBox.Image = lastActiveFrame[0];
@@ -1001,9 +1001,9 @@ namespace LF2.IDE
 				if (lastActiveFrame != null && lastActiveFrame.Length > 0)
 				{
 					formTag.numericUpDown_ImageIndex.Maximum =
-					formFrame.numericUpDown_imageIndex.Maximum =
+					formFrame.numericUpDown_pic.Maximum =
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
-					formTag.numericUpDown_ImageIndex.Value = formFrame.numericUpDown_imageIndex.Value = formShape.numericUpDown_ImageIndex.Value = 0;
+					formTag.numericUpDown_ImageIndex.Value = formFrame.numericUpDown_pic.Value = formShape.numericUpDown_ImageIndex.Value = 0;
 					formTag.tagBox.Image =
 					formFrame.drawBox.Image =
 					formShape.drawBox.Image = lastActiveFrame[0];

@@ -141,50 +141,6 @@ namespace LF2.IDE
 			nextPlus.Text = (numericUpDown_frameIndex.Value + 1).ToString();
 		}
 
-		struct Frame
-		{
-			public int indexStart, indexEnd;
-			public string data;
-		}
-
-		public List<Range> GetFrames(ScintillaNET.Scintilla sci)
-		{
-			List<Range> frames = new List<Range>(400);
-			for (int i = sci.Text.IndexOf("<frame>"); i >= 0; i = sci.Text.IndexOf("<frame>", i + 7))
-			{
-				int j = sci.Text.IndexOf("<frame_end>", i + 7);
-				if (j < 0)
-					return frames;
-				frames.Add(sci.GetRange(i, j + 11));
-			}
-			return frames;
-		}
-
-		static class Pattern
-		{
-			public const string frame = @"<frame>\s*(\d*)\s*(\w*)",
-				pic = @"pic:\s*(\d*)",
-				state = @"state:\s*(\d*)",
-				wait = @"wait:\s*(\d*)",
-				next = @"next:\s*(\d*)",
-				dvx = @"dvx:\s*(\d*)",
-				dvy = @"dvx:\s*(\d*)",
-				dvz = @"dvz:\s*(\d*)",
-				centerx = @"cenrex:\s*(\d*)",
-				centery = @"cenrey:\s*(\d*)",
-				hit_Fa = @"hit_Fa:\s*(\d*)",
-				hit_Ua = @"hit_Ua:\s*(\d*)",
-				hit_Da = @"hit_Da:\s*(\d*)",
-				hit_Fj = @"hit_Fj:\s*(\d*)",
-				hit_Uj = @"hit_Uj:\s*(\d*)",
-				hit_Dj = @"hit_Dj:\s*(\d*)",
-				hit_ja = @"hit_ja:\s*(\d*)",
-				hit_a = @"hit_a:\s*(\d*)",
-				hit_d = @"hit_d:\s*(\d*)",
-				hit_j = @"hit_j:\s*(\d*)",
-				sound = @"sound:\s*(.*)";
-		}
-
 		class UndoHandler : IDisposable
 		{
 			Scintilla sci;
@@ -202,6 +158,7 @@ namespace LF2.IDE
 
 		char[] sep = { ' ', '\r', '\n', '\t' };
 
+		// This is fucking performance not-wise if slicing was possible I would be so happy
 		private void Merge(object sender, EventArgs e)
 		{
 			DocumentForm doc = mainForm.ActiveDocument as DocumentForm;
@@ -211,64 +168,69 @@ namespace LF2.IDE
 				next,
 				pic = (int)numericUpDown_pic.Value;
 			int.TryParse(textBox_next.Text, out next);
-			List<Range> frames = GetFrames(doc.Scintilla);
 			using (UndoHandler undoHandler = new UndoHandler(doc.Scintilla))
 			{
-				foreach (Range frame in frames)
+				for (int i = doc.Scintilla.Text.IndexOf("<frame>"), j = doc.Scintilla.Text.IndexOf("<frame_end>", i + 7); i >= 0 && j >= 0; i = doc.Scintilla.Text.IndexOf("<frame>", i + 7), j = doc.Scintilla.Text.IndexOf("<frame_end>", i + 7))
 				{
-					GroupCollection match = Regex.Match(frame.Text, Pattern.frame).Groups;
+					var frameRange = doc.Scintilla.GetRange(i, j + 11);
+					string frame = frameRange.Text;
+					GroupCollection match = Regex.Match(frame, LF2DataUtils.Pattern.frame).Groups;
 					int num = int.Parse(match[1].Value);
 					if (num >= numericUpDown_rangeStart.Value && num <= numericUpDown_rangeEnd.Value)
 					{
-						string dat = frame.Text;
-						dat = Regex.Replace(dat, Pattern.frame, "<frame> " + (checkBoxMerge_index.Checked ? index.ToString() : match[1].Value) + (checkBoxMerge_caption.Checked ? match[2].Value : (" " + comboBox_caption.Text)));
-						if (checkBoxMerge_pic.CheckState == CheckState.Checked)
-							dat = Regex.Replace(dat, Pattern.pic, "pic: " + pic);
-						else if (checkBoxMerge_pic.CheckState == CheckState.Indeterminate && !Regex.IsMatch(dat, Pattern.pic))
+						LF2DataUtils.Frame frameDat;
+						try
 						{
-							string[] split = dat.Split(sep, StringSplitOptions.RemoveEmptyEntries);
-							// TODO: find a way to not write shit-like code
+							frameDat = LF2DataUtils.ReadFrame(frame);
 						}
-						if (checkBoxMerge_state.Checked)
-							dat = Regex.Replace(dat, Pattern.state, "state: " + comboBox_state.Text);
-						if (checkBoxMerge_wait.Checked)
-							dat = Regex.Replace(dat, Pattern.wait, "wait: " + textBox_wait.Text);
-						if (checkBoxMerge_next.Checked)
-							dat = Regex.Replace(dat, Pattern.next, "next: " + next);
-						if (checkBoxMerge_dvx.Checked)
-							dat = Regex.Replace(dat, Pattern.dvx, "dvx: " + textBox_dvx.Text);
-						if (checkBoxMerge_dvy.Checked)
-							dat = Regex.Replace(dat, Pattern.dvy, "dvy: " + textBox_dvy.Text);
-						if (checkBoxMerge_dvz.Checked)
-							dat = Regex.Replace(dat, Pattern.dvz, "dvz: " + textBox_dvz.Text);
-						if (checkBoxMerge_centerx.Checked)
-							dat = Regex.Replace(dat, Pattern.centerx, "centerx: " + textBox_centerx.Text);
-						if (checkBoxMerge_centery.Checked)
-							dat = Regex.Replace(dat, Pattern.centery, "centery: " + textBox_centery.Text);
-						if (checkBoxMerge_hit_a.Checked)
-							dat = Regex.Replace(dat, Pattern.hit_a, "hit_a: " + textBox_hit_a.Text);
-						if (checkBoxMerge_hit_d.Checked)
-							dat = Regex.Replace(dat, Pattern.hit_d, "hit_d: " + textBox_hit_d.Text);
-						if (checkBoxMerge_hit_Da.Checked)
-							dat = Regex.Replace(dat, Pattern.hit_Da, "hit_Da: " + textBox_hit_Da.Text);
-						if (checkBoxMerge_hit_Dj.Checked)
-							dat = Regex.Replace(dat, Pattern.hit_Dj, "hit_Dj: " + textBox_hit_Dj.Text);
-						if (checkBoxMerge_hit_Fa.Checked)
-							dat = Regex.Replace(dat, Pattern.hit_Fa, "hit_Fa: " + textBox_hit_Fa.Text);
-						if (checkBoxMerge_hit_Fj.Checked)
-							dat = Regex.Replace(dat, Pattern.hit_Fj, "hit_Fj: " + textBox_hit_Fj.Text);
-						if (checkBoxMerge_hit_j.Checked)
-							dat = Regex.Replace(dat, Pattern.hit_j, "hit_j: " + textBox_hit_j.Text);
-						if (checkBoxMerge_hit_ja.Checked)
-							dat = Regex.Replace(dat, Pattern.hit_ja, "hit_ja: " + textBox_hit_ja.Text);
-						if (checkBoxMerge_hit_Ua.Checked)
-							dat = Regex.Replace(dat, Pattern.hit_Ua, "hit_Ua: " + textBox_hit_Ua.Text);
-						if (checkBoxMerge_hit_Uj.Checked)
-							dat = Regex.Replace(dat, Pattern.hit_Uj, "hit_Uj: " + textBox_hit_Uj.Text);
-						if (checkBoxMerge_sound.Checked)
-							dat = Regex.Replace(dat, Pattern.sound, "sound: " + textBox_sound.Text);
+						catch (LF2DataUtils.DataSyntaxException ex)
+						{
+							mainForm.formEventLog.Error(ex, "Data Syntax Error");
+							return;
+						}
+						
+						if (checkBoxMerge_pic.CheckState == CheckState.Checked || checkBoxMerge_pic.CheckState == CheckState.Indeterminate && frameDat.pic.HasValue)
+							frameDat.pic = (int)numericUpDown_pic.Value;
+						if (checkBoxMerge_state.CheckState == CheckState.Checked || checkBoxMerge_state.CheckState == CheckState.Indeterminate && frameDat.state.HasValue)
+							frameDat.state = int.Parse(comboBox_state.Text);
+						if (checkBoxMerge_wait.CheckState == CheckState.Checked || checkBoxMerge_wait.CheckState == CheckState.Indeterminate && frameDat.wait.HasValue)
+							frameDat.wait = int.Parse(textBox_wait.Text);
+						if (checkBoxMerge_next.CheckState == CheckState.Checked || checkBoxMerge_next.CheckState == CheckState.Indeterminate && frameDat.next.HasValue)
+							frameDat.next = next;
+						if (checkBoxMerge_dvx.CheckState == CheckState.Checked || checkBoxMerge_dvx.CheckState == CheckState.Indeterminate && frameDat.dvx.HasValue)
+							frameDat.dvx = int.Parse(textBox_dvx.Text);
+						if (checkBoxMerge_dvy.CheckState == CheckState.Checked || checkBoxMerge_dvy.CheckState == CheckState.Indeterminate && frameDat.dvy.HasValue)
+							frameDat.dvy = int.Parse(textBox_dvy.Text);
+						if (checkBoxMerge_dvz.CheckState == CheckState.Checked || checkBoxMerge_dvz.CheckState == CheckState.Indeterminate && frameDat.dvz.HasValue)
+							frameDat.dvz = int.Parse(textBox_dvz.Text);
+						if (checkBoxMerge_centerx.CheckState == CheckState.Checked || checkBoxMerge_centerx.CheckState == CheckState.Indeterminate && frameDat.centerx.HasValue)
+							frameDat.centerx = int.Parse(textBox_centerx.Text);
+						if (checkBoxMerge_centery.CheckState == CheckState.Checked || checkBoxMerge_centery.CheckState == CheckState.Indeterminate && frameDat.centery.HasValue)
+							frameDat.centery = int.Parse(textBox_centery.Text);
+						if (checkBoxMerge_hit_a.CheckState == CheckState.Checked || checkBoxMerge_hit_a.CheckState == CheckState.Indeterminate && frameDat.hit_a.HasValue)
+							frameDat.hit_a = int.Parse(textBox_hit_a.Text);
+						if (checkBoxMerge_hit_d.CheckState == CheckState.Checked || checkBoxMerge_hit_d.CheckState == CheckState.Indeterminate && frameDat.hit_d.HasValue)
+							frameDat.hit_d = int.Parse(textBox_hit_d.Text);
+						if (checkBoxMerge_hit_Da.CheckState == CheckState.Checked || checkBoxMerge_hit_Da.CheckState == CheckState.Indeterminate && frameDat.hit_Da.HasValue)
+							frameDat.hit_Da = int.Parse(textBox_hit_Da.Text);
+						if (checkBoxMerge_hit_Dj.CheckState == CheckState.Checked || checkBoxMerge_hit_Dj.CheckState == CheckState.Indeterminate && frameDat.hit_Dj.HasValue)
+							frameDat.hit_Dj = int.Parse(textBox_hit_Dj.Text);
+						if (checkBoxMerge_hit_Fa.CheckState == CheckState.Checked || checkBoxMerge_hit_Fa.CheckState == CheckState.Indeterminate && frameDat.hit_Fa.HasValue)
+							frameDat.hit_Fa = int.Parse(textBox_hit_Fa.Text);
+						if (checkBoxMerge_hit_Fj.CheckState == CheckState.Checked || checkBoxMerge_hit_Fj.CheckState == CheckState.Indeterminate && frameDat.hit_Fj.HasValue)
+							frameDat.hit_Fj = int.Parse(textBox_hit_Fj.Text);
+						if (checkBoxMerge_hit_j.CheckState == CheckState.Checked || checkBoxMerge_hit_j.CheckState == CheckState.Indeterminate && frameDat.hit_j.HasValue)
+							frameDat.hit_j = int.Parse(textBox_hit_j.Text);
+						if (checkBoxMerge_hit_ja.CheckState == CheckState.Checked || checkBoxMerge_hit_ja.CheckState == CheckState.Indeterminate && frameDat.hit_ja.HasValue)
+							frameDat.hit_ja = int.Parse(textBox_hit_ja.Text);
+						if (checkBoxMerge_hit_Ua.CheckState == CheckState.Checked || checkBoxMerge_hit_Ua.CheckState == CheckState.Indeterminate && frameDat.hit_Ua.HasValue)
+							frameDat.hit_Ua = int.Parse(textBox_hit_Ua.Text);
+						if (checkBoxMerge_hit_Uj.CheckState == CheckState.Checked || checkBoxMerge_hit_Uj.CheckState == CheckState.Indeterminate && frameDat.hit_Uj.HasValue)
+							frameDat.hit_Uj = int.Parse(textBox_hit_Uj.Text);
+						if (checkBoxMerge_sound.CheckState == CheckState.Checked || checkBoxMerge_sound.CheckState == CheckState.Indeterminate && frameDat.sound != null)
+							frameDat.sound = textBox_sound.Text;
 
-						frame.Text = dat;
+						frameRange.Text = frameDat.ToString();
 
 						index++;
 						next++;

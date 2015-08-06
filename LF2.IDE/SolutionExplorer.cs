@@ -79,7 +79,8 @@ namespace LF2.IDE
 			TreeNode rootNode = e.Result as TreeNode;
 			treeView.Nodes.Add(rootNode);
 			refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-			mainForm.formEventLog.Log("Solution Explorer Refreshed (" + filterToolStripComboBox.Text + "): " + stopWatch.Elapsed, true);
+			try { mainForm.formEventLog.Log("Solution Explorer Refreshed (" + filterToolStripComboBox.Text + "): " + stopWatch.Elapsed, true); }
+			catch { }
 			stopWatch.Reset();
 		}
 

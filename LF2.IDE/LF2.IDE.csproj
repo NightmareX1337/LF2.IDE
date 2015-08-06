@@ -213,7 +213,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="PluginManager.cs" />
-    <Compile Include="LF2DataUtil.cs" />
+    <Compile Include="LF2DataUtils.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

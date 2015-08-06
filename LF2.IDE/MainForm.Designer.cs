@@ -1405,7 +1405,7 @@
 			this.MainMenuStrip = this.mainMenuStrip;
 			this.Name = "MainForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "LF2.IDE";
+			this.Text = "LF2 IDE";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Closing);
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainFormForm_Closed);

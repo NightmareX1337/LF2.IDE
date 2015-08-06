@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("LF2.IDE")]
+[assembly: AssemblyTitle("LF2 IDE")]
 [assembly: AssemblyDescription("LF2 Integrated Development Environment")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("NightmareX")]
-[assembly: AssemblyProduct("LF2.IDE")]
+[assembly: AssemblyProduct("LF2 IDE")]
 [assembly: AssemblyCopyright("Copyright © NightmareX 2015")]
 [assembly: AssemblyTrademark("")]
 

@@ -61,7 +61,7 @@ namespace TagBox
 
 	#region Data classes
 
-	public class TagData
+	public class TagBoxData
 	{
 		public List<Bdy> bdys = new List<Bdy>(2);
 		public List<Itr> itrs = new List<Itr>(2);
@@ -930,9 +930,9 @@ namespace TagBox
 			}
 		}
 
-		TagData tagData = new TagData();
+		TagBoxData tagData = new TagBoxData();
 		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), ReadOnly(true)]
-		public TagData TagData
+		public TagBoxData TagData
 		{
 			get { return tagData; }
 			set

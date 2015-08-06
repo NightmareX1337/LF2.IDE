@@ -64,8 +64,8 @@ namespace LF2.IDE
 				media.Show(dockPanel);
 				formEventLog.Show(dockPanel);
 				solutionExplorer.Show(dockPanel);
-				formTag.AutoHidePortion = 500;
-				formFrame.AutoHidePortion = 300;
+				formTag.AutoHidePortion = 550;
+				formFrame.AutoHidePortion = 350;
 				formShape.AutoHidePortion = 300;
 				media.AutoHidePortion = 300;
 				formEventLog.AutoHidePortion = 250;
@@ -680,7 +680,7 @@ namespace LF2.IDE
 			if (file.EndsWith(".dat"))
 			{
 				doc.Scintilla.Text = "";
-				doc.Scintilla.AppendText(LF2DataUtil.Decrypt(file));
+				doc.Scintilla.AppendText(LF2DataUtils.Decrypt(file));
 				doc.Scintilla.UndoRedo.EmptyUndoBuffer();
 				doc.Scintilla.Modified = false;
 			}
@@ -1083,7 +1083,7 @@ namespace LF2.IDE
 			if (file.EndsWith(".dat"))
 			{
 				doc = new DocumentForm(this);
-				doc.Scintilla.AppendText(LF2DataUtil.Decrypt(file));
+				doc.Scintilla.AppendText(LF2DataUtils.Decrypt(file));
 				doc.Scintilla.UndoRedo.EmptyUndoBuffer();
 				doc.Scintilla.Modified = false;
 				doc.TabText = Path.GetFileName(file);
@@ -1120,7 +1120,7 @@ namespace LF2.IDE
 			if (file.EndsWith(".dat"))
 			{
 				DocumentForm doc = new DocumentForm(this);
-				doc.Scintilla.AppendText(LF2DataUtil.Decrypt(file));
+				doc.Scintilla.AppendText(LF2DataUtils.Decrypt(file));
 				doc.Scintilla.UndoRedo.EmptyUndoBuffer();
 				doc.Scintilla.Modified = false;
 				doc.TabText = Path.GetFileName(file);
@@ -1279,7 +1279,8 @@ namespace LF2.IDE
 				if (notify)
 					formEventLog.Error(error, "Update Checking Error");
 				else
-					formEventLog.Log("Update Check Failed", true);
+					try { formEventLog.Log("Update Check Failed", true); }
+					catch { }
 			}
 			else if (e.Result is UpdateInfo)
 			{
@@ -1289,7 +1290,8 @@ namespace LF2.IDE
 					if (updateInfo.notify)
 						MessageBox.Show(this, "I believe you have the lastest version :)", "Update Checker");
 					else
-						formEventLog.Log("Everthing looks up-to-date", true);
+						try { formEventLog.Log("Everthing looks up-to-date", true); }
+						catch { }
 				}
 				else
 				{
@@ -1303,7 +1305,8 @@ namespace LF2.IDE
 						if (updateInfo.notify)
 							MessageBox.Show(this, "Somehow, it appears that your current version is even higher than the latest one", "Update Checker");
 						else
-							formEventLog.Log("Somehow, it appears that your current version is even higher than the latest one", "Update Checker", false);
+							try { formEventLog.Log("Somehow, it appears that your current version is even higher than the latest one", "Update Checker", false); }
+							catch { }
 					}
 				}
 			}
@@ -1384,7 +1387,8 @@ namespace LF2.IDE
 		{
 			UtilManager.UtilLock = false;
 			TimeSpan ts = (TimeSpan)e.Result;
-			formEventLog.Log("Data Utils Loaded: " + ts, true);
+			try { formEventLog.Log("Data Utils Loaded: " + ts, true); }
+			catch { }
 		}
 
 		private void backgroundWorker_Plugin_DoWork(object sender, DoWorkEventArgs e)
@@ -1400,10 +1404,11 @@ namespace LF2.IDE
 		{
 			PluginLock = false;
 			TimeSpan ts = (TimeSpan)e.Result;
-			formEventLog.Log("Plugins Loaded: " + ts, true);
 			try
 			{
+				formEventLog.Log("Plugins Loaded: " + ts, true);
 				foreach (string plugin in Settings.Current.activePlugins)
+				{
 					try
 					{
 						Plugins[plugin].Register();
@@ -1412,6 +1417,7 @@ namespace LF2.IDE
 					{
 						formEventLog.Error(ex, "[" + plugin + "] : Plugin Registration Error");
 					}
+				}
 			}
 			catch (Exception ex)
 			{

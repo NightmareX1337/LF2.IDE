@@ -137,7 +137,9 @@ public struct sFrame
 	int bdy_y;
 	int bdy_w;
 	int bdy_h;
+	[MarshalAs(UnmanagedType.LPStr)]
 	string fname;
+	[MarshalAs(UnmanagedType.LPStr)]
 	string sound;
 }
 
@@ -179,12 +181,14 @@ public struct sDataFile
 	int[] pic_col;
 	int id;
 	int type;
-	string small_bmp;	//I believe at least some of this has to do with small image
-	[MarshalAs(UnmanagedType.LPArray)]
-	string face_bmp;	//I believe at least some of this has to do with small image
+	[MarshalAs(UnmanagedType.LPStr)]
+	string small_bmp;
+	[MarshalAs(UnmanagedType.LPStr)]
+	string face_bmp;
 	[MarshalAs(UnmanagedType.LPArray)]
 	sFrame[] frames;
-	string name;	//not actually certain that the length is 12, seems like voodoo magic
+	[MarshalAs(UnmanagedType.LPStr)]
+	string name;
 }
 
 [StructLayout(LayoutKind.Sequential)]
@@ -206,6 +210,7 @@ public struct sSpawn
 public struct sPhase
 {
 	int bound;
+	[MarshalAs(UnmanagedType.LPStr)]
 	string music;
 	int spawn_count;
 	[MarshalAs(UnmanagedType.LPArray)]
@@ -217,6 +222,7 @@ public struct sPhase
 public struct sStage
 {
 	int phase_count;
+	[MarshalAs(UnmanagedType.LPArray)]
 	sPhase[] phases;
 }
 
@@ -230,12 +236,20 @@ public struct sBackground
 	int perspective2;
 	int shadow;
 	int layer_count;
+	[MarshalAs(UnmanagedType.LPArray)]
 	string[] layer_bmps;
+	[MarshalAs(UnmanagedType.LPStr)]
 	string shadow_bmp;
+	[MarshalAs(UnmanagedType.LPStr)]
 	string name;
+	[MarshalAs(UnmanagedType.LPArray)]
 	int[] transparency;
+	[MarshalAs(UnmanagedType.LPArray)]
 	int[] layer_width;
+	[MarshalAs(UnmanagedType.LPArray)]
 	int[] layer_x;
+	[MarshalAs(UnmanagedType.LPArray)]
 	int[] layer_y;
+	[MarshalAs(UnmanagedType.LPArray)]
 	int[] layer_height;
 }

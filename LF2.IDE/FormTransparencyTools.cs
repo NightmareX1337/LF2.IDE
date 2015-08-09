@@ -516,6 +516,19 @@ namespace LF2.IDE
 		}
 
 		bool editing = false;
+		private int editingLevel = 0;
+
+		public void EditIn()
+		{
+			editingLevel++;
+			editing = editingLevel > 0;
+		}
+
+		public void EditOut()
+		{
+			editingLevel--;
+			editing = editingLevel > 0;
+		}
 
 		void BoundTextChanged(object sender, EventArgs e)
 		{
@@ -530,7 +543,7 @@ namespace LF2.IDE
 
 		void PictureBoxOriginalRectangleChanged(object sender, EventArgs e)
 		{
-			editing = true;
+			EditIn();
 
 			xBox.Text = pictureBoxOriginal.Rectangle.X.ToString();
 			yBox.Text = pictureBoxOriginal.Rectangle.Y.ToString();
@@ -546,7 +559,7 @@ namespace LF2.IDE
 			rightBox.Refresh();
 			bottomBox.Refresh();
 
-			editing = false;
+			EditOut();
 		}
 	}
 }

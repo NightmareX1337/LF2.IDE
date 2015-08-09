@@ -66,7 +66,8 @@ namespace LF2.IDE
 		public static readonly string exeDir = Path.GetDirectoryName(Application.ExecutablePath);
 
 		public static readonly string langPath = exeDir + "\\data.lang.xml";
-		public static readonly string dockingPath = exeDir + "\\docking.xml";
+		public static readonly string dockingPath = Settings.SettingsDir + "\\docking.xml";
+		public static readonly string nearDockingPath = exeDir + "\\docking.xml";
 		public static readonly string utilDir = exeDir + "\\DataUtils";
 		public static readonly string plugDir = exeDir + "\\Plugins";
 		public static readonly string templateDir = exeDir + "\\Templates";

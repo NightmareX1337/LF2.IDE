@@ -1,6 +1,6 @@
 ﻿namespace LF2.IDE
 {
-	partial class FormTag
+	partial class FormDesing
 	{
 		/// <summary>
 		/// Designer variable used to keep track of non-visual components.
@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTag));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDesing));
 			this.cpoint_decrease = new System.Windows.Forms.TextBox();
 			this.cpoint_x = new System.Windows.Forms.TextBox();
 			this.label_c_throwvz = new System.Windows.Forms.Label();
@@ -84,6 +84,7 @@
 			this.button_Clip = new System.Windows.Forms.Button();
 			this.tabControl_Tags = new System.Windows.Forms.TabControl();
 			this.tabPage_bdy = new System.Windows.Forms.TabPage();
+			this.label1 = new System.Windows.Forms.Label();
 			this.label_bdyHint = new System.Windows.Forms.Label();
 			this.button_bdyReset = new System.Windows.Forms.Button();
 			this.bdy_h = new System.Windows.Forms.TextBox();
@@ -155,6 +156,7 @@
 			this.label_w_x = new System.Windows.Forms.Label();
 			this.label_w_Kind = new System.Windows.Forms.Label();
 			this.tabPage_o = new System.Windows.Forms.TabPage();
+			this.button_oReset = new System.Windows.Forms.Button();
 			this.groupBox_OpointPanel = new System.Windows.Forms.GroupBox();
 			this.progressBar_CacheCreation = new System.Windows.Forms.ProgressBar();
 			this.label_CacheCreationProgress = new System.Windows.Forms.Label();
@@ -172,7 +174,7 @@
 			this.label_o_facing = new System.Windows.Forms.Label();
 			this.label_o_oid = new System.Windows.Forms.Label();
 			this.label_o_dvy = new System.Windows.Forms.Label();
-			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.tabPage_center = new System.Windows.Forms.TabPage();
 			this.centery = new System.Windows.Forms.TextBox();
 			this.button_centerReset = new System.Windows.Forms.Button();
 			this.centerx = new System.Windows.Forms.TextBox();
@@ -190,6 +192,10 @@
 			this.checkBox_c = new System.Windows.Forms.CheckBox();
 			this.checkBox_b = new System.Windows.Forms.CheckBox();
 			this.checkBox_center = new System.Windows.Forms.CheckBox();
+			this.buttonSyncToDesing = new System.Windows.Forms.Button();
+			this.buttonSyncToEditor = new System.Windows.Forms.Button();
+			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.textBox_caption = new System.Windows.Forms.TextBox();
 			this.tagBox = new TagBox.TagBox();
 			this.tabPage_b.SuspendLayout();
 			this.tabPage_c.SuspendLayout();
@@ -200,7 +206,11 @@
 			this.tabPage_w.SuspendLayout();
 			this.tabPage_o.SuspendLayout();
 			this.groupBox_OpointPanel.SuspendLayout();
-			this.tabPage1.SuspendLayout();
+			this.tabPage_center.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+			this.splitContainer1.Panel1.SuspendLayout();
+			this.splitContainer1.Panel2.SuspendLayout();
+			this.splitContainer1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// cpoint_decrease
@@ -209,6 +219,7 @@
 			this.cpoint_decrease.Name = "cpoint_decrease";
 			this.cpoint_decrease.Size = new System.Drawing.Size(55, 20);
 			this.cpoint_decrease.TabIndex = 14;
+			this.cpoint_decrease.TextChanged += new System.EventHandler(this.cpoint_decrease_TextChanged);
 			// 
 			// cpoint_x
 			// 
@@ -416,6 +427,7 @@
 			this.cpoint_kind.Name = "cpoint_kind";
 			this.cpoint_kind.Size = new System.Drawing.Size(121, 21);
 			this.cpoint_kind.TabIndex = 2;
+			this.cpoint_kind.TextChanged += new System.EventHandler(this.cpoint_kind_TextChanged);
 			// 
 			// button_bReset
 			// 
@@ -457,15 +469,16 @@
 			this.cpoint_fronthurtact.Name = "cpoint_fronthurtact";
 			this.cpoint_fronthurtact.Size = new System.Drawing.Size(55, 20);
 			this.cpoint_fronthurtact.TabIndex = 17;
+			this.cpoint_fronthurtact.TextChanged += new System.EventHandler(this.cpoint_fronthurtact_TextChanged);
 			// 
 			// label_cVectorHint
 			// 
 			this.label_cVectorHint.AutoSize = true;
-			this.label_cVectorHint.Location = new System.Drawing.Point(117, 267);
+			this.label_cVectorHint.Location = new System.Drawing.Point(6, 238);
 			this.label_cVectorHint.Name = "label_cVectorHint";
-			this.label_cVectorHint.Size = new System.Drawing.Size(137, 13);
+			this.label_cVectorHint.Size = new System.Drawing.Size(143, 26);
 			this.label_cVectorHint.TabIndex = 71;
-			this.label_cVectorHint.Text = "Right click to draw a vector";
+			this.label_cVectorHint.Text = "<Left Click> Coordinate point\r\n<Right Click> Draw vector";
 			// 
 			// cpoint_cover
 			// 
@@ -477,7 +490,7 @@
 			this.cpoint_cover.Name = "cpoint_cover";
 			this.cpoint_cover.Size = new System.Drawing.Size(55, 21);
 			this.cpoint_cover.TabIndex = 16;
-			this.cpoint_cover.TextChanged += new System.EventHandler(this.CoverChanged);
+			this.cpoint_cover.TextChanged += new System.EventHandler(this.CCoverChanged);
 			// 
 			// cpoint_dircontrol
 			// 
@@ -501,6 +514,7 @@
 			this.cpoint_hurtable.Name = "cpoint_hurtable";
 			this.cpoint_hurtable.Size = new System.Drawing.Size(55, 21);
 			this.cpoint_hurtable.TabIndex = 12;
+			this.cpoint_hurtable.TextChanged += new System.EventHandler(this.cpoint_hurtable_TextChanged);
 			// 
 			// label_o_action
 			// 
@@ -517,6 +531,7 @@
 			this.cpoint_throwinjury.Name = "cpoint_throwinjury";
 			this.cpoint_throwinjury.Size = new System.Drawing.Size(55, 20);
 			this.cpoint_throwinjury.TabIndex = 13;
+			this.cpoint_throwinjury.TextChanged += new System.EventHandler(this.cpoint_throwinjury_TextChanged);
 			// 
 			// button_cReset
 			// 
@@ -534,6 +549,7 @@
 			this.cpoint_throwvz.Name = "cpoint_throwvz";
 			this.cpoint_throwvz.Size = new System.Drawing.Size(55, 20);
 			this.cpoint_throwvz.TabIndex = 11;
+			this.cpoint_throwvz.TextChanged += new System.EventHandler(this.cpoint_throwvz_TextChanged);
 			// 
 			// cpoint_throwvy
 			// 
@@ -557,6 +573,7 @@
 			this.cpoint_taction.Name = "cpoint_taction";
 			this.cpoint_taction.Size = new System.Drawing.Size(55, 20);
 			this.cpoint_taction.TabIndex = 8;
+			this.cpoint_taction.TextChanged += new System.EventHandler(this.cpoint_taction_TextChanged);
 			// 
 			// cpoint_aaction
 			// 
@@ -564,6 +581,7 @@
 			this.cpoint_aaction.Name = "cpoint_aaction";
 			this.cpoint_aaction.Size = new System.Drawing.Size(55, 20);
 			this.cpoint_aaction.TabIndex = 7;
+			this.cpoint_aaction.TextChanged += new System.EventHandler(this.cpoint_aaction_TextChanged);
 			// 
 			// cpoint_injury
 			// 
@@ -571,6 +589,7 @@
 			this.cpoint_injury.Name = "cpoint_injury";
 			this.cpoint_injury.Size = new System.Drawing.Size(55, 20);
 			this.cpoint_injury.TabIndex = 5;
+			this.cpoint_injury.TextChanged += new System.EventHandler(this.cpoint_injury_TextChanged);
 			// 
 			// cpoint_y
 			// 
@@ -661,7 +680,7 @@
 			this.cpoint_vaction.Name = "cpoint_vaction";
 			this.cpoint_vaction.Size = new System.Drawing.Size(55, 21);
 			this.cpoint_vaction.TabIndex = 6;
-			this.cpoint_vaction.SelectedIndexChanged += new System.EventHandler(this.VactionChanged);
+			this.cpoint_vaction.TextChanged += new System.EventHandler(this.VactionChanged);
 			// 
 			// cpoint_backhurtact
 			// 
@@ -669,6 +688,7 @@
 			this.cpoint_backhurtact.Name = "cpoint_backhurtact";
 			this.cpoint_backhurtact.Size = new System.Drawing.Size(55, 20);
 			this.cpoint_backhurtact.TabIndex = 18;
+			this.cpoint_backhurtact.TextChanged += new System.EventHandler(this.cpoint_backhurtact_TextChanged);
 			// 
 			// label_o_Kind
 			// 
@@ -744,7 +764,7 @@
 			this.tabControl_Tags.Controls.Add(this.tabPage_o);
 			this.tabControl_Tags.Controls.Add(this.tabPage_c);
 			this.tabControl_Tags.Controls.Add(this.tabPage_b);
-			this.tabControl_Tags.Controls.Add(this.tabPage1);
+			this.tabControl_Tags.Controls.Add(this.tabPage_center);
 			this.tabControl_Tags.Location = new System.Drawing.Point(164, 4);
 			this.tabControl_Tags.Name = "tabControl_Tags";
 			this.tabControl_Tags.SelectedIndex = 0;
@@ -756,6 +776,7 @@
 			// tabPage_bdy
 			// 
 			this.tabPage_bdy.BackColor = System.Drawing.Color.Honeydew;
+			this.tabPage_bdy.Controls.Add(this.label1);
 			this.tabPage_bdy.Controls.Add(this.label_bdyHint);
 			this.tabPage_bdy.Controls.Add(this.button_bdyReset);
 			this.tabPage_bdy.Controls.Add(this.bdy_h);
@@ -774,7 +795,16 @@
 			this.tabPage_bdy.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_bdy.TabIndex = 0;
 			this.tabPage_bdy.Text = "bdy";
-			this.tabPage_bdy.UseVisualStyleBackColor = true;
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(6, 165);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(255, 52);
+			this.label1.TabIndex = 17;
+			this.label1.Text = "<Left Click> Draw bdy rectangle\r\n<Ctrl+Left Click> Create and draw new bdy rectan" +
+    "gle\r\n<Shift+Left Click> Select bdy\r\n<Shift+Right Click> Delete selected bdy";
 			// 
 			// label_bdyHint
 			// 
@@ -884,6 +914,7 @@
 			this.bdy_kind.Name = "bdy_kind";
 			this.bdy_kind.Size = new System.Drawing.Size(86, 21);
 			this.bdy_kind.TabIndex = 2;
+			this.bdy_kind.TextChanged += new System.EventHandler(this.bdy_kind_TextChanged);
 			// 
 			// tabPage_itr
 			// 
@@ -947,6 +978,7 @@
 			this.itr_injury.Name = "itr_injury";
 			this.itr_injury.Size = new System.Drawing.Size(55, 20);
 			this.itr_injury.TabIndex = 13;
+			this.itr_injury.TextChanged += new System.EventHandler(this.itr_injury_TextChanged);
 			// 
 			// button_itrReset
 			// 
@@ -964,6 +996,7 @@
 			this.itr_bdefend.Name = "itr_bdefend";
 			this.itr_bdefend.Size = new System.Drawing.Size(55, 20);
 			this.itr_bdefend.TabIndex = 12;
+			this.itr_bdefend.TextChanged += new System.EventHandler(this.itr_bdefend_TextChanged);
 			// 
 			// itr_fall
 			// 
@@ -971,6 +1004,7 @@
 			this.itr_fall.Name = "itr_fall";
 			this.itr_fall.Size = new System.Drawing.Size(55, 20);
 			this.itr_fall.TabIndex = 11;
+			this.itr_fall.TextChanged += new System.EventHandler(this.itr_fall_TextChanged);
 			// 
 			// itr_vrest
 			// 
@@ -978,6 +1012,7 @@
 			this.itr_vrest.Name = "itr_vrest";
 			this.itr_vrest.Size = new System.Drawing.Size(55, 20);
 			this.itr_vrest.TabIndex = 10;
+			this.itr_vrest.TextChanged += new System.EventHandler(this.itr_vrest_TextChanged);
 			// 
 			// itr_arest
 			// 
@@ -985,6 +1020,7 @@
 			this.itr_arest.Name = "itr_arest";
 			this.itr_arest.Size = new System.Drawing.Size(55, 20);
 			this.itr_arest.TabIndex = 9;
+			this.itr_arest.TextChanged += new System.EventHandler(this.itr_arest_TextChanged);
 			// 
 			// itr_dvy
 			// 
@@ -1032,6 +1068,7 @@
 			this.itr_caughtact.Name = "itr_caughtact";
 			this.itr_caughtact.Size = new System.Drawing.Size(55, 20);
 			this.itr_caughtact.TabIndex = 17;
+			this.itr_caughtact.TextChanged += new System.EventHandler(this.itr_caughtact_TextChanged);
 			// 
 			// itr_catchingact
 			// 
@@ -1039,6 +1076,7 @@
 			this.itr_catchingact.Name = "itr_catchingact";
 			this.itr_catchingact.Size = new System.Drawing.Size(55, 20);
 			this.itr_catchingact.TabIndex = 16;
+			this.itr_catchingact.TextChanged += new System.EventHandler(this.itr_catchingact_TextChanged);
 			// 
 			// itr_zwidth
 			// 
@@ -1046,6 +1084,7 @@
 			this.itr_zwidth.Name = "itr_zwidth";
 			this.itr_zwidth.Size = new System.Drawing.Size(55, 20);
 			this.itr_zwidth.TabIndex = 14;
+			this.itr_zwidth.TextChanged += new System.EventHandler(this.itr_zwidth_TextChanged);
 			// 
 			// itr_x
 			// 
@@ -1139,11 +1178,13 @@
 			// label_itrVectorHint
 			// 
 			this.label_itrVectorHint.AutoSize = true;
-			this.label_itrVectorHint.Location = new System.Drawing.Point(102, 242);
+			this.label_itrVectorHint.Location = new System.Drawing.Point(6, 242);
 			this.label_itrVectorHint.Name = "label_itrVectorHint";
-			this.label_itrVectorHint.Size = new System.Drawing.Size(137, 13);
+			this.label_itrVectorHint.Size = new System.Drawing.Size(246, 65);
 			this.label_itrVectorHint.TabIndex = 1;
-			this.label_itrVectorHint.Text = "Right click to draw a vector";
+			this.label_itrVectorHint.Text = "<Left Click> Draw itr rectangle\r\n<Right Click> Draw itr vector\r\n<Ctrl+Left Click>" +
+    " Create and draw new itr rectangle\r\n<Shift+Left Click> Select itr\r\n<Shift+Right " +
+    "Click> Delete selected itr";
 			// 
 			// label_itr_caughtact
 			// 
@@ -1221,6 +1262,7 @@
 			this.itr_effect.Name = "itr_effect";
 			this.itr_effect.Size = new System.Drawing.Size(55, 21);
 			this.itr_effect.TabIndex = 15;
+			this.itr_effect.TextChanged += new System.EventHandler(this.itr_effect_TextChanged);
 			// 
 			// itr_kind
 			// 
@@ -1245,6 +1287,7 @@
 			this.itr_kind.Name = "itr_kind";
 			this.itr_kind.Size = new System.Drawing.Size(121, 21);
 			this.itr_kind.TabIndex = 2;
+			this.itr_kind.TextChanged += new System.EventHandler(this.itr_kind_TextChanged);
 			// 
 			// tabPage_w
 			// 
@@ -1302,7 +1345,7 @@
 			this.wpoint_weaponact.Name = "wpoint_weaponact";
 			this.wpoint_weaponact.Size = new System.Drawing.Size(58, 21);
 			this.wpoint_weaponact.TabIndex = 5;
-			this.wpoint_weaponact.SelectedIndexChanged += new System.EventHandler(this.WeaponactChanged);
+			this.wpoint_weaponact.TextChanged += new System.EventHandler(this.WeaponactChanged);
 			// 
 			// label_wHint
 			// 
@@ -1320,9 +1363,9 @@
 			this.label_wVectorHint.AutoSize = true;
 			this.label_wVectorHint.Location = new System.Drawing.Point(6, 142);
 			this.label_wVectorHint.Name = "label_wVectorHint";
-			this.label_wVectorHint.Size = new System.Drawing.Size(137, 13);
+			this.label_wVectorHint.Size = new System.Drawing.Size(143, 26);
 			this.label_wVectorHint.TabIndex = 42;
-			this.label_wVectorHint.Text = "Right click to draw a vector";
+			this.label_wVectorHint.Text = "<Left Click> Coordinate point\r\n<Right Click> Draw vector";
 			// 
 			// wpoint_dvz
 			// 
@@ -1330,6 +1373,7 @@
 			this.wpoint_dvz.Name = "wpoint_dvz";
 			this.wpoint_dvz.Size = new System.Drawing.Size(58, 20);
 			this.wpoint_dvz.TabIndex = 10;
+			this.wpoint_dvz.TextChanged += new System.EventHandler(this.wpoint_dvz_TextChanged);
 			// 
 			// button_wReset
 			// 
@@ -1363,6 +1407,7 @@
 			this.wpoint_attacking.Name = "wpoint_attacking";
 			this.wpoint_attacking.Size = new System.Drawing.Size(58, 20);
 			this.wpoint_attacking.TabIndex = 6;
+			this.wpoint_attacking.TextChanged += new System.EventHandler(this.wpoint_attacking_TextChanged);
 			// 
 			// wpoint_y
 			// 
@@ -1390,7 +1435,7 @@
 			this.wpoint_cover.Name = "wpoint_cover";
 			this.wpoint_cover.Size = new System.Drawing.Size(58, 21);
 			this.wpoint_cover.TabIndex = 7;
-			this.wpoint_cover.TextChanged += new System.EventHandler(this.CoverChanged);
+			this.wpoint_cover.TextChanged += new System.EventHandler(this.WCoverChanged);
 			// 
 			// wpoint_kind
 			// 
@@ -1403,6 +1448,7 @@
 			this.wpoint_kind.Name = "wpoint_kind";
 			this.wpoint_kind.Size = new System.Drawing.Size(91, 21);
 			this.wpoint_kind.TabIndex = 2;
+			this.wpoint_kind.TextChanged += new System.EventHandler(this.wpoint_kind_TextChanged);
 			// 
 			// label_w_dvz
 			// 
@@ -1488,6 +1534,7 @@
 			// tabPage_o
 			// 
 			this.tabPage_o.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(240)))), ((int)(((byte)(255)))));
+			this.tabPage_o.Controls.Add(this.button_oReset);
 			this.tabPage_o.Controls.Add(this.groupBox_OpointPanel);
 			this.tabPage_o.Controls.Add(this.label_oHint);
 			this.tabPage_o.Controls.Add(this.label_oVectorHint);
@@ -1514,6 +1561,16 @@
 			this.tabPage_o.TabIndex = 3;
 			this.tabPage_o.Text = "o";
 			// 
+			// button_oReset
+			// 
+			this.button_oReset.Location = new System.Drawing.Point(6, 137);
+			this.button_oReset.Name = "button_oReset";
+			this.button_oReset.Size = new System.Drawing.Size(79, 23);
+			this.button_oReset.TabIndex = 57;
+			this.button_oReset.Text = "Reset";
+			this.button_oReset.UseVisualStyleBackColor = true;
+			this.button_oReset.Click += new System.EventHandler(this.Reset_O);
+			// 
 			// groupBox_OpointPanel
 			// 
 			this.groupBox_OpointPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1522,9 +1579,9 @@
 			this.groupBox_OpointPanel.Controls.Add(this.progressBar_CacheCreation);
 			this.groupBox_OpointPanel.Controls.Add(this.label_CacheCreationProgress);
 			this.groupBox_OpointPanel.Controls.Add(this.button_CreateOpointCache);
-			this.groupBox_OpointPanel.Location = new System.Drawing.Point(6, 137);
+			this.groupBox_OpointPanel.Location = new System.Drawing.Point(6, 166);
 			this.groupBox_OpointPanel.Name = "groupBox_OpointPanel";
-			this.groupBox_OpointPanel.Size = new System.Drawing.Size(298, 192);
+			this.groupBox_OpointPanel.Size = new System.Drawing.Size(298, 116);
 			this.groupBox_OpointPanel.TabIndex = 56;
 			this.groupBox_OpointPanel.TabStop = false;
 			this.groupBox_OpointPanel.Text = "Opoint Viewer";
@@ -1576,9 +1633,9 @@
 			this.label_oVectorHint.AutoSize = true;
 			this.label_oVectorHint.Location = new System.Drawing.Point(120, 108);
 			this.label_oVectorHint.Name = "label_oVectorHint";
-			this.label_oVectorHint.Size = new System.Drawing.Size(137, 13);
+			this.label_oVectorHint.Size = new System.Drawing.Size(143, 26);
 			this.label_oVectorHint.TabIndex = 54;
-			this.label_oVectorHint.Text = "Right click to draw a vector";
+			this.label_oVectorHint.Text = "<Left Click> Coordinate point\r\n<Right Click> Draw vector";
 			// 
 			// opoint_facing
 			// 
@@ -1586,6 +1643,7 @@
 			this.opoint_facing.Name = "opoint_facing";
 			this.opoint_facing.Size = new System.Drawing.Size(60, 20);
 			this.opoint_facing.TabIndex = 9;
+			this.opoint_facing.TextChanged += new System.EventHandler(this.opoint_facing_TextChanged);
 			// 
 			// opoint_dvy
 			// 
@@ -1647,6 +1705,7 @@
 			this.opoint_kind.Name = "opoint_kind";
 			this.opoint_kind.Size = new System.Drawing.Size(69, 21);
 			this.opoint_kind.TabIndex = 2;
+			this.opoint_kind.TextChanged += new System.EventHandler(this.opoint_kind_TextChanged);
 			// 
 			// label_o_facing
 			// 
@@ -1675,24 +1734,24 @@
 			this.label_o_dvy.TabIndex = 2;
 			this.label_o_dvy.Text = "dvy :";
 			// 
-			// tabPage1
+			// tabPage_center
 			// 
-			this.tabPage1.Controls.Add(this.centery);
-			this.tabPage1.Controls.Add(this.button_centerReset);
-			this.tabPage1.Controls.Add(this.centerx);
-			this.tabPage1.Controls.Add(this.label_center_y);
-			this.tabPage1.Controls.Add(this.label_center_x);
-			this.tabPage1.Location = new System.Drawing.Point(4, 22);
-			this.tabPage1.Name = "tabPage1";
-			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(310, 424);
-			this.tabPage1.TabIndex = 6;
-			this.tabPage1.Text = "center";
-			this.tabPage1.UseVisualStyleBackColor = true;
+			this.tabPage_center.Controls.Add(this.centery);
+			this.tabPage_center.Controls.Add(this.button_centerReset);
+			this.tabPage_center.Controls.Add(this.centerx);
+			this.tabPage_center.Controls.Add(this.label_center_y);
+			this.tabPage_center.Controls.Add(this.label_center_x);
+			this.tabPage_center.Location = new System.Drawing.Point(4, 22);
+			this.tabPage_center.Name = "tabPage_center";
+			this.tabPage_center.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage_center.Size = new System.Drawing.Size(310, 424);
+			this.tabPage_center.TabIndex = 6;
+			this.tabPage_center.Text = "center";
+			this.tabPage_center.UseVisualStyleBackColor = true;
 			// 
 			// centery
 			// 
-			this.centery.Location = new System.Drawing.Point(30, 32);
+			this.centery.Location = new System.Drawing.Point(60, 32);
 			this.centery.Name = "centery";
 			this.centery.Size = new System.Drawing.Size(55, 20);
 			this.centery.TabIndex = 29;
@@ -1700,16 +1759,16 @@
 			// 
 			// button_centerReset
 			// 
-			this.button_centerReset.Location = new System.Drawing.Point(6, 58);
+			this.button_centerReset.Location = new System.Drawing.Point(40, 58);
 			this.button_centerReset.Name = "button_centerReset";
-			this.button_centerReset.Size = new System.Drawing.Size(79, 23);
+			this.button_centerReset.Size = new System.Drawing.Size(75, 23);
 			this.button_centerReset.TabIndex = 30;
 			this.button_centerReset.Text = "Reset";
 			this.button_centerReset.UseVisualStyleBackColor = true;
 			// 
 			// centerx
 			// 
-			this.centerx.Location = new System.Drawing.Point(30, 6);
+			this.centerx.Location = new System.Drawing.Point(60, 6);
 			this.centerx.Name = "centerx";
 			this.centerx.Size = new System.Drawing.Size(55, 20);
 			this.centerx.TabIndex = 28;
@@ -1720,18 +1779,18 @@
 			this.label_center_y.AutoSize = true;
 			this.label_center_y.Location = new System.Drawing.Point(6, 35);
 			this.label_center_y.Name = "label_center_y";
-			this.label_center_y.Size = new System.Drawing.Size(18, 13);
+			this.label_center_y.Size = new System.Drawing.Size(48, 13);
 			this.label_center_y.TabIndex = 32;
-			this.label_center_y.Text = "y :";
+			this.label_center_y.Text = "centery :";
 			// 
 			// label_center_x
 			// 
 			this.label_center_x.AutoSize = true;
 			this.label_center_x.Location = new System.Drawing.Point(6, 9);
 			this.label_center_x.Name = "label_center_x";
-			this.label_center_x.Size = new System.Drawing.Size(18, 13);
+			this.label_center_x.Size = new System.Drawing.Size(48, 13);
 			this.label_center_x.TabIndex = 31;
-			this.label_center_x.Text = "x :";
+			this.label_center_x.Text = "centerx :";
 			// 
 			// toolTip_Hint
 			// 
@@ -1746,16 +1805,15 @@
 			// 
 			this.checkBoxLinkage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.checkBoxLinkage.Appearance = System.Windows.Forms.Appearance.Button;
+			this.checkBoxLinkage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.checkBoxLinkage.ImageIndex = 1;
 			this.checkBoxLinkage.ImageList = this.imageList;
 			this.checkBoxLinkage.Location = new System.Drawing.Point(12, 431);
 			this.checkBoxLinkage.Name = "checkBoxLinkage";
 			this.checkBoxLinkage.Size = new System.Drawing.Size(99, 23);
 			this.checkBoxLinkage.TabIndex = 112;
-			this.checkBoxLinkage.Text = "Link with Editor";
 			this.checkBoxLinkage.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-			this.toolTip_Hint.SetToolTip(this.checkBoxLinkage, "Apply changes immediately");
+			this.toolTip_Hint.SetToolTip(this.checkBoxLinkage, "Sync text editor with desing panel\r\nThis will cause to apply changes immediately");
 			this.checkBoxLinkage.UseVisualStyleBackColor = true;
 			this.checkBoxLinkage.CheckedChanged += new System.EventHandler(this.checkBoxLinkage_CheckedChanged);
 			// 
@@ -1865,6 +1923,60 @@
 			this.checkBox_center.UseVisualStyleBackColor = true;
 			this.checkBox_center.CheckedChanged += new System.EventHandler(this.checkBox_tag_CheckedChanged);
 			// 
+			// buttonSyncToDesing
+			// 
+			this.buttonSyncToDesing.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buttonSyncToDesing.Location = new System.Drawing.Point(0, 0);
+			this.buttonSyncToDesing.Name = "buttonSyncToDesing";
+			this.buttonSyncToDesing.Size = new System.Drawing.Size(70, 23);
+			this.buttonSyncToDesing.TabIndex = 101;
+			this.buttonSyncToDesing.TabStop = false;
+			this.buttonSyncToDesing.Text = ">>  Sync";
+			this.buttonSyncToDesing.UseVisualStyleBackColor = true;
+			this.buttonSyncToDesing.Click += new System.EventHandler(this.buttonSyncToDesing_Click);
+			// 
+			// buttonSyncToEditor
+			// 
+			this.buttonSyncToEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buttonSyncToEditor.Location = new System.Drawing.Point(0, 0);
+			this.buttonSyncToEditor.Name = "buttonSyncToEditor";
+			this.buttonSyncToEditor.Size = new System.Drawing.Size(72, 23);
+			this.buttonSyncToEditor.TabIndex = 101;
+			this.buttonSyncToEditor.TabStop = false;
+			this.buttonSyncToEditor.Text = "<<  Sync";
+			this.buttonSyncToEditor.UseVisualStyleBackColor = true;
+			this.buttonSyncToEditor.Click += new System.EventHandler(this.buttonSyncToEditor_Click);
+			// 
+			// splitContainer1
+			// 
+			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.splitContainer1.IsSplitterFixed = true;
+			this.splitContainer1.Location = new System.Drawing.Point(12, 402);
+			this.splitContainer1.Name = "splitContainer1";
+			// 
+			// splitContainer1.Panel1
+			// 
+			this.splitContainer1.Panel1.Controls.Add(this.buttonSyncToEditor);
+			// 
+			// splitContainer1.Panel2
+			// 
+			this.splitContainer1.Panel2.Controls.Add(this.buttonSyncToDesing);
+			this.splitContainer1.Size = new System.Drawing.Size(146, 23);
+			this.splitContainer1.SplitterDistance = 72;
+			this.splitContainer1.TabIndex = 113;
+			this.splitContainer1.TabStop = false;
+			// 
+			// textBox_caption
+			// 
+			this.textBox_caption.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBox_caption.Location = new System.Drawing.Point(71, 12);
+			this.textBox_caption.Name = "textBox_caption";
+			this.textBox_caption.Size = new System.Drawing.Size(87, 20);
+			this.textBox_caption.TabIndex = 114;
+			this.textBox_caption.TextChanged += new System.EventHandler(this.textBox_caption_TextChanged);
+			// 
 			// tagBox
 			// 
 			this.tagBox.ActiveBdyIndex = null;
@@ -1892,23 +2004,27 @@
 			this.tagBox.ShowBoundToolTip = true;
 			this.tagBox.ShowCoordinateSystem = true;
 			this.tagBox.ShowCoordinateToolTip = true;
-			this.tagBox.Size = new System.Drawing.Size(146, 387);
+			this.tagBox.Size = new System.Drawing.Size(146, 358);
 			this.tagBox.Smoothing = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 			this.tagBox.TabIndex = 111;
 			this.tagBox.TabStop = false;
 			this.tagBox.Trancparency = true;
 			this.tagBox.VectorDivision = 4;
+			this.tagBox.ActiveBdyChanged += new System.EventHandler(this.tagBox_ActiveBdyChanged);
+			this.tagBox.ActiveItrChanged += new System.EventHandler(this.tagBox_ActiveItrChanged);
 			this.tagBox.ActiveRectangleChanged += new System.EventHandler(this.TagBoxRectangleChanged);
 			this.tagBox.ActivePointChanged += new System.EventHandler(this.TagBoxPointChanged);
 			this.tagBox.ActiveVectorChanged += new System.EventHandler(this.TagBoxVectorChanged);
 			this.tagBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tagBox_MouseUp);
 			// 
-			// FormTag
+			// FormDesing
 			// 
-			this.AutoHidePortion = 450D;
+			this.AutoHidePortion = 500D;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(484, 466);
+			this.Controls.Add(this.textBox_caption);
+			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.checkBoxLinkage);
 			this.Controls.Add(this.tagBox);
 			this.Controls.Add(this.checkBox_center);
@@ -1932,12 +2048,12 @@
 			this.KeyPreview = true;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.Name = "FormTag";
+			this.Name = "FormDesing";
 			this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockRightAutoHide;
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.TabText = "Tag";
-			this.Text = "Tag";
+			this.TabText = "Desing";
+			this.Text = "Desing";
 			this.ToolTipText = "Tag Generator";
 			this.Load += new System.EventHandler(this.FormTag_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormTag_KeyDown);
@@ -1958,8 +2074,12 @@
 			this.tabPage_o.PerformLayout();
 			this.groupBox_OpointPanel.ResumeLayout(false);
 			this.groupBox_OpointPanel.PerformLayout();
-			this.tabPage1.ResumeLayout(false);
-			this.tabPage1.PerformLayout();
+			this.tabPage_center.ResumeLayout(false);
+			this.tabPage_center.PerformLayout();
+			this.splitContainer1.Panel1.ResumeLayout(false);
+			this.splitContainer1.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+			this.splitContainer1.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -2115,7 +2235,7 @@
 		public System.Windows.Forms.CheckBox checkBox_o;
 		public System.Windows.Forms.CheckBox checkBox_c;
 		public System.Windows.Forms.CheckBox checkBox_b;
-		private System.Windows.Forms.TabPage tabPage1;
+		private System.Windows.Forms.TabPage tabPage_center;
 		public System.Windows.Forms.CheckBox checkBox_center;
 		public TagBox.TagBox tagBox;
 		public System.Windows.Forms.TextBox centery;
@@ -2123,7 +2243,13 @@
 		public System.Windows.Forms.TextBox centerx;
 		public System.Windows.Forms.Label label_center_y;
 		public System.Windows.Forms.Label label_center_x;
-		private System.Windows.Forms.CheckBox checkBoxLinkage;
 		private System.Windows.Forms.ImageList imageList;
+		public System.Windows.Forms.Button buttonSyncToDesing;
+		public System.Windows.Forms.Button buttonSyncToEditor;
+		public System.Windows.Forms.Button button_oReset;
+		public System.Windows.Forms.Label label1;
+		public System.Windows.Forms.CheckBox checkBoxLinkage;
+		private System.Windows.Forms.SplitContainer splitContainer1;
+		public System.Windows.Forms.TextBox textBox_caption;
 	}
 }

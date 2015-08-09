@@ -152,9 +152,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WeifenLuo.WinFormsUI.Docking">
       <HintPath>..\Assemblies\WeifenLuo.WinFormsUI.Docking\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
@@ -165,6 +167,11 @@
     </Compile>
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="TagBox.cs">
       <SubType>Component</SubType>
@@ -209,9 +216,6 @@
       <DependentUpon>FormTransparencyTools.cs</DependentUpon>
     </Compile>
     <None Include="app.config" />
-    <None Include="docking.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Compile Include="PluginManager.cs" />
     <Compile Include="LF2DataUtils.cs" />
     <Compile Include="MainForm.cs">
@@ -244,11 +248,11 @@
     <Compile Include="DocumentForm.Designer.cs">
       <DependentUpon>DocumentForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormTag.cs">
+    <Compile Include="FormDesing.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormTag.Designer.cs">
-      <DependentUpon>FormTag.cs</DependentUpon>
+    <Compile Include="FormDesing.Designer.cs">
+      <DependentUpon>FormDesing.cs</DependentUpon>
     </Compile>
     <Compile Include="FormFrame.cs">
       <SubType>Form</SubType>
@@ -318,8 +322,8 @@
     <EmbeddedResource Include="FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormTag.resx">
-      <DependentUpon>FormTag.cs</DependentUpon>
+    <EmbeddedResource Include="FormDesing.resx">
+      <DependentUpon>FormDesing.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormFrame.resx">
       <DependentUpon>FormFrame.cs</DependentUpon>
@@ -351,7 +355,7 @@
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
     </None>
     <None Include="Resources\Menu\excol.png" />
     <None Include="Templates\AI.as">
@@ -372,11 +376,6 @@
     <None Include="Templates\Weapon.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <Compile Include="SolutionExplorer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -393,6 +392,9 @@
       <Link>SciLexer64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="docking.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Main.ico" />
     <Content Include="Main_.ico" />
     <Content Include="Resources\Bitmap Icons\favicon128x128.bmp" />

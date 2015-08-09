@@ -76,8 +76,8 @@ namespace TagBox
 	{
 		public event EventHandler DataChanged;
 
-		private int _kind;
-		public int kind
+		private int? _kind;
+		public int? kind
 		{
 			get { return _kind; }
 			set
@@ -96,6 +96,8 @@ namespace TagBox
 		public int y;
 		public int w;
 		public int h;
+
+		public Bdy() { }
 
 		public Bdy(Rectangle rect)
 		{
@@ -134,8 +136,8 @@ namespace TagBox
 		public int dvx;
 		public int dvy;
 
-		private int _arest;
-		public int arest
+		private int? _arest;
+		public int? arest
 		{
 			get { return _arest; }
 			set
@@ -150,8 +152,8 @@ namespace TagBox
 		}
 		public event EventHandler ArestChanged;
 
-		private int _vrest;
-		public int vrest
+		private int? _vrest;
+		public int? vrest
 		{
 			get { return _vrest; }
 			set
@@ -166,8 +168,8 @@ namespace TagBox
 		}
 		public event EventHandler VrestChanged;
 
-		private int _fall;
-		public int fall
+		private int? _fall;
+		public int? fall
 		{
 			get { return _fall; }
 			set
@@ -182,8 +184,8 @@ namespace TagBox
 		}
 		public event EventHandler FallChanged;
 
-		private int _bdefend;
-		public int bdefend
+		private int? _bdefend;
+		public int? bdefend
 		{
 			get { return _bdefend; }
 			set
@@ -198,8 +200,8 @@ namespace TagBox
 		}
 		public event EventHandler BdefendChanged;
 
-		private int _injury;
-		public int injury
+		private int? _injury;
+		public int? injury
 		{
 			get { return _injury; }
 			set
@@ -214,8 +216,8 @@ namespace TagBox
 		}
 		public event EventHandler injuryChanged;
 
-		private int _zwidth;
-		public int zwidth
+		private int? _zwidth;
+		public int? zwidth
 		{
 			get { return _zwidth; }
 			set
@@ -230,8 +232,8 @@ namespace TagBox
 		}
 		public event EventHandler ZwidthChanged;
 
-		private int _effect;
-		public int effect
+		private int? _effect;
+		public int? effect
 		{
 			get { return _effect; }
 			set
@@ -246,8 +248,8 @@ namespace TagBox
 		}
 		public event EventHandler EffectChanged;
 
-		private int _catchingact;
-		public int catchingact
+		private int? _catchingact;
+		public int? catchingact
 		{
 			get { return _catchingact; }
 			set
@@ -262,8 +264,8 @@ namespace TagBox
 		}
 		public event EventHandler CatchingactChanged;
 
-		private int _caughtact;
-		public int caughtact
+		private int? _caughtact;
+		public int? caughtact
 		{
 			get { return _caughtact; }
 			set
@@ -277,6 +279,8 @@ namespace TagBox
 			}
 		}
 		public event EventHandler CaughtactChanged;
+
+		public Itr() { }
 
 		public Itr(Rectangle rect)
 		{
@@ -294,8 +298,8 @@ namespace TagBox
 	{
 		public event EventHandler DataChanged;
 
-		private int _kind;
-		public int kind
+		private int? _kind;
+		public int? kind
 		{
 			get { return _kind; }
 			set
@@ -313,8 +317,8 @@ namespace TagBox
 		public int x;
 		public int y;
 
-		private int _weaponact;
-		public int weaponact
+		private int? _weaponact;
+		public int? weaponact
 		{
 			get { return _weaponact; }
 			set
@@ -327,8 +331,8 @@ namespace TagBox
 		}
 		public event EventHandler WeaponactChanged;
 
-		private int _attacking;
-		public int attacking
+		private int? _attacking;
+		public int? attacking
 		{
 			get { return _attacking; }
 			set
@@ -343,8 +347,8 @@ namespace TagBox
 		}
 		public event EventHandler AttackingChanged;
 
-		private int _cover;
-		public int cover
+		private bool? _cover;
+		public bool? cover
 		{
 			get { return _cover; }
 			set
@@ -362,8 +366,8 @@ namespace TagBox
 		public int dvx;
 		public int dvy;
 
-		private int _dvz;
-		public int dvz
+		private int? _dvz;
+		public int? dvz
 		{
 			get { return _dvz; }
 			set
@@ -387,8 +391,8 @@ namespace TagBox
 	{
 		public event EventHandler DataChanged;
 
-		private int _kind;
-		public int kind
+		private int? _kind;
+		public int? kind
 		{
 			get { return _kind; }
 			set
@@ -406,8 +410,8 @@ namespace TagBox
 		public int x;
 		public int y;
 
-		private int _action;
-		public int action
+		private int? _action;
+		public int? action
 		{
 			get { return _action; }
 			set
@@ -425,8 +429,8 @@ namespace TagBox
 		public int dvx;
 		public int dvy;
 
-		private int _oid;
-		public int oid
+		private int? _oid;
+		public int? oid
 		{
 			get { return _oid; }
 			set
@@ -441,8 +445,8 @@ namespace TagBox
 		}
 		public event EventHandler OidChanged;
 
-		private int _facing;
-		public int facing
+		private int? _facing;
+		public int? facing
 		{
 			get { return _facing; }
 			set
@@ -467,8 +471,8 @@ namespace TagBox
 	{
 		public event EventHandler DataChanged;
 
-		private int _kind;
-		public int kind
+		private int? _kind;
+		public int? kind
 		{
 			get { return _kind; }
 			set
@@ -486,8 +490,8 @@ namespace TagBox
 		public int x;
 		public int y;
 
-		private int _injury;
-		public int injury
+		private int? _injury;
+		public int? injury
 		{
 			get { return _injury; }
 			set
@@ -502,8 +506,8 @@ namespace TagBox
 		}
 		public event EventHandler injuryChanged;
 
-		private int _vaction;
-		public int vaction
+		private int? _vaction;
+		public int? vaction
 		{
 			get { return _vaction; }
 			set
@@ -518,8 +522,8 @@ namespace TagBox
 		}
 		public event EventHandler VactionChanged;
 
-		private int _aaction;
-		public int aaction
+		private int? _aaction;
+		public int? aaction
 		{
 			get { return _aaction; }
 			set
@@ -534,8 +538,8 @@ namespace TagBox
 		}
 		public event EventHandler AactionChanged;
 
-		private int _taction;
-		public int taction
+		private int? _taction;
+		public int? taction
 		{
 			get { return _taction; }
 			set
@@ -553,8 +557,8 @@ namespace TagBox
 		public int throwvx;
 		public int throwvy;
 
-		private int _throwvz;
-		public int throwvz
+		private int? _throwvz;
+		public int? throwvz
 		{
 			get { return _throwvz; }
 			set
@@ -569,8 +573,8 @@ namespace TagBox
 		}
 		public event EventHandler ThrowvzChanged;
 
-		private int _hurtable;
-		public int hurtable
+		private bool? _hurtable;
+		public bool? hurtable
 		{
 			get { return _hurtable; }
 			set
@@ -585,8 +589,8 @@ namespace TagBox
 		}
 		public event EventHandler HurtableChanged;
 
-		private int _throwinjury;
-		public int throwinjury
+		private int? _throwinjury;
+		public int? throwinjury
 		{
 			get { return _throwinjury; }
 			set
@@ -601,8 +605,8 @@ namespace TagBox
 		}
 		public event EventHandler ThrowinjuryChanged;
 
-		private int _decrease;
-		public int decrease
+		private int? _decrease;
+		public int? decrease
 		{
 			get { return _decrease; }
 			set
@@ -617,8 +621,8 @@ namespace TagBox
 		}
 		public event EventHandler DecreaseChanged;
 
-		private int _dircontrol;
-		public int dircontrol
+		private bool? _dircontrol;
+		public bool? dircontrol
 		{
 			get { return _dircontrol; }
 			set
@@ -633,8 +637,8 @@ namespace TagBox
 		}
 		public event EventHandler DircontrolChanged;
 
-		private int _cover;
-		public int cover
+		private bool? _cover;
+		public bool? cover
 		{
 			get { return _cover; }
 			set
@@ -649,8 +653,8 @@ namespace TagBox
 		}
 		public event EventHandler CoverChanged;
 
-		private int _fronthurtact;
-		public int fronthurtact
+		private int? _fronthurtact;
+		public int? fronthurtact
 		{
 			get { return _fronthurtact; }
 			set
@@ -665,8 +669,8 @@ namespace TagBox
 		}
 		public event EventHandler FronthurtactChanged;
 
-		private int _backhurtact;
-		public int backhurtact
+		private int? _backhurtact;
+		public int? backhurtact
 		{
 			get { return _backhurtact; }
 			set
@@ -1262,7 +1266,7 @@ namespace TagBox
 			}
 		}
 
-		int? activeBdyIndex = null;
+		public int? activeBdyIndex = null;
 		[Browsable(false)]
 		public int? ActiveBdyIndex
 		{
@@ -1332,7 +1336,7 @@ namespace TagBox
 			}
 		}
 
-		int? activeItrIndex = null;
+		public int? activeItrIndex = null;
 		[Browsable(false)]
 		public int? ActiveItrIndex
 		{

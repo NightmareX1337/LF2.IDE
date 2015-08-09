@@ -1041,6 +1041,14 @@ namespace LF2.IDE
 			Process.Start(psi);
 		}
 
+		void OpenFileInExplorerToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			TreeNode node = treeView.SelectedNode;
+			FileInfo di = (FileInfo)node.Tag;
+			ProcessStartInfo psi = new ProcessStartInfo("explorer", "/select, " + di.FullName);
+			Process.Start(psi);
+		}
+
 		void EditWithoutDecryptionToolStripMenuItemClick(object sender, EventArgs e)
 		{
 			if (treeView.SelectedNode.Tag is FileInfo)

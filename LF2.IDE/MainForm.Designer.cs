@@ -110,6 +110,7 @@
 			this.clearRecentHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.reopenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.closeAllDocumentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator_File = new System.Windows.Forms.ToolStripSeparator();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -189,9 +190,9 @@
 			this.dockPanel.DefaultFloatWindowSize = new System.Drawing.Size(500, 500);
 			this.dockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.dockPanel.DockBottomPortion = 350D;
-			this.dockPanel.DockLeftPortion = 300D;
-			this.dockPanel.DockRightPortion = 440D;
-			this.dockPanel.DockTopPortion = 335D;
+			this.dockPanel.DockLeftPortion = 350D;
+			this.dockPanel.DockRightPortion = 500D;
+			this.dockPanel.DockTopPortion = 300D;
 			this.dockPanel.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
 			this.dockPanel.Location = new System.Drawing.Point(0, 51);
 			this.dockPanel.Margin = new System.Windows.Forms.Padding(2);
@@ -629,7 +630,6 @@
 			this.textWrapToolStripButton.Size = new System.Drawing.Size(23, 24);
 			this.textWrapToolStripButton.Text = "Text Wrap";
 			this.textWrapToolStripButton.Click += new System.EventHandler(this.ToolStripButtonwwClick);
-			this.textWrapToolStripButton.DisplayStyleChanged += new System.EventHandler(this.ToolStripButtonwwClick);
 			// 
 			// showAllCharsToolStripButton
 			// 
@@ -839,6 +839,7 @@
             this.clearRecentHistoryToolStripMenuItem,
             this.reopenToolStripMenuItem,
             this.closeToolStripMenuItem,
+            this.closeAllDocumentsToolStripMenuItem,
             this.toolStripSeparator_File,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
@@ -901,6 +902,13 @@
 			this.closeToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.closeToolStripMenuItem.Text = "&Close";
 			this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItemClick);
+			// 
+			// closeAllDocumentsToolStripMenuItem
+			// 
+			this.closeAllDocumentsToolStripMenuItem.Name = "closeAllDocumentsToolStripMenuItem";
+			this.closeAllDocumentsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+			this.closeAllDocumentsToolStripMenuItem.Text = "Close All";
+			this.closeAllDocumentsToolStripMenuItem.Click += new System.EventHandler(this.closeAllDocumentsToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator_File
 			// 
@@ -1408,7 +1416,7 @@
 			this.Text = "LF2 IDE";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Closing);
-			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainFormForm_Closed);
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
 			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.Shown += new System.EventHandler(this.MainForm_Shown);
 			this.ResizeEnd += new System.EventHandler(this.MainFormResizeEnd);
@@ -1550,6 +1558,7 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		public System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem createErrorToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem closeAllDocumentsToolStripMenuItem;
 		/*private System.Windows.Forms.ToolStripMenuItem batToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem batToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem brokenweaponToolStripMenuItem;

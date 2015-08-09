@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.IO;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace LF2.IDE
 {
@@ -35,7 +36,7 @@ namespace LF2.IDE
 			int dec, pass;
 			byte[] buffer = File.ReadAllBytes(filepath);
 			byte[] decryptedtext = new byte[dec = Math.Max(0, buffer.Length - 123)];
-			byte* password = stackalloc byte[pass = EncryptionKey.Length];
+			byte* password = stackalloc byte[pass = EncryptionKey.Length]; // if file is too big then it will crash
 
 			if (pass == 0) return Encoding.Default.GetString(buffer);
 
@@ -79,7 +80,7 @@ namespace LF2.IDE
 		{
 			int len, pass, txt;
 			byte[] dat = new byte[len = 123 + (txt = text.Length)];
-			byte* password = stackalloc byte[pass = DecryptionKey.Length];
+			byte* password = stackalloc byte[pass = DecryptionKey.Length]; // if file is too big then it will crash
 
 			for (int i = 0; i < pass; i++)
 				password[i] = (byte)DecryptionKey[i];
@@ -152,19 +153,62 @@ namespace LF2.IDE
 			public int? oid;
 			public int? facing;
 
+			// God save us from ever needing to write this kind of creepy code
 			public override string ToString()
 			{
-				return string.Format(
-					"   opoint:\n      {0}{1}{2}{3}{4}{5}{6}{7}\n   opoint_end:",
-					kind.HasValue ? "kind: " + kind.Value + "  " : string.Empty,
-					x.HasValue ? "x: " + x.Value + "  " : string.Empty,
-					y.HasValue ? "y: " + y.Value + "  " : string.Empty,
-					action.HasValue ? "action: " + action.Value + "  " : string.Empty,
-					dvx.HasValue ? "dvx: " + dvx.Value + "  " : string.Empty,
-					dvy.HasValue ? "dvy: " + dvy.Value + "  " : string.Empty,
-					oid.HasValue ? "oid: " + oid.Value + "  " : string.Empty,
-					facing.HasValue ? "facing: " + facing.Value : string.Empty
-					);
+				StringBuilder str = new StringBuilder(32);
+				str.Append("   opoint:\n      ");
+				if (kind.HasValue)
+					str.Append("kind: ").Append(kind.Value).Append("  ");
+				if (x.HasValue)
+					str.Append("x: ").Append(x.Value).Append("  ");
+				if (y.HasValue)
+					str.Append("y: ").Append(y.Value).Append("  ");
+				if (action.HasValue)
+					str.Append("action: ").Append(action.Value).Append("  ");
+				if (dvx.HasValue)
+					str.Append("dvx: ").Append(dvx.Value).Append("  ");
+				if (dvy.HasValue)
+					str.Append("dvy: ").Append(dvy.Value).Append("  ");
+				if (oid.HasValue)
+					str.Append("oid: ").Append(oid.Value).Append("  ");
+				if (facing.HasValue)
+					str.Append("facing: ").Append(facing.Value).Append("  ");
+				str.Remove(str.Length - 2, 2);
+				str.Append("\n   opoint_end:");
+				return str.ToString();
+			}
+
+			// God save us from ever needing to write this kind of creepy code
+			public static explicit operator TagBox.OPoint(Opoint obj)
+			{
+				return new TagBox.OPoint()
+				{
+					action = obj.action,
+					dvx = obj.dvx.HasValue ? obj.dvx.Value : 0,
+					dvy = obj.dvy.HasValue ? obj.dvy.Value : 0,
+					facing = obj.facing,
+					kind = obj.kind,
+					oid = obj.oid,
+					x = obj.x.HasValue ? obj.x.Value : 0,
+					y = obj.y.HasValue ? obj.y.Value : 0
+				};
+			}
+
+			// God save us from ever needing to write this kind of creepy code
+			public static explicit operator Opoint(TagBox.OPoint obj)
+			{
+				return new Opoint()
+				{
+					action = obj.action,
+					dvx = obj.dvx,
+					dvy = obj.dvy,
+					facing = obj.facing,
+					kind = obj.kind,
+					oid = obj.oid,
+					x = obj.x,
+					y = obj.y
+				};
 			}
 		}
 
@@ -173,13 +217,33 @@ namespace LF2.IDE
 			public int? x;
 			public int? y;
 
+			// God save us from ever needing to write this kind of creepy code
 			public override string ToString()
 			{
-				return string.Format(
-					"   bpoint:\n      {0}{1}\n   bpoint_end:",
-					x.HasValue ? "x: " + x.Value + "  " : string.Empty,
-					y.HasValue ? "y: " + y.Value : string.Empty
-					);
+				StringBuilder str = new StringBuilder(32);
+				str.Append("   bpoint:\n      ");
+				if (x.HasValue)
+					str.Append("x: ").Append(x.Value).Append("  ");
+				if (y.HasValue)
+					str.Append("y: ").Append(y.Value).Append("  ");
+				str.Remove(str.Length - 2, 2);
+				str.Append("\n   bpoint_end:");
+				return str.ToString();
+			}
+
+			// God save us from ever needing to write this kind of creepy code
+			public static explicit operator Point?(Bpoint obj)
+			{
+				if (obj.x.HasValue && obj.y.HasValue)
+					return new Point((int)obj.x, (int)obj.y);
+				else
+					return null;
+			}
+
+			// God save us from ever needing to write this kind of creepy code
+			public static explicit operator Bpoint(Point? obj)
+			{
+				return obj.HasValue ? new Bpoint() { x = obj.Value.X, y = obj.Value.Y } : new Bpoint();
 			}
 		}
 
@@ -190,7 +254,7 @@ namespace LF2.IDE
 			public int? y;
 			public int? injury;
 			public int? fronthurtact;
-			public int? cover;
+			public bool? cover;
 			public int? backhurtact;
 			public int? vaction;
 			public int? aaction;
@@ -198,37 +262,109 @@ namespace LF2.IDE
 			public int? daction;
 			public int? throwvx;
 			public int? throwvy;
-			public int? hurtable;
+			public bool? hurtable;
 			public int? decrease;
-			public int? dircontrol;
+			public bool? dircontrol;
 			public int? taction;
 			public int? throwinjury;
 			public int? throwvz;
 
+			// God save us from ever needing to write this kind of creepy code
 			public override string ToString()
 			{
-				return string.Format(
-					"   cpoint:\n      {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}\n   cpoint_end:",
-					kind.HasValue ? "kind: " + kind.Value + "  " : string.Empty,
-					x.HasValue ? "x: " + x.Value + "  " : string.Empty,
-					y.HasValue ? "y: " + y.Value + "  " : string.Empty,
-					injury.HasValue ? "injury: " + injury.Value + "  " : string.Empty,
-					fronthurtact.HasValue ? "fronthurtact: " + fronthurtact.Value + "  " : string.Empty,
-					cover.HasValue ? "cover: " + cover.Value + "  " : string.Empty,
-					backhurtact.HasValue ? "backhurtact: " + backhurtact.Value + "  " : string.Empty,
-					vaction.HasValue ? "vaction: " + vaction.Value + "  " : string.Empty,
-					aaction.HasValue ? "aaction: " + aaction.Value + "  " : string.Empty,
-					jaction.HasValue ? "jaction: " + jaction.Value + "  " : string.Empty,
-					daction.HasValue ? "daction: " + daction.Value + "  " : string.Empty,
-					throwvx.HasValue ? "throwvx: " + throwvx.Value + "  " : string.Empty,
-					throwvy.HasValue ? "throwvy: " + throwvy.Value + "  " : string.Empty,
-					hurtable.HasValue ? "hurtable: " + hurtable.Value + "  " : string.Empty,
-					decrease.HasValue ? "decrease: " + decrease.Value + "  " : string.Empty,
-					dircontrol.HasValue ? "dircontrol: " + dircontrol.Value + "  " : string.Empty,
-					taction.HasValue ? "taction: " + taction.Value + "  " : string.Empty,
-					throwinjury.HasValue ? "throwinjury: " + throwinjury.Value + "  " : string.Empty,
-					throwvz.HasValue ? "throwvz: " + throwvz.Value : string.Empty
-					);
+				StringBuilder str = new StringBuilder(128);
+				str.Append("   cpoint:\n      ");
+				if (kind.HasValue)
+					str.Append("kind: ").Append(kind.Value).Append("  ");
+				if (x.HasValue)
+					str.Append("x: ").Append(x.Value).Append("  ");
+				if (y.HasValue)
+					str.Append("y: ").Append(y.Value).Append("  ");
+				if (injury.HasValue)
+					str.Append("injury: ").Append(injury.Value).Append("  ");
+				if (fronthurtact.HasValue)
+					str.Append("fronthurtact: ").Append(fronthurtact.Value).Append("  ");
+				if (cover.HasValue)
+					str.Append("cover: ").Append(cover.Value ? "1" : "0").Append("  ");
+				if (backhurtact.HasValue)
+					str.Append("backhurtact: ").Append(backhurtact.Value).Append("  ");
+				if (vaction.HasValue)
+					str.Append("vaction: ").Append(vaction.Value).Append("  ");
+				if (aaction.HasValue)
+					str.Append("aaction: ").Append(aaction.Value).Append("  ");
+				if (jaction.HasValue)
+					str.Append("jaction: ").Append(jaction.Value).Append("  ");
+				if (daction.HasValue)
+					str.Append("daction: ").Append(daction.Value).Append("  ");
+				if (throwvx.HasValue)
+					str.Append("throwvx: ").Append(throwvx.Value).Append("  ");
+				if (throwvy.HasValue)
+					str.Append("throwvy: ").Append(throwvy.Value).Append("  ");
+				if (hurtable.HasValue)
+					str.Append("hurtable: ").Append(hurtable.Value ? "1" : "0").Append("  ");
+				if (decrease.HasValue)
+					str.Append("decrease: ").Append(decrease.Value).Append("  ");
+				if (dircontrol.HasValue)
+					str.Append("dircontrol: ").Append(dircontrol.Value ? "1" : "0").Append("  ");
+				if (taction.HasValue)
+					str.Append("taction: ").Append(taction.Value).Append("  ");
+				if (throwinjury.HasValue)
+					str.Append("throwinjury: ").Append(throwinjury.Value).Append("  ");
+				if (throwvz.HasValue)
+					str.Append("throwvz: ").Append(throwvz.Value).Append("  ");
+				str.Remove(str.Length - 2, 2);
+				str.Append("\n   cpoint_end:");
+				return str.ToString();
+			}
+
+			// God save us from ever needing to write this kind of creepy code
+			public static explicit operator TagBox.CPoint(Cpoint obj)
+			{
+				return new TagBox.CPoint()
+				{
+					aaction = obj.aaction,
+					backhurtact = obj.backhurtact,
+					cover = obj.cover,
+					decrease = obj.decrease,
+					dircontrol = obj.dircontrol,
+					fronthurtact = obj.fronthurtact,
+					hurtable = obj.hurtable,
+					injury = obj.injury,
+					kind = obj.kind,
+					taction = obj.taction,
+					throwinjury = obj.throwinjury,
+					throwvx = obj.throwvx.HasValue ? obj.throwvx.Value : 0,
+					throwvy = obj.throwvy.HasValue ? obj.throwvy.Value : 0,
+					throwvz = obj.throwvz,
+					vaction = obj.vaction,
+					x = obj.x.HasValue ? obj.x.Value : 0,
+					y = obj.y.HasValue ? obj.y.Value : 0,
+				};
+			}
+
+			// God save us from ever needing to write this kind of creepy code
+			public static explicit operator Cpoint(TagBox.CPoint obj)
+			{
+				return new Cpoint()
+				{
+					aaction = obj.aaction,
+					backhurtact = obj.backhurtact,
+					cover = obj.cover,
+					decrease = obj.decrease,
+					dircontrol = obj.dircontrol,
+					fronthurtact = obj.fronthurtact,
+					hurtable = obj.hurtable,
+					injury = obj.injury,
+					kind = obj.kind,
+					taction = obj.taction,
+					throwinjury = obj.throwinjury,
+					throwvx = obj.throwvx,
+					throwvy = obj.throwvy,
+					throwvz = obj.throwvz,
+					vaction = obj.vaction,
+					x = obj.x,
+					y = obj.y
+				};
 			}
 		}
 
@@ -239,25 +375,71 @@ namespace LF2.IDE
 			public int? y;
 			public int? weaponact;
 			public int? attacking;
-			public int? cover;
+			public bool? cover;
 			public int? dvx;
 			public int? dvy;
 			public int? dvz;
 
+			// God save us from ever needing to write this kind of creepy code
 			public override string ToString()
 			{
-				return string.Format(
-					"   wpoint:\n      {0}{1}{2}{3}{4}{5}{6}{7}{8}\n   wpoint_end:",
-					kind.HasValue ? "kind: " + kind.Value + "  " : string.Empty,
-					x.HasValue ? "x: " + x.Value + "  " : string.Empty,
-					y.HasValue ? "y: " + y.Value + "  " : string.Empty,
-					weaponact.HasValue ? "weaponact: " + weaponact.Value + "  " : string.Empty,
-					attacking.HasValue ? "attacking: " + attacking.Value + "  " : string.Empty,
-					cover.HasValue ? "cover: " + cover.Value + "  " : string.Empty,
-					dvx.HasValue ? "dvx: " + dvx.Value + "  " : string.Empty,
-					dvy.HasValue ? "dvy: " + dvy.Value + "  " : string.Empty,
-					dvz.HasValue ? "dvz: " + dvz.Value : string.Empty
-					);
+				StringBuilder str = new StringBuilder(128);
+				str.Append("   wpoint:\n      ");
+				if (kind.HasValue)
+					str.Append("kind: ").Append(kind.Value).Append("  ");
+				if (x.HasValue)
+					str.Append("x: ").Append(x.Value).Append("  ");
+				if (y.HasValue)
+					str.Append("y: ").Append(y.Value).Append("  ");
+				if (weaponact.HasValue)
+					str.Append("weaponact: ").Append(weaponact.Value).Append("  ");
+				if (attacking.HasValue)
+					str.Append("attacking: ").Append(attacking.Value).Append("  ");
+				if (cover.HasValue)
+					str.Append("cover: ").Append(cover.Value ? "1" : "0").Append("  ");
+				if (dvx.HasValue)
+					str.Append("dvx: ").Append(dvx.Value).Append("  ");
+				if (dvy.HasValue)
+					str.Append("dvy: ").Append(dvy.Value).Append("  ");
+				if (dvz.HasValue)
+					str.Append("dvz: ").Append(dvz.Value).Append("  ");
+				str.Remove(str.Length - 2, 2);
+				str.Append("\n   wpoint_end:");
+				return str.ToString();
+			}
+
+			// God save us from ever needing to write this kind of creepy code
+			public static explicit operator TagBox.WPoint(Wpoint obj)
+			{
+				return new TagBox.WPoint()
+				{
+					attacking = obj.attacking,
+					cover = obj.cover,
+					dvx = obj.dvx.HasValue ? obj.dvx.Value : 0,
+					dvy = obj.dvy.HasValue ? obj.dvy.Value : 0,
+					dvz = obj.dvz,
+					kind = obj.kind,
+					weaponact = obj.weaponact,
+					x = obj.x.HasValue ? obj.x.Value : 0,
+					y = obj.y.HasValue ? obj.y.Value : 0
+				};
+			}
+
+			// God save us from ever needing to write this kind of creepy code
+			public static explicit operator Wpoint(TagBox.WPoint obj)
+			{
+				return new Wpoint()
+				{
+					attacking = obj.attacking,
+					cover = obj.cover,
+					dvx = obj.dvx,
+					dvy = obj.dvy,
+					dvz = obj.dvz,
+					kind = obj.kind,
+					weaponact = obj.weaponact,
+					x = obj.x,
+					y = obj.y
+				};
 			}
 		}
 
@@ -280,27 +462,94 @@ namespace LF2.IDE
 			public int? injury;
 			public int? zwidth;
 
+			// God save us from ever needing to write this kind of creepy code
 			public override string ToString()
 			{
-				return string.Format(
-					"   itr:\n      {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}\n   itr_end:",
-					kind.HasValue ? "kind: " + kind.Value + "  " : string.Empty,
-					x.HasValue ? "x: " + x.Value + "  " : string.Empty,
-					y.HasValue ? "y: " + y.Value + "  " : string.Empty,
-					w.HasValue ? "w: " + w.Value + "  " : string.Empty,
-					h.HasValue ? "h: " + h.Value + "  " : string.Empty,
-					dvx.HasValue ? "dvx: " + dvx.Value + "  " : string.Empty,
-					dvy.HasValue ? "dvy: " + dvy.Value + "  " : string.Empty,
-					fall.HasValue ? "fall: " + fall.Value + "  " : string.Empty,
-					arest.HasValue ? "arest: " + arest.Value + "  " : string.Empty,
-					vrest.HasValue ? "vrest: " + vrest.Value + "  " : string.Empty,
-					effect.HasValue ? "effect: " + effect.Value + "  " : string.Empty,
-					catchingact.HasValue ? "catchingact: " + catchingact.Value + "  " : string.Empty,
-					caughtact.HasValue ? "caughtact: " + caughtact.Value + "  " : string.Empty,
-					bdefend.HasValue ? "bdefend: " + bdefend.Value + "  " : string.Empty,
-					injury.HasValue ? "injury: " + injury.Value + "  " : string.Empty,
-					zwidth.HasValue ? "zwidth: " + zwidth.Value : string.Empty
-					);
+				StringBuilder str = new StringBuilder(128);
+				str.Append("   itr:\n      ");
+				if (kind.HasValue)
+					str.Append("kind: ").Append(kind.Value).Append("  ");
+				if (x.HasValue)
+					str.Append("x: ").Append(x.Value).Append("  ");
+				if (y.HasValue)
+					str.Append("y: ").Append(y.Value).Append("  ");
+				if (w.HasValue)
+					str.Append("w: ").Append(w.Value).Append("  ");
+				if (h.HasValue)
+					str.Append("h: ").Append(h.Value).Append("  ");
+				if (dvx.HasValue)
+					str.Append("dvx: ").Append(dvx.Value).Append("  ");
+				if (dvy.HasValue)
+					str.Append("dvy: ").Append(dvy.Value).Append("  ");
+				if (fall.HasValue)
+					str.Append("fall: ").Append(fall.Value).Append("  ");
+				if (arest.HasValue)
+					str.Append("arest: ").Append(arest.Value).Append("  ");
+				if (vrest.HasValue)
+					str.Append("vrest: ").Append(vrest.Value).Append("  ");
+				if (effect.HasValue)
+					str.Append("effect: ").Append(effect.Value).Append("  ");
+				if (catchingact.HasValue)
+					str.Append("catchingact: ").Append(catchingact.Value).Append("  ");
+				if (caughtact.HasValue)
+					str.Append("caughtact: ").Append(caughtact.Value).Append("  ");
+				if (bdefend.HasValue)
+					str.Append("bdefend: ").Append(bdefend.Value).Append("  ");
+				if (injury.HasValue)
+					str.Append("injury: ").Append(injury.Value).Append("  ");
+				if (zwidth.HasValue)
+					str.Append("zwidth: ").Append(zwidth.Value).Append("  ");
+				str.Remove(str.Length - 2, 2);
+				str.Append("\n   itr_end:");
+				return str.ToString();
+			}
+
+			// God save us from ever needing to write this kind of creepy code
+			public static explicit operator TagBox.Itr(Itr obj)
+			{
+				return new TagBox.Itr()
+				{
+					arest = obj.arest,
+					bdefend = obj.bdefend,
+					catchingact = obj.catchingact,
+					caughtact = obj.caughtact,
+					dvx = obj.dvx.HasValue ? obj.dvx.Value : 0,
+					dvy = obj.dvy.HasValue ? obj.dvy.Value : 0,
+					effect = obj.effect,
+					fall = obj.fall,
+					h = obj.h.HasValue ? obj.h.Value : 0,
+					injury = obj.injury,
+					kind = obj.kind.HasValue ? obj.kind.Value : 0,
+					vrest = obj.vrest,
+					w = obj.w.HasValue ? obj.w.Value : 0,
+					x = obj.x.HasValue ? obj.x.Value : 0,
+					y = obj.y.HasValue ? obj.y.Value : 0,
+					zwidth = obj.zwidth
+				};
+			}
+
+			// God save us from ever needing to write this kind of creepy code
+			public static explicit operator Itr(TagBox.Itr obj)
+			{
+				return new Itr()
+				{
+					arest = obj.arest,
+					bdefend = obj.bdefend,
+					catchingact = obj.catchingact,
+					caughtact = obj.caughtact,
+					dvx = obj.dvx,
+					dvy = obj.dvy,
+					effect = obj.effect,
+					fall = obj.fall,
+					h = obj.h,
+					injury = obj.injury,
+					kind = obj.kind,
+					vrest = obj.vrest,
+					w = obj.w,
+					x = obj.x,
+					y = obj.y,
+					zwidth = obj.zwidth
+				};
 			}
 		}
 
@@ -314,14 +563,45 @@ namespace LF2.IDE
 
 			public override string ToString()
 			{
-				return string.Format(
-					"   bdy:\n      {0}{1}{2}{3}{4}\n   bdy_end:",
-					w.HasValue ? "kind: " + w.Value + "  " : string.Empty,
-					x.HasValue ? "x: " + x.Value + "  " : string.Empty,
-					y.HasValue ? "y: " + y.Value + "  " : string.Empty,
-					w.HasValue ? "w: " + w.Value + "  " : string.Empty,
-					h.HasValue ? "h: " + h.Value : string.Empty
-					);
+				StringBuilder str = new StringBuilder(64);
+				str.Append("   bdy:\n      ");
+				if (w.HasValue)
+					str.Append("kind: ").Append(kind.Value).Append("  ");
+				if (x.HasValue)
+					str.Append("x: ").Append(x.Value).Append("  ");
+				if (y.HasValue)
+					str.Append("y: ").Append(y.Value).Append("  ");
+				if (w.HasValue)
+					str.Append("w: ").Append(w.Value).Append("  ");
+				if (h.HasValue)
+					str.Append("h: ").Append(h.Value).Append("  ");
+				str.Remove(str.Length - 2, 2);
+				str.Append("\n   bdy_end:");
+				return str.ToString();
+			}
+
+			public static explicit operator TagBox.Bdy(Bdy obj)
+			{
+				return new TagBox.Bdy()
+				{
+					h = obj.h.HasValue ? obj.h.Value : 0,
+					kind = obj.kind,
+					w = obj.w.HasValue ? obj.w.Value : 0,
+					x = obj.x.HasValue ? obj.x.Value : 0,
+					y = obj.y.HasValue ? obj.y.Value : 0
+				};
+			}
+
+			public static explicit operator Bdy(TagBox.Bdy obj)
+			{
+				return new Bdy()
+				{
+					h = obj.h,
+					kind = obj.kind,
+					w = obj.w,
+					x = obj.x,
+					y = obj.y
+				};
 			}
 		}
 
@@ -360,7 +640,7 @@ namespace LF2.IDE
 			public override string ToString()
 			{
 				StringBuilder str = new StringBuilder(128);
-				str.Append("<frame>").Append(index).Append(" ").Append(caption).Append("\n   ");
+				str.Append("<frame> ").Append(index).Append(" ").Append(caption).Append("\n   ");
 				if (pic.HasValue)
 					str.Append("pic: ").Append(pic.Value).Append("  ");
 				if (state.HasValue)
@@ -369,16 +649,16 @@ namespace LF2.IDE
 					str.Append("wait: ").Append(wait.Value).Append("  ");
 				if (next.HasValue)
 					str.Append("next: ").Append(next.Value).Append("  ");
-				if (centerx.HasValue)
-					str.Append("centerx: ").Append(centerx.Value).Append("  ");
-				if (centery.HasValue)
-					str.Append("centery: ").Append(centery.Value).Append("  ");
 				if (dvx.HasValue)
 					str.Append("dvx: ").Append(dvx.Value).Append("  ");
 				if (dvy.HasValue)
 					str.Append("dvy: ").Append(dvy.Value).Append("  ");
 				if (dvz.HasValue)
 					str.Append("dvz: ").Append(dvz.Value).Append("  ");
+				if (centerx.HasValue)
+					str.Append("centerx: ").Append(centerx.Value).Append("  ");
+				if (centery.HasValue)
+					str.Append("centery: ").Append(centery.Value).Append("  ");
 				if (mp.HasValue)
 					str.Append("mp: ").Append(mp.Value).Append("  ");
 				if (hit_a.HasValue)
@@ -400,26 +680,27 @@ namespace LF2.IDE
 				if (hit_Dj.HasValue)
 					str.Append("hit_Dj: ").Append(hit_Dj.Value).Append("  ");
 				if (hit_ja.HasValue)
-					str.Append("hit_ja: ").Append(hit_ja.Value);
+					str.Append("hit_ja: ").Append(hit_ja.Value).Append("  ");
+				str.Remove(str.Length - 2, 2);
 				if (sound != null)
-					str.Append("\nsound: ").Append(sound);
-				if (opoint != null)
-					str.Append("\n   opoint:\n      ").Append(opoint.ToString()).Append("   opoint_end:");
-				if (wpoint != null)
-					str.Append("\n   wpoint:\n      ").Append(wpoint.ToString()).Append("   wpoint_end:");
+					str.Append("\n   sound: ").Append(sound);
 				if (bpoint != null)
-					str.Append("\n   bpoint:\n      ").Append(bpoint.ToString()).Append("   bpoint_end:");
+					str.Append("\n").Append(bpoint.ToString());
+				if (opoint != null)
+					str.Append("\n").Append(opoint.ToString());
 				if (cpoint != null)
-					str.Append("\n   cpoint:\n      ").Append(cpoint.ToString()).Append("   cpoint_end:");
+					str.Append("\n").Append(cpoint.ToString());
+				if (wpoint != null)
+					str.Append("\n").Append(wpoint.ToString());
+				if (itrs != null)
+				{
+					foreach (var itr in itrs)
+						str.Append("\n").Append(itr.ToString());
+				}
 				if (bdys != null)
 				{
 					foreach (var bdy in bdys)
-						str.Append("\n   bdy:\n      ").Append(bdy.ToString()).Append("   bdy_end:");
-				}
-				if (itrs != null)
-				{
-					foreach (var itr in bdys)
-						str.Append("\n   itr:\n      ").Append(itr.ToString()).Append("   itr_end:");
+						str.Append("\n").Append(bdy.ToString());
 				}
 				str.Append("\n<frame_end>");
 				return str.ToString();
@@ -507,14 +788,17 @@ namespace LF2.IDE
 			return ReadFrame(TokenizeFrame(frame));
 		}
 
+		// God save us from ever needing to write this kind of creepy code
 		public static Frame ReadFrame(string[] frameTokens)
 		{
-			if (frameTokens.Length > 2 && frameTokens[0] == "<frame>")
+			if (frameTokens.Length > 2 && frameTokens[0] == "<frame>" && frameTokens[frameTokens.Length - 1] == "<frame_end>")
 			{
 				Frame frame = new Frame();
 				List<Bdy> bdys = new List<Bdy>();
 				List<Itr> itrs = new List<Itr>();
 				DataState dataState = DataState.frameElement;
+				frame.index = int.Parse(frameTokens[1]);
+				frame.caption = frameTokens[2];
 				for (int i = 3; i < frameTokens.Length; i++)
 				{
 					string token = frameTokens[i];
@@ -637,7 +921,7 @@ namespace LF2.IDE
 								frame.opoint.oid = int.Parse(frameTokens[++i]);
 								break;
 							case "facing:":
-								frame.opoint.kind = int.Parse(frameTokens[++i]);
+								frame.opoint.facing = int.Parse(frameTokens[++i]);
 								break;
 							case "opoint_end:":
 								dataState = DataState.frameElement;
@@ -664,7 +948,7 @@ namespace LF2.IDE
 								frame.wpoint.attacking = int.Parse(frameTokens[++i]);
 								break;
 							case "cover:":
-								frame.wpoint.cover = int.Parse(frameTokens[++i]);
+								frame.wpoint.cover = int.Parse(frameTokens[++i]) != 0;
 								break;
 							case "dvx:":
 								frame.wpoint.dvx = int.Parse(frameTokens[++i]);
@@ -711,49 +995,49 @@ namespace LF2.IDE
 							case "injury:":
 								frame.cpoint.injury = int.Parse(frameTokens[++i]);
 								break;
-							case "fronthurtact":
+							case "fronthurtact:":
 								frame.cpoint.fronthurtact = int.Parse(frameTokens[++i]);
 								break;
-							case "cover":
-								frame.cpoint.cover = int.Parse(frameTokens[++i]);
+							case "cover:":
+								frame.cpoint.cover = int.Parse(frameTokens[++i]) != 0;
 								break;
-							case "backhurtact":
+							case "backhurtact:":
 								frame.cpoint.backhurtact = int.Parse(frameTokens[++i]);
 								break;
-							case "vaction":
+							case "vaction:":
 								frame.cpoint.vaction = int.Parse(frameTokens[++i]);
 								break;
-							case "aaction":
+							case "aaction:":
 								frame.cpoint.aaction = int.Parse(frameTokens[++i]);
 								break;
-							case "jaction":
+							case "jaction:":
 								frame.cpoint.jaction = int.Parse(frameTokens[++i]);
 								break;
-							case "daction":
+							case "daction:":
 								frame.cpoint.daction = int.Parse(frameTokens[++i]);
 								break;
-							case "throwvx":
+							case "throwvx:":
 								frame.cpoint.throwvx = int.Parse(frameTokens[++i]);
 								break;
-							case "throwvy":
+							case "throwvy:":
 								frame.cpoint.throwvy = int.Parse(frameTokens[++i]);
 								break;
-							case "hurtable":
-								frame.cpoint.hurtable = int.Parse(frameTokens[++i]);
+							case "hurtable:":
+								frame.cpoint.hurtable = int.Parse(frameTokens[++i]) != 0;
 								break;
-							case "decrease":
+							case "decrease:":
 								frame.cpoint.decrease = int.Parse(frameTokens[++i]);
 								break;
-							case "dircontrol":
-								frame.cpoint.dircontrol = int.Parse(frameTokens[++i]);
+							case "dircontrol:":
+								frame.cpoint.dircontrol = int.Parse(frameTokens[++i]) != 0;
 								break;
-							case "taction":
+							case "taction:":
 								frame.cpoint.taction = int.Parse(frameTokens[++i]);
 								break;
-							case "throwinjury":
+							case "throwinjury:":
 								frame.cpoint.throwinjury = int.Parse(frameTokens[++i]);
 								break;
-							case "throwvz":
+							case "throwvz:":
 								frame.cpoint.throwvz = int.Parse(frameTokens[++i]);
 								break;
 							case "cpoint_end:":

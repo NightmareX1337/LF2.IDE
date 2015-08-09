@@ -8,12 +8,13 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace LF2.IDE
 {
-	public partial class FormTag : WeifenLuo.WinFormsUI.Docking.DockContent
+	public partial class FormDesing : WeifenLuo.WinFormsUI.Docking.DockContent
 	{
-		public FormTag(MainForm main)
+		public FormDesing(MainForm main)
 		{
 			mainForm = main;
 			InitializeComponent();
@@ -51,7 +52,6 @@ namespace LF2.IDE
 			new Point(37, 19),
 			new Point(37, 26),
 			new Point(38, 33),
-			new Point(38, 33),
 			new Point(34, 36),
 			new Point(29, 40)
 		};
@@ -74,6 +74,8 @@ namespace LF2.IDE
 			{ 143, 44, 45, 66 },
 			{ 144, 45, 42, 55 }
 		};
+
+		public LF2DataUtils.Itr[] Itrs = null;
 
 		private void Reset_Bdy(object sender, EventArgs e)
 		{
@@ -109,8 +111,7 @@ namespace LF2.IDE
 			tagBox.Refresh();
 		}
 
-		List<Rectangle> bdyRectangles = new List<Rectangle>(), itrRectangles = new List<Rectangle>();
-
+		// God save us from ever needing to write this kind of creepy code
 		public string Generate()
 		{
 			bool newLineState = false;
@@ -314,18 +315,35 @@ namespace LF2.IDE
 
 		void WeaponactChanged(object sender, EventArgs e)
 		{
+			if (wpoint_weaponact.SelectedIndex < 0)
+			{
+				tagBox.WPointImage = null;
+				tagBox.WPointImageOffset = Point.Empty;
+				return;
+			}
+			if (tagBox.WPoint != null)
+				tagBox.WPoint.weaponact = int.Parse(wpoint_weaponact.Text);
+			if (tagBox.WPoint.weaponact.Value == 0)
+			{
+				tagBox.WPointImage = null;
+				tagBox.WPointImageOffset = Point.Empty;
+				return;
+			}
 			tagBox.WPointImage = weaponactImage = (Image)Properties.Resources.ResourceManager.GetObject("weapon" + wpoint_weaponact.Text);
 			if (tagBox.WPointImage != null)
 				tagBox.WPointImageOffset = weaponPoints[wpoint_weaponact.SelectedIndex];
 			else
 				tagBox.WPointImageOffset = Point.Empty;
+			if (!editing)
+				SyncToEditor(mainForm.ActiveDocument, true);
 		}
 
 		void ImageIndexChanged(object sender, EventArgs e)
 		{
+			if (!editing)
+				SyncToEditor(mainForm.ActiveDocument, true);
 			if (mainForm.lastActiveFrame != null)
 				tagBox.Image = mainForm.lastActiveFrame[mainForm.lastActiveDoc.frameIndexTag = (int)numericUpDown_ImageIndex.Value];
-
 			numericUpDown_ImageIndex.Refresh();
 			tagBox.Refresh();
 		}
@@ -372,24 +390,69 @@ namespace LF2.IDE
 			}
 		}
 
-		void CoverChanged(object sender, EventArgs e)
+		void CCoverChanged(object sender, EventArgs e)
 		{
-			switch (tagBox.DrawingMode)
+			if (tagBox.CPoint != null)
 			{
-				case TagBox.DrawingMode.WPoint:
-					tagBox.WPointCover = (wpoint_cover.Text != "0" && wpoint_cover.Text != "");
-					break;
-				case TagBox.DrawingMode.CPoint:
-					tagBox.CPointCover = (cpoint_cover.Text != "0" && cpoint_cover.Text != "");
-					break;
+				int c = 0;
+				int.TryParse(cpoint_cover.Text, out c);
+
+				tagBox.CPointCover = (c != 0);
+				try
+				{
+					tagBox.CPoint.cover = tagBox.CPointCover;
+				}
+				catch { }
+				if (!editing)
+					SyncToEditor(mainForm.ActiveDocument, true);
 			}
 		}
 
-		bool editing = false;
+		void WCoverChanged(object sender, EventArgs e)
+		{
+			if (tagBox.WPoint != null)
+			{
+				int c = 0;
+				int.TryParse(wpoint_cover.Text, out c);
+
+				tagBox.WPointCover = (c != 0);
+				try
+				{
+					tagBox.WPoint.cover = tagBox.WPointCover;
+				}
+				catch { }
+				if (!editing)
+					SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		public bool editing
+		{
+			get;
+			private set;
+		}
+		private int editingLevel = 0;
+
+		public void EditIn()
+		{
+			editingLevel++;
+			editing = editingLevel > 0;
+		}
+
+		public void EditOut()
+		{
+			editingLevel--;
+			editing = editingLevel > 0;
+		}
+		public void EditReset()
+		{
+			editingLevel = 0;
+			editing = false;
+		}
 
 		void TagBoxPointChanged(object sender, EventArgs e)
 		{
-			editing = true;
+			EditIn();
 			switch (tagBox.DrawingMode)
 			{
 				case TagBox.DrawingMode.WPoint:
@@ -423,13 +486,13 @@ namespace LF2.IDE
 					centery.Refresh();
 					break;
 			}
-			editing = false;
+			EditOut();
 			tagBox.Refresh();
 		}
 
 		void TagBoxVectorChanged(object sender, EventArgs e)
 		{
-			editing = true;
+			EditIn();
 			switch (tagBox.DrawingMode)
 			{
 				case TagBox.DrawingMode.Itr:
@@ -469,13 +532,13 @@ namespace LF2.IDE
 					cpoint_throwvy.Refresh();
 					break;
 			}
-			editing = false;
+			EditOut();
 			tagBox.Refresh();
 		}
 
 		void TagBoxRectangleChanged(object sender, EventArgs e)
 		{
-			editing = true;
+			EditIn();
 			switch (tagBox.DrawingMode)
 			{
 				case TagBox.DrawingMode.Bdy:
@@ -505,7 +568,7 @@ namespace LF2.IDE
 					itr_h.Refresh();
 					break;
 			}
-			editing = false;
+			EditOut();
 			tagBox.Refresh();
 		}
 
@@ -611,7 +674,17 @@ namespace LF2.IDE
 
 		void VactionChanged(object sender, EventArgs e)
 		{
+			int vaction = 0;
+			if (cpoint_vaction.SelectedIndex < 0 || !int.TryParse(cpoint_vaction.Text, out vaction) || cpoint_kind.Text == "2")
+			{
+				tagBox.CPointImage = null;
+				return;
+			}
 			bool dir = (cpoint_dircontrol.Text == "0" || cpoint_dircontrol.Text == "");
+			if (tagBox.CPoint != null)
+			{
+				tagBox.CPoint.dircontrol = dir;
+			}
 			vactionImageMirror = (Image)(vactionImage = (Image)Properties.Resources.ResourceManager.GetObject("caught" + caughtPoints[cpoint_vaction.SelectedIndex, 1])).Clone();
 			if (vactionImage == null)
 			{
@@ -637,8 +710,10 @@ namespace LF2.IDE
 		{
 			if (vactionImage == null) return;
 
+			int dir = 0;
+			int.TryParse(cpoint_dircontrol.Text, out dir);
 
-			if (cpoint_dircontrol.Text == "0" || cpoint_dircontrol.Text == "")
+			if (dir == 0)
 			{
 				tagBox.CPointImage = vactionImageMirror;
 				tagBox.CPointImageOffset = new Point(vactionImageMirror.Width - caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
@@ -835,7 +910,7 @@ namespace LF2.IDE
 
 				backgroundWorker_CreateOpointCache.ReportProgress((int)(i / (float)(matches.Count) * 100), file);
 
-				string dat = LF2DataUtil.Decrypt(lfDir + "\\" + file);
+				string dat = LF2DataUtils.Decrypt(lfDir + "\\" + file);
 				List<SpriteSheet> fileList = ParseFiles(lfDir, dat);
 				if (fileList == null) continue;
 				Dictionary<int, Bitmap> bmpList = ParseBmpList(fileList);
@@ -868,7 +943,8 @@ namespace LF2.IDE
 				progressBar_CacheCreation.Value = 100;
 				label_CacheCreationProgress.Text = "data\\...";
 
-				mainForm.formEventLog.Log("Opoint Cache Created: " + stopWatch.Elapsed, true);
+				try { mainForm.formEventLog.Log("Opoint Cache Created: " + stopWatch.Elapsed, true); }
+				catch { }
 			}
 			button_CreateOpointCache.Text = cacheButtonString;
 			stopWatch.Reset();
@@ -876,6 +952,8 @@ namespace LF2.IDE
 
 		void OidChanged(object sender, EventArgs e)
 		{
+			if (tagBox.OPoint != null)
+				tagBox.OPoint.oid = int.Parse(opoint_oid.Text);
 			int x = opoint_action.SelectedIndex, id = opoint_oid.SelectedIndex, pic;
 			if (id < 0)
 			{
@@ -898,6 +976,8 @@ namespace LF2.IDE
 
 		void Opoint_actionChanged(object sender, EventArgs e)
 		{
+			if (tagBox.OPoint != null)
+				tagBox.OPoint.action = int.Parse(opoint_action.Text);
 			int x = opoint_action.SelectedIndex, id = opoint_oid.SelectedIndex, pic;
 			if (id < 0)
 			{
@@ -910,11 +990,6 @@ namespace LF2.IDE
 			tagBox.OPointImage = opointImage = ((pic != 999 && o.bmpList.ContainsKey(pic)) ? o.bmpList[pic] : null);
 			tagBox.OPointImageOffset = opointOffset = o.frames[x].center;
 			tagBox.Refresh();
-		}
-
-		private void button_AddBdy_Click(object sender, EventArgs e)
-		{
-
 		}
 
 		private void FormTag_KeyDown(object sender, KeyEventArgs e)
@@ -986,74 +1061,741 @@ namespace LF2.IDE
 
 		private void checkBoxLinkage_CheckedChanged(object sender, EventArgs e)
 		{
+			Settings.Current.syncDesing = checkBoxLinkage.Checked;
 			checkBoxLinkage.ImageIndex = checkBoxLinkage.Checked ? 0 : 1;
 		}
-
-		private bool SyncChanges()
+		
+		// God save us from ever needing to write this kind of creepy code
+		public void RefreshAllTextBoxes(bool w = true, bool o = true, bool c = true, bool b = true, bool center = true, bool itr = true)
 		{
-			DocumentForm theDoc = mainForm.ActiveDocument;
-			if (theDoc == null)
-				return false;
-			int fs = theDoc.Scintilla.Text.LastIndexOf("<frame>", theDoc.Scintilla.Lines.Current.EndPosition);
-			if (fs < 0)
-				return false;
-			int fe = theDoc.Scintilla.Text.IndexOf("<frame_end>", fs);
-			if (fe < 0)
-				return false;
-			var fr = theDoc.Scintilla.GetRange(fs, fe);
-			return false;
+			EditIn();
+			if(w)
+				if (tagBox.WPoint != null)
+				{
+					wpoint_attacking.Text = tagBox.WPoint.attacking.HasValue ? tagBox.WPoint.attacking.ToString() : "";
+					wpoint_cover.Text = tagBox.WPoint.cover.HasValue ? (tagBox.WPoint.cover.Value ? "1" : "0") : "";
+					wpoint_dvx.Text = tagBox.WPoint.dvx.ToString();
+					wpoint_dvy.Text = tagBox.WPoint.dvy.ToString();
+					wpoint_dvz.Text = tagBox.WPoint.dvz.HasValue ? tagBox.WPoint.dvz.ToString() : "";
+					wpoint_kind.Text = tagBox.WPoint.kind.HasValue ? tagBox.WPoint.kind.ToString() : "";
+					wpoint_weaponact.Text = tagBox.WPoint.weaponact.HasValue ? tagBox.WPoint.weaponact.ToString() : "";
+					wpoint_x.Text = tagBox.WPoint.x.ToString();
+					wpoint_y.Text = tagBox.WPoint.y.ToString();
+				}
+				else
+				{
+					wpoint_attacking.Text = 
+					wpoint_cover.Text = 
+					wpoint_dvx.Text = 
+					wpoint_dvy.Text = 
+					wpoint_dvz.Text = 
+					wpoint_kind.Text = 
+					wpoint_weaponact.Text = 
+					wpoint_x.Text = 
+					wpoint_y.Text = "";
+				}
+			if(o)
+				if (tagBox.OPoint != null)
+				{
+					opoint_action.Text = tagBox.OPoint.action.HasValue ? tagBox.OPoint.action.ToString() : "";
+					opoint_dvx.Text = tagBox.OPoint.dvx.ToString();
+					opoint_dvy.Text = tagBox.OPoint.dvy.ToString();
+					opoint_facing.Text = tagBox.OPoint.facing.HasValue ? tagBox.OPoint.facing.ToString() : "";
+					opoint_kind.Text = tagBox.OPoint.kind.HasValue ? tagBox.OPoint.kind.ToString() : "";
+					opoint_oid.Text = tagBox.OPoint.oid.HasValue ? tagBox.OPoint.oid.ToString() : "";
+					opoint_x.Text = tagBox.OPoint.x.ToString();
+					opoint_y.Text = tagBox.OPoint.y.ToString();
+				}
+				else
+				{
+					opoint_action.Text = 
+					opoint_dvx.Text = 
+					opoint_dvy.Text = 
+					opoint_facing.Text = 
+					opoint_kind.Text = 
+					opoint_oid.Text = 
+					opoint_x.Text = 
+					opoint_y.Text = "";
+				}
+			if(c)
+				if (tagBox.CPoint != null)
+				{
+					cpoint_aaction.Text = tagBox.CPoint.aaction.HasValue ? tagBox.CPoint.aaction.ToString() : "";
+					cpoint_backhurtact.Text = tagBox.CPoint.backhurtact.HasValue ? tagBox.CPoint.backhurtact.ToString() : "";
+					cpoint_cover.Text = tagBox.CPoint.cover.HasValue ? (tagBox.CPoint.cover.Value ? "1" : "0") : "";
+					cpoint_decrease.Text = tagBox.CPoint.decrease.HasValue ? tagBox.CPoint.decrease.ToString() : "";
+					cpoint_dircontrol.Text = tagBox.CPoint.dircontrol.HasValue ? (tagBox.CPoint.dircontrol.Value ? "1" : "0") : "";
+					cpoint_fronthurtact.Text = tagBox.CPoint.fronthurtact.HasValue ? tagBox.CPoint.fronthurtact.ToString() : "";
+					cpoint_hurtable.Text = tagBox.CPoint.hurtable.HasValue ? (tagBox.CPoint.hurtable.Value ? "1" : "0") : "";
+					cpoint_injury.Text = tagBox.CPoint.injury.HasValue ? tagBox.CPoint.injury.ToString() : "";
+					cpoint_kind.Text = tagBox.CPoint.kind.HasValue ? tagBox.CPoint.kind.ToString() : "";
+					cpoint_taction.Text = tagBox.CPoint.taction.HasValue ? tagBox.CPoint.taction.ToString() : "";
+					cpoint_throwinjury.Text = tagBox.CPoint.throwinjury.HasValue ? tagBox.CPoint.throwinjury.ToString() : "";
+					cpoint_throwvx.Text = tagBox.CPoint.throwvx.ToString();
+					cpoint_throwvy.Text = tagBox.CPoint.throwvy.ToString();
+					cpoint_throwvz.Text = tagBox.CPoint.throwvz.HasValue ? tagBox.CPoint.throwvz.ToString() : "";
+					cpoint_vaction.Text = tagBox.CPoint.vaction.HasValue ? tagBox.CPoint.vaction.ToString() : "";
+					cpoint_x.Text = tagBox.CPoint.x.ToString();
+					cpoint_y.Text = tagBox.CPoint.y.ToString();
+				}
+				else
+				{
+					cpoint_aaction.Text = 
+					cpoint_backhurtact.Text = 
+					cpoint_cover.Text = 
+					cpoint_decrease.Text = 
+					cpoint_dircontrol.Text = 
+					cpoint_fronthurtact.Text = 
+					cpoint_hurtable.Text = 
+					cpoint_injury.Text = 
+					cpoint_kind.Text = 
+					cpoint_taction.Text = 
+					cpoint_throwinjury.Text = 
+					cpoint_throwvx.Text = 
+					cpoint_throwvy.Text = 
+					cpoint_throwvz.Text = 
+					cpoint_vaction.Text = 
+					cpoint_x.Text = 
+					cpoint_y.Text = "";
+				}
+			if(b)
+				if (tagBox.BPoint.HasValue)
+				{
+					bpoint_x.Text = tagBox.BPoint.Value.X.ToString();
+					bpoint_y.Text = tagBox.BPoint.Value.Y.ToString();
+				}
+				else
+				{
+					bpoint_x.Text = 
+					bpoint_y.Text = "";
+				}
+			if(center)
+				if (tagBox.Center.HasValue)
+				{
+					centerx.Text = tagBox.Center.Value.X.ToString();
+					centery.Text = tagBox.Center.Value.Y.ToString();
+				}
+				else
+				{
+					centerx.Text = 
+					centery.Text = "";
+				}
+			if(itr)
+				if (tagBox.ActiveItr == null)
+				{
+					itr_arest.Text =
+					itr_bdefend.Text =
+					itr_catchingact.Text =
+					itr_caughtact.Text =
+					itr_dvx.Text =
+					itr_dvy.Text =
+					itr_effect.Text =
+					itr_fall.Text =
+					itr_h.Text =
+					itr_injury.Text =
+					itr_kind.Text =
+					itr_vrest.Text =
+					itr_w.Text =
+					itr_x.Text =
+					itr_y.Text =
+					itr_zwidth.Text = "";
+				}
+			EditOut();
+			WCoverChanged(wpoint_cover, EventArgs.Empty);
+			CCoverChanged(cpoint_cover, EventArgs.Empty);
+			DircontrolChanged(cpoint_dircontrol, EventArgs.Empty);
+			VactionChanged(cpoint_vaction, EventArgs.Empty);
+			WeaponactChanged(wpoint_weaponact, EventArgs.Empty);
 		}
 
-		static readonly List<char> tokenDelim = new List<char>(new char[]{ ' ', '\t', '\r', '\n' }),
-			tokemDelimEnd = new List<char>(new char[]{ '>', ':' }),
-			tokenDelimBegin = new List<char>(new char[]{ '<' });
-
-		public string[] TokenizeFrame(string frame)
+		// God save us from ever needing to write this kind of creepy code
+		public bool SyncToEditor(DocumentForm theDoc, bool auto = false)
 		{
-			List<string> tokens = new List<string>(128);
-			bool spaceState = false;
-			int tokenStart = 0;
-			for (int i = 0; i < frame.Length; i++)
+			try
 			{
-				if (tokemDelimEnd.Contains(frame[i]))
+				if (theDoc == null || theDoc.DocumentType != DocumentType.ObjectData)
+					return false;
+				int fs = theDoc.Scintilla.Text.LastIndexOf("<frame>", theDoc.Scintilla.Lines.Current.EndPosition);
+				if (fs < 0)
+					return false;
+				int fe = theDoc.Scintilla.Text.IndexOf("<frame_end>", fs + 7);
+				if (fe < 0 || fe + 11 < theDoc.Scintilla.CurrentPos)
+					return false;
+				var fr = theDoc.Scintilla.GetRange(fs, fe + 11);
 				{
-					if (spaceState)
+					var frame = LF2DataUtils.ReadFrame(fr.Text);
+					frame.pic = (int)numericUpDown_ImageIndex.Value;
+					frame.caption = textBox_caption.Text;
+					if (tagBox.BdyTags != null)
 					{
-						tokenStart = i;
+						frame.bdys = tagBox.BdyTags.Select<TagBox.Bdy, LF2DataUtils.Bdy>((TagBox.Bdy bdy) => (LF2DataUtils.Bdy)bdy).ToArray<LF2DataUtils.Bdy>();
 					}
 					else
+						frame.bdys = null;
+					if (tagBox.ItrTags != null)
 					{
-						tokens.Add(frame.Substring(tokenStart, i - tokenStart));
-					}
-				}
-				if (char.IsWhiteSpace(frame[i]))
-				{
-					if (spaceState)
-					{
-						
+						frame.itrs = tagBox.ItrTags.Select<TagBox.Itr, LF2DataUtils.Itr>((TagBox.Itr itr) => (LF2DataUtils.Itr)itr).ToArray<LF2DataUtils.Itr>();
 					}
 					else
+						frame.itrs = null;
+					if (tagBox.WPoint != null)
 					{
-
+						int i = 0;
+						if (int.TryParse(wpoint_attacking.Text, out i))
+							frame.wpoint.attacking = i;
+						if (int.TryParse(wpoint_cover.Text, out i))
+							frame.wpoint.cover = i != 0;
+						if (int.TryParse(wpoint_dvx.Text, out i))
+							frame.wpoint.dvx = i;
+						if (int.TryParse(wpoint_dvy.Text, out i))
+							frame.wpoint.dvy = i;
+						if (int.TryParse(wpoint_dvz.Text, out i))
+							frame.wpoint.dvz = i;
+						if (int.TryParse(wpoint_kind.Text, out i))
+							frame.wpoint.kind = i;
+						if (int.TryParse(wpoint_weaponact.Text, out i))
+							frame.wpoint.weaponact = i;
+						if (int.TryParse(wpoint_x.Text, out i))
+							frame.wpoint.x = i;
+						if (int.TryParse(wpoint_y.Text, out i))
+							frame.wpoint.y = i;
 					}
+					if (tagBox.OPoint != null)
+					{
+						int i = 0;
+						if (int.TryParse(opoint_action.Text, out i))
+							frame.opoint.action = i;
+						if (int.TryParse(opoint_dvx.Text, out i))
+							frame.opoint.dvx = i;
+						if (int.TryParse(opoint_dvy.Text, out i))
+							frame.opoint.dvy = i;
+						if (int.TryParse(opoint_facing.Text, out i))
+							frame.opoint.facing = i;
+						if (int.TryParse(opoint_kind.Text, out i))
+							frame.opoint.kind = i;
+						if (int.TryParse(opoint_oid.Text, out i))
+							frame.opoint.oid = i;
+						if (int.TryParse(opoint_x.Text, out i))
+							frame.opoint.x = i;
+						if (int.TryParse(opoint_y.Text, out i))
+							frame.opoint.y = i;
+					}
+					if (tagBox.CPoint != null)
+					{
+						int i = 0;
+						if (int.TryParse(cpoint_aaction.Text, out i))
+							frame.cpoint.aaction = i;
+						if (int.TryParse(cpoint_backhurtact.Text, out i))
+							frame.cpoint.backhurtact = i;
+						if (int.TryParse(cpoint_cover.Text, out i))
+							frame.cpoint.cover = i != 0;
+						if (int.TryParse(cpoint_decrease.Text, out i))
+							frame.cpoint.decrease = i;
+						if (int.TryParse(cpoint_dircontrol.Text, out i))
+							frame.cpoint.dircontrol = i != 0;
+						if (int.TryParse(cpoint_fronthurtact.Text, out i))
+							frame.cpoint.fronthurtact = i;
+						if (int.TryParse(cpoint_hurtable.Text, out i))
+							frame.cpoint.hurtable = i != 0;
+						if (int.TryParse(cpoint_injury.Text, out i))
+							frame.cpoint.injury = i;
+						if (int.TryParse(cpoint_kind.Text, out i))
+							frame.cpoint.kind = i;
+						if (i != 2)
+						{
+							if (int.TryParse(cpoint_throwvx.Text, out i))
+								frame.cpoint.throwvx = i;
+							if (int.TryParse(cpoint_throwvy.Text, out i))
+								frame.cpoint.throwvy = i;
+						}
+						if (int.TryParse(cpoint_taction.Text, out i))
+							frame.cpoint.taction = i;
+						if (int.TryParse(cpoint_throwinjury.Text, out i))
+							frame.cpoint.throwinjury = i;
+						if (int.TryParse(cpoint_throwvz.Text, out i))
+							frame.cpoint.throwvz = i;
+						if (int.TryParse(cpoint_vaction.Text, out i))
+							frame.cpoint.vaction = i;
+						if (int.TryParse(cpoint_x.Text, out i))
+							frame.cpoint.x = i;
+						if (int.TryParse(cpoint_y.Text, out i))
+							frame.cpoint.y = i;
+					}
+					if (tagBox.BPoint != null)
+					{
+						int i = 0;
+						if (int.TryParse(bpoint_x.Text, out i))
+							frame.bpoint.x = i;
+						if (int.TryParse(bpoint_y.Text, out i))
+							frame.bpoint.y = i;
+					}
+					{
+						int i = 0;
+						if (int.TryParse(centerx.Text, out i))
+							frame.centerx = i;
+						if (int.TryParse(centery.Text, out i))
+							frame.centery = i;
+					}
+					fr.Text = frame.ToString();
 				}
-				if (!char.IsWhiteSpace(frame[i]))
-				{
-					if (spaceState)
-					{
-						
-					}
-					else
-					{
-
-					}
-				}
+				return true;
 			}
-			return tokens.ToArray();
+			catch { return false; }
 		}
 
 		private void tagBox_MouseUp(object sender, MouseEventArgs e)
 		{
+			SyncToEditor(mainForm.ActiveDocument, true);
+		}
+
+		private void bdy_kind_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.ActiveBdy != null)
+			{
+				try
+				{
+					tagBox.ActiveBdy.kind = int.Parse(bdy_kind.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void itr_kind_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.ActiveItr != null)
+			{
+				try
+				{
+					tagBox.ActiveItr.kind = int.Parse(itr_kind.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void itr_arest_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.ActiveItr != null)
+			{
+				try
+				{
+					tagBox.ActiveItr.arest = int.Parse(itr_arest.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void itr_vrest_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.ActiveItr != null)
+			{
+				try
+				{
+					tagBox.ActiveItr.vrest = int.Parse(itr_vrest.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void itr_fall_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.ActiveItr != null)
+			{
+				try
+				{
+					tagBox.ActiveItr.fall = int.Parse(itr_fall.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void itr_bdefend_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.ActiveItr != null)
+			{
+				try
+				{
+					tagBox.ActiveItr.bdefend = int.Parse(itr_bdefend.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void itr_injury_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.ActiveItr != null)
+			{
+				try
+				{
+					tagBox.ActiveItr.injury = int.Parse(itr_injury.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void itr_zwidth_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.ActiveItr != null)
+			{
+				try
+				{
+					tagBox.ActiveItr.zwidth = int.Parse(itr_zwidth.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void itr_effect_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.ActiveItr != null)
+			{
+				try
+				{
+					tagBox.ActiveItr.effect = int.Parse(itr_effect.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void itr_catchingact_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.ActiveItr != null)
+			{
+				try
+				{
+					tagBox.ActiveItr.catchingact = int.Parse(itr_catchingact.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void itr_caughtact_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.ActiveItr != null)
+			{
+				try
+				{
+					tagBox.ActiveItr.caughtact = int.Parse(itr_caughtact.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void wpoint_kind_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.WPoint != null)
+			{
+				try
+				{
+					tagBox.WPoint.kind = int.Parse(wpoint_kind.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void wpoint_attacking_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.WPoint != null)
+			{
+				try
+				{
+					tagBox.WPoint.attacking = int.Parse(wpoint_attacking.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void wpoint_dvz_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.WPoint != null)
+			{
+				try
+				{
+					tagBox.WPoint.dvz = int.Parse(wpoint_dvz.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void opoint_kind_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.OPoint != null)
+			{
+				try
+				{
+					tagBox.OPoint.kind = int.Parse(opoint_kind.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void opoint_facing_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.OPoint != null)
+			{
+				try
+				{
+					tagBox.OPoint.facing = int.Parse(opoint_facing.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void cpoint_kind_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.CPoint != null)
+			{
+				try
+				{
+					tagBox.CPoint.kind = int.Parse(cpoint_kind.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void cpoint_injury_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.CPoint != null)
+			{
+				try
+				{
+					tagBox.CPoint.injury = int.Parse(cpoint_injury.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void cpoint_aaction_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.CPoint != null)
+			{
+				try
+				{
+					tagBox.CPoint.aaction = int.Parse(cpoint_aaction.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void cpoint_taction_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.CPoint != null)
+			{
+				try
+				{
+					tagBox.CPoint.taction = int.Parse(cpoint_taction.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void cpoint_throwvz_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.CPoint != null)
+			{
+				try
+				{
+					tagBox.CPoint.throwvz = int.Parse(cpoint_throwvz.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void cpoint_hurtable_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			bool hurtable = (cpoint_hurtable.Text == "0" || cpoint_hurtable.Text == "");
+			if (tagBox.CPoint != null)
+			{
+				tagBox.CPoint.hurtable = hurtable;
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void cpoint_throwinjury_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.CPoint != null)
+			{
+				try
+				{
+					tagBox.CPoint.throwinjury = int.Parse(cpoint_throwinjury.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void cpoint_decrease_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.CPoint != null)
+			{
+				try
+				{
+					tagBox.CPoint.throwinjury = int.Parse(cpoint_throwinjury.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void cpoint_fronthurtact_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.CPoint != null)
+			{
+				try
+				{
+					tagBox.CPoint.throwinjury = int.Parse(cpoint_throwinjury.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		private void cpoint_backhurtact_TextChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			if (tagBox.CPoint != null)
+			{
+				try
+				{
+					tagBox.CPoint.throwinjury = int.Parse(cpoint_throwinjury.Text);
+				}
+				catch { }
+				SyncToEditor(mainForm.ActiveDocument, true);
+			}
+		}
+
+		// God save us from ever needing to write this kind of creepy code
+		private void tagBox_ActiveBdyChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			TagBox.Bdy bdy = tagBox.ActiveBdy;
+			EditIn();
+			if (bdy != null)
+			{
+				bdy_kind.Text = bdy.kind.ToString();
+				bdy_x.Text = bdy.x.ToString();
+				bdy_y.Text = bdy.y.ToString();
+				bdy_w.Text = bdy.w.ToString();
+				bdy_h.Text = bdy.h.ToString();
+			}
+			EditOut();
+		}
+
+		// God save us from ever needing to write this kind of creepy code
+		private void tagBox_ActiveItrChanged(object sender, EventArgs e)
+		{
+			if (editing)
+				return;
+			TagBox.Itr itr = tagBox.ActiveItr;
+			EditIn();
+			if (itr != null)
+			{
+				itr_arest.Text = itr.arest.ToString();
+				itr_bdefend.Text = itr.bdefend.ToString();
+				itr_catchingact.Text = itr.catchingact.ToString();
+				itr_caughtact.Text = itr.caughtact.ToString();
+				itr_dvx.Text = itr.dvx.ToString();
+				itr_dvy.Text = itr.dvy.ToString();
+				itr_effect.Text = itr.effect.ToString();
+				itr_fall.Text = itr.fall.ToString();
+				itr_h.Text = itr.h.ToString();
+				itr_injury.Text = itr.injury.ToString();
+				itr_kind.Text = itr.kind.ToString();
+				itr_vrest.Text = itr.vrest.ToString();
+				itr_w.Text = itr.w.ToString();
+				itr_x.Text = itr.x.ToString();
+				itr_y.Text = itr.y.ToString();
+				itr_zwidth.Text = itr.zwidth.ToString();
+			}
+			EditOut();
+		}
+
+		private void buttonSyncToEditor_Click(object sender, EventArgs e)
+		{
+			SyncToEditor(mainForm.ActiveDocument, true);
+		}
+
+		private void buttonSyncToDesing_Click(object sender, EventArgs e)
+		{
+			mainForm.ActiveDocument.SyncToDesing();
+		}
+
+		private void textBox_caption_TextChanged(object sender, EventArgs e)
+		{
+			if (!editing)
+				SyncToEditor(mainForm.ActiveDocument, true);
 		}
 	}
 }

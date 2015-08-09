@@ -1,5 +1,6 @@
 ﻿using ScintillaNET;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -8,7 +9,9 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Threading;
 using WeifenLuo.WinFormsUI.Docking;
+using System.Diagnostics;
 
 namespace LF2.IDE
 {
@@ -16,6 +19,9 @@ namespace LF2.IDE
 	{
 		private string _filePath;
 		private bool _issaved;
+		private DocumentType documentType = DocumentType.Default;
+		private System.Timers.Timer syncTimer = new System.Timers.Timer(1000) { AutoReset = true };
+		bool justEdited = false;
 
 		public List<SpriteSheet> spriteList = new List<SpriteSheet>(0);
 		public Bitmap[] frames;
@@ -24,6 +30,11 @@ namespace LF2.IDE
 		public int frameIndexShape;
 
 		private MainForm mainForm;
+
+		public DocumentType DocumentType
+		{
+			get { return documentType; }
+		}
 
 		public string FilePath
 		{
@@ -128,7 +139,7 @@ namespace LF2.IDE
 		public bool Save(string filePath)
 		{
 			if (filePath.EndsWith(".dat"))
-				LF2DataUtil.Encrypt(Scintilla.Text, filePath);
+				LF2DataUtils.Encrypt(Scintilla.Text, filePath);
 			else
 				File.WriteAllText(filePath, Scintilla.Text, Encoding.Default);
 
@@ -221,6 +232,7 @@ namespace LF2.IDE
 
 		public DocumentForm(MainForm main)
 		{
+			syncTimer.Elapsed += syncTimer_Elapsed;
 			mainForm = main;
 			InitializeComponent();
 		}
@@ -337,32 +349,36 @@ namespace LF2.IDE
 				this.Scintilla.Snippets.List.Clear();
 				this.Scintilla.AutoComplete.List.Clear();
 				this.Scintilla.ConfigurationManager.Language = "default";
+				documentType = DocumentType.Default;
 				switch(language)
 				{
-					case "default":
-						goto default;
 					case "dat":
 						Scintilla.Indentation.UseTabs = false;
 						if (Scintilla.Text.Contains("<stage>"))
 						{
 							Scintilla.Indentation.TabWidth = 8;
 							this.Scintilla.ConfigurationManager.Language = "stage_dat";
+							documentType = DocumentType.StageData;
 						}
 						else if (Scintilla.Text.Contains("layer:"))
 						{
 							Scintilla.Indentation.TabWidth = 2;
 							this.Scintilla.ConfigurationManager.Language = "bg_dat";
+							documentType = DocumentType.BgData;
 						}
 						else
 						{
 							Scintilla.Indentation.TabWidth = 3;
 							this.Scintilla.ConfigurationManager.Language = "object_dat";
+							documentType = DocumentType.ObjectData;
 						}
 						Scintilla.EndOfLine.Mode = EndOfLineMode.LF;
 						this.Icon = Properties.Resources.DocumentDAT;
 						auto = true;
 						smart = true;
 						break;
+					case "default":
+						goto default;
 					case "txt":
 						if (TabText.TrimEnd(' ', '*') != "data.txt")
 							goto default;
@@ -373,6 +389,7 @@ namespace LF2.IDE
 						auto = true;
 						smart = true;
 						this.Scintilla.ConfigurationManager.Language = "data_txt";
+						documentType = DocumentType.DataTxt;
 						break;
 					case "as":
 						Scintilla.Indentation.UseTabs = true;
@@ -382,6 +399,7 @@ namespace LF2.IDE
 						auto = false;
 						smart = true;
 						this.Scintilla.ConfigurationManager.Language = language;
+						documentType = DocumentType.AngelScript;
 						break;
 					case "cs":
 						Scintilla.Indentation.UseTabs = true;
@@ -391,6 +409,7 @@ namespace LF2.IDE
 						auto = false;
 						smart = true;
 						this.Scintilla.ConfigurationManager.Language = language;
+						documentType = DocumentType.CSharp;
 						break;
 					case "html":
 					case "xml":
@@ -401,12 +420,14 @@ namespace LF2.IDE
 						auto = false;
 						smart = true;
 						this.Scintilla.ConfigurationManager.Language = language;
+						documentType = DocumentType.XML;
 						break;
 					default:
 						Scintilla.Indentation.UseTabs = true;
 						Scintilla.Indentation.TabWidth = 4;
 						Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
 						this.Icon = Properties.Resources.Document;
+						documentType = DocumentType.Default;
 						auto = false;
 						smart = false;
 						break;
@@ -460,7 +481,9 @@ namespace LF2.IDE
 
 		void ScintillaTextChanged(object sender, EventArgs e)
 		{
+			justEdited = true;
 			SetMarginAuto();
+			syncTimer.Start();
 		}
 
 		public void SetMarginAuto()
@@ -484,6 +507,10 @@ namespace LF2.IDE
 			toolStripStatusLabel_SelLen.Text = (scintilla.Selection.Length).ToString();
 			int sel = scintilla.Selection.Range.EndingLine.Number - scintilla.Selection.Range.StartingLine.Number;
 			toolStripStatusLabel_SelLines.Text = (scintilla.Selection.Length > 0 ? sel : 0).ToString();
+			if (!justEdited)
+			{
+				SyncToDesing(auto = true);
+			}
 		}
 
 		private void scintilla_KeyDown(object sender, KeyEventArgs e)
@@ -491,5 +518,225 @@ namespace LF2.IDE
 			if (e.KeyCode == Keys.Insert)
 				toolStripStatusLabel_InsOvr.Text = scintilla.OverType ? "INS" : "OVR";
 		}
+
+		// God save us from ever needing to write this kind of creepy code
+		public bool SyncToDesing(bool auto = false)
+		{
+			if (documentType != DocumentType.ObjectData || auto && !mainForm.formDesing.checkBoxLinkage.Checked)
+				return false;
+			try
+			{
+				int fs = Scintilla.Text.LastIndexOf("<frame>", Scintilla.Lines.Current.EndPosition);
+				if (fs < 0)
+					return false;
+				int fe = Scintilla.Text.IndexOf("<frame_end>", fs + 7);
+				if (fe < 0 || fe + 11 < Scintilla.CurrentPos)
+					return false;
+				var fr = Scintilla.GetRange(fs, fe + 11);
+				{
+					var frame = LF2DataUtils.ReadFrame(fr.Text);
+					mainForm.formDesing.EditIn();
+					if (frame.pic.HasValue)
+						mainForm.formDesing.numericUpDown_ImageIndex.Value = frame.pic.Value;
+					mainForm.formDesing.textBox_caption.Text = frame.caption;
+					if (frame.bdys != null)
+					{
+						mainForm.formDesing.tagBox.BdyTags = new List<TagBox.Bdy>(frame.bdys.Select<LF2DataUtils.Bdy, TagBox.Bdy>((LF2DataUtils.Bdy bdy) => (TagBox.Bdy)bdy));
+						if (mainForm.formDesing.tagBox.BdyTags.Count >= 0)
+							mainForm.formDesing.tagBox.ActiveBdyIndex = mainForm.formDesing.tagBox.BdyTags.Count - 1;
+						else
+							mainForm.formDesing.tagBox.ActiveBdyIndex = null;
+						if (mainForm.formDesing.tagBox.ActiveBdyIndex.HasValue)
+						{
+							LF2DataUtils.Bdy bdy = frame.bdys[mainForm.formDesing.tagBox.ActiveBdyIndex.Value];
+							if (bdy != null)
+							{
+								mainForm.formDesing.bdy_h.Text = bdy.h.HasValue ? bdy.h.ToString() : "";
+								mainForm.formDesing.bdy_kind.Text = bdy.kind.HasValue ? bdy.kind.ToString() : "";
+								mainForm.formDesing.bdy_w.Text = bdy.w.HasValue ? bdy.w.ToString() : "";
+								mainForm.formDesing.bdy_x.Text = bdy.x.HasValue ? bdy.x.ToString() : "";
+								mainForm.formDesing.bdy_y.Text = bdy.y.HasValue ? bdy.y.ToString() : "";
+							}
+						}
+					}
+					else
+					{
+						mainForm.formDesing.tagBox.ClearBdyList();
+						mainForm.formDesing.bdy_h.Text = 
+						mainForm.formDesing.bdy_kind.Text = 
+						mainForm.formDesing.bdy_w.Text = 
+						mainForm.formDesing.bdy_x.Text = 
+						mainForm.formDesing.bdy_y.Text = "";
+					}
+					if (frame.itrs != null)
+					{
+						mainForm.formDesing.tagBox.ItrTags = new List<TagBox.Itr>(frame.itrs.Select<LF2DataUtils.Itr, TagBox.Itr>((LF2DataUtils.Itr itr) => (TagBox.Itr)itr));
+						if (mainForm.formDesing.tagBox.ItrTags.Count >= 0)
+							mainForm.formDesing.tagBox.activeItrIndex = mainForm.formDesing.tagBox.ItrTags.Count - 1;
+						if (mainForm.formDesing.tagBox.ActiveItrIndex.HasValue)
+						{
+							LF2DataUtils.Itr itr = frame.itrs[mainForm.formDesing.tagBox.ActiveItrIndex.Value];
+							if (itr != null)
+							{
+								mainForm.formDesing.itr_arest.Text = itr.arest.HasValue ? itr.arest.ToString() : "";
+								mainForm.formDesing.itr_bdefend.Text = itr.bdefend.HasValue ? itr.bdefend.ToString() : "";
+								mainForm.formDesing.itr_catchingact.Text = itr.catchingact.HasValue ? itr.catchingact.ToString() : "";
+								mainForm.formDesing.itr_caughtact.Text = itr.caughtact.HasValue ? itr.caughtact.ToString() : "";
+								mainForm.formDesing.itr_dvx.Text = itr.dvx.HasValue ? itr.dvx.ToString() : "";
+								mainForm.formDesing.itr_dvy.Text = itr.dvy.HasValue ? itr.dvy.ToString() : "";
+								mainForm.formDesing.itr_effect.Text = itr.effect.HasValue ? itr.effect.ToString() : "";
+								mainForm.formDesing.itr_fall.Text = itr.fall.HasValue ? itr.fall.ToString() : "";
+								mainForm.formDesing.itr_h.Text = itr.h.HasValue ? itr.h.ToString() : "";
+								mainForm.formDesing.itr_injury.Text = itr.injury.HasValue ? itr.injury.ToString() : "";
+								mainForm.formDesing.itr_kind.Text = itr.kind.HasValue ? itr.kind.ToString() : "";
+								mainForm.formDesing.itr_vrest.Text = itr.vrest.HasValue ? itr.vrest.ToString() : "";
+								mainForm.formDesing.itr_w.Text = itr.w.HasValue ? itr.w.ToString() : "";
+								mainForm.formDesing.itr_x.Text = itr.x.HasValue ? itr.x.ToString() : "";
+								mainForm.formDesing.itr_y.Text = itr.y.HasValue ? itr.y.ToString() : "";
+								mainForm.formDesing.itr_zwidth.Text = itr.zwidth.HasValue ? itr.zwidth.ToString() : "";
+							}
+						}
+					}
+					else
+					{
+						mainForm.formDesing.tagBox.ClearItrList();
+					}
+					if (frame.centerx.HasValue && frame.centery.HasValue)
+					{
+						mainForm.formDesing.tagBox.TagData.center = new Point(frame.centerx.Value, frame.centery.Value);
+					}
+					else
+					{
+						mainForm.formDesing.tagBox.TagData.center = null;
+					}
+					if (frame.bpoint != null)
+					{
+						mainForm.formDesing.tagBox.TagData.bpoint = (Point)frame.bpoint;
+					}
+					else
+					{
+						mainForm.formDesing.tagBox.TagData.bpoint = null;
+					}
+					if (frame.cpoint != null)
+					{
+						mainForm.formDesing.tagBox.TagData.cpoint = (TagBox.CPoint)frame.cpoint;
+					}
+					else
+					{
+						mainForm.formDesing.tagBox.TagData.cpoint = null;
+					}
+					if (frame.opoint != null)
+					{
+						mainForm.formDesing.tagBox.TagData.opoint = (TagBox.OPoint)frame.opoint;
+					}
+					else
+					{
+						mainForm.formDesing.tagBox.TagData.opoint = null;
+					}
+					if (frame.wpoint != null)
+					{
+						mainForm.formDesing.tagBox.TagData.wpoint = (TagBox.WPoint)frame.wpoint;
+					}
+					else
+					{
+						mainForm.formDesing.tagBox.TagData.wpoint = null;
+					}
+					mainForm.formDesing.RefreshAllTextBoxes();
+				}
+				mainForm.formDesing.EditReset();
+				mainForm.formDesing.tagBox.Refresh();
+				return true;
+			}
+			catch
+			{
+				mainForm.formDesing.EditReset();
+				mainForm.formDesing.tagBox.Invalidate();
+				return false;
+			}
+		}
+
+		private void syncTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			Action func = (Action)(() =>
+			{
+				justEdited = false;
+				syncTimer.Stop();
+				SyncToDesing(true);
+			});
+			this.BeginInvoke(func);
+		}
+
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Save();
+		}
+
+		private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Close();
+		}
+
+		private void closeAllButThisToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var doc = this.DockPanel.DocumentsToArray();
+			for (int i = this.DockPanel.DocumentsCount - 1; i >= 0; i--)
+			{
+				if (doc[i] != this)
+					(doc[i] as DocumentForm).Close();
+			}
+		}
+
+		private void closeAllToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var doc = this.DockPanel.DocumentsToArray();
+			for (int i = this.DockPanel.DocumentsCount - 1; i >= 0; i--)
+			{
+				if (doc[i] != this)
+					(doc[i] as DocumentForm).Close();
+			}
+			Close();
+		}
+
+		private void copyFullPathToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (_filePath != null)
+				System.Windows.Forms.Clipboard.SetText(_filePath, TextDataFormat.UnicodeText);
+		}
+
+		private void copyFileNameToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (_filePath != null)
+				System.Windows.Forms.Clipboard.SetText(Path.GetFileName(_filePath), TextDataFormat.UnicodeText);
+		}
+
+		private void copyFileItselfToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (File.Exists(_filePath))
+			{
+				var fdl = new System.Collections.Specialized.StringCollection();
+				fdl.Add(_filePath);
+				System.Windows.Forms.Clipboard.SetFileDropList(fdl);
+			}
+		}
+
+		private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (File.Exists(_filePath))
+			{
+				Process.Start("explorer", "/select, " + _filePath);
+			}
+		}
+	}
+
+	public enum DocumentType
+	{
+		Default,
+		ObjectData,
+		StageData,
+		BgData,
+		DataTxt,
+		AngelScript,
+		CSharp,
+		XML
 	}
 }

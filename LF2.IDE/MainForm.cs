@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -31,20 +32,25 @@ namespace LF2.IDE
 
 			DesingSettings();
 
-			if (!File.Exists(Program.dockingPath))
+			if (File.Exists(Program.dockingPath))
+			{
+				dockPanel.LoadFromXml(Program.dockingPath, new WeifenLuo.WinFormsUI.Docking.DeserializeDockContent(DockingDeserializer));
+				isLoaded = true;
+			}
+			else if (File.Exists(Program.nearDockingPath))
+			{
+				dockPanel.LoadFromXml(Program.nearDockingPath, new WeifenLuo.WinFormsUI.Docking.DeserializeDockContent(DockingDeserializer));
+				isLoaded = true;
+			}
+			else
 			{
 				if (formEventLog == null)
 					formEventLog = new FormEventLog();
-				formTag = new FormTag(this);
+				formDesing = new FormDesing(this);
 				formFrame = new FormFrame(this);
 				formShape = new FormShape(this);
 				solutionExplorer = new SolutionExplorer(this);
 				media = new MediaPanel();
-			}
-			else
-			{
-				dockPanel.LoadFromXml(Program.dockingPath, new WeifenLuo.WinFormsUI.Docking.DeserializeDockContent(DockingDeserializer));
-				isLoaded = true;
 			}
 
 			try
@@ -58,13 +64,14 @@ namespace LF2.IDE
 
 			if (!isLoaded)
 			{
-				formTag.Show(dockPanel);
+				formDesing.Show(dockPanel);
 				formFrame.Show(dockPanel);
 				formShape.Show(dockPanel);
 				media.Show(dockPanel);
 				formEventLog.Show(dockPanel);
 				solutionExplorer.Show(dockPanel);
-				formTag.AutoHidePortion = 550;
+
+				formDesing.AutoHidePortion = 550;
 				formFrame.AutoHidePortion = 350;
 				formShape.AutoHidePortion = 300;
 				media.AutoHidePortion = 300;
@@ -72,11 +79,17 @@ namespace LF2.IDE
 				solutionExplorer.AutoHidePortion = 300;
 			}
 
+			formDesing.checkBoxLinkage.Checked = Settings.Current.syncDesing;
+
+			this.Size = Settings.Current.window.Size;
+			this.Location = Settings.Current.window.Location;
+			this.WindowState = Settings.Current.windowState;
+
 			formEventLog.Log("Initialized: " + stopWatch.Elapsed, true);
 			stopWatch.Restart();
 		}
 
-		public FormTag formTag;
+		public FormDesing formDesing;
 		public FormFrame formFrame;
 		public FormShape formShape;
 		public SolutionExplorer solutionExplorer;
@@ -103,10 +116,10 @@ namespace LF2.IDE
 				lastActiveFrame = (lastActiveDoc = ActiveDocument).frames;
 				if (lastActiveFrame != null && lastActiveFrame.Length > 0)
 				{
-					formTag.numericUpDown_ImageIndex.Maximum =
+					formDesing.numericUpDown_ImageIndex.Maximum =
 					formFrame.numericUpDown_pic.Maximum =
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
-					formTag.tagBox.Image =
+					formDesing.tagBox.Image =
 					formFrame.drawBox.Image =
 					formShape.drawBox.Image = lastActiveFrame[0];
 				}
@@ -117,9 +130,11 @@ namespace LF2.IDE
 			{
 				solutionExplorer.refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
 				solutionExplorer.PopulateTreeView(solutionExplorer.DestinationFolder);
-				formTag.stopWatch.Start();
-				formTag.StartCaching();
+				formDesing.stopWatch.Start();
+				formDesing.StartCaching();
 			}
+
+			formDesing.checkBoxLinkage.Checked = Settings.Current.syncDesing;
 
 			formEventLog.Log("MainForm Loaded: " + stopWatch.Elapsed, true);
 			stopWatch.Reset();
@@ -146,7 +161,7 @@ namespace LF2.IDE
 		}
 
 		readonly string felPersist = typeof(FormEventLog).FullName,
-			ftPersist = typeof(FormTag).FullName,
+			ftPersist = typeof(FormDesing).FullName,
 			ffPersist = typeof(FormFrame).FullName,
 			fsPersist = typeof(FormShape).FullName,
 			sePersist = typeof(SolutionExplorer).FullName,
@@ -158,7 +173,7 @@ namespace LF2.IDE
 			if (persistString == felPersist)
 				return formEventLog = new FormEventLog();
 			else if (persistString == ftPersist)
-				return formTag = new FormTag(this);
+				return formDesing = new FormDesing(this);
 			else if (persistString == ffPersist)
 				return formFrame = new FormFrame(this);
 			else if (persistString == fsPersist)
@@ -167,10 +182,11 @@ namespace LF2.IDE
 				return solutionExplorer = new SolutionExplorer(this);
 			else if (persistString == mpPersist)
 				return media = new MediaPanel();
-			else if (persistString == docPersist && Settings.Current.saveDocStates)
+			else if (persistString == docPersist && Settings.Current.saveDocStates && docLoop < Settings.Current.documentSettings.Count)
 			{
 				DocSet ds = Settings.Current.documentSettings[docLoop++];
 				DocumentForm df = Open(ds.filePath, true);
+				df.Scintilla.LineWrapping.Mode = ds.lineWrappingMode;
 				df.Scintilla.Lines.FirstVisibleIndex = ds.firstVisibleLine;
 				df.Scintilla.Selection.Start = ds.selectionStart;
 				df.Scintilla.Selection.End = ds.selectionEnd;
@@ -282,10 +298,10 @@ namespace LF2.IDE
 						if (e.Cancel)
 							return;
 					}
-					else if(dr == DialogResult.No)
-					{
-						toClose.Add(doc);
-					}
+					//else if(dr == DialogResult.No)
+					//{
+					//	toClose.Add(doc);
+					//}
 				}
 				else if(!File.Exists(doc.FilePath))
 				{
@@ -480,8 +496,9 @@ namespace LF2.IDE
 			}
 		}
 
-		void MainFormForm_Closed(object sender, FormClosedEventArgs e)
+		void MainForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
+			closed = true;
 			foreach (DocumentForm doc in toClose)
 			{
 				doc.Scintilla.Modified = false;
@@ -508,6 +525,9 @@ namespace LF2.IDE
 						});
 				}
 			}
+			Settings.Current.windowState = this.WindowState;
+			this.WindowState = FormWindowState.Normal;
+			Settings.Current.window = new Rectangle(this.Location, this.Size);
 			Settings.Current.Save();
 			try
 			{
@@ -530,9 +550,11 @@ namespace LF2.IDE
 
 		public Bitmap[] lastActiveFrame;
 		public DocumentForm lastActiveDoc;
+		bool closed = false;
 
 		void DockPanelActiveDocumentChanged(object sender, EventArgs e)
 		{
+			if (closed) return;
 			if (ActiveDocument != null)
 			{
 				if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.None)
@@ -558,16 +580,16 @@ namespace LF2.IDE
 				{
 					lastActiveDoc = ActiveDocument;
 					lastActiveFrame = lastActiveDoc.frames;
-					formTag.numericUpDown_ImageIndex.Maximum =
+					formDesing.numericUpDown_ImageIndex.Maximum =
 					formFrame.numericUpDown_pic.Maximum =
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
-					formTag.numericUpDown_ImageIndex.Value = lastActiveDoc.frameIndexTag;
 					formFrame.numericUpDown_pic.Value = lastActiveDoc.frameIndexFrame;
 					formShape.numericUpDown_ImageIndex.Value = lastActiveDoc.frameIndexShape;
-					formTag.tagBox.Image = lastActiveFrame[lastActiveDoc.frameIndexTag];
+					formDesing.tagBox.Image = lastActiveFrame[lastActiveDoc.frameIndexTag];
 					formFrame.drawBox.Image = lastActiveFrame[lastActiveDoc.frameIndexFrame];
 					formShape.drawBox.Image = lastActiveFrame[lastActiveDoc.frameIndexShape];
 				}
+				ActiveDocument.SyncToDesing(true);
 			}
 			else
 				toolStripIncrementalSearcher.Scintilla = null;
@@ -702,7 +724,7 @@ namespace LF2.IDE
 
 		void ShowTagWindowToolStripMenuItemClick(object sender, EventArgs e)
 		{
-			formTag.Show();
+			formDesing.Show();
 		}
 
 		void ShowFrameWindowToolStripMenuItemClick(object sender, EventArgs e)
@@ -773,6 +795,7 @@ namespace LF2.IDE
 		void ToolStripButtoneolClick(object sender, EventArgs e)
 		{
 			ActiveDocument.Scintilla.Whitespace.Mode = showAllCharsToolStripButton.Checked ? ScintillaNET.WhitespaceMode.VisibleAlways : ScintillaNET.WhitespaceMode.Invisible;
+			ActiveDocument.Scintilla.EndOfLine.IsVisible = showAllCharsToolStripButton.Checked;
 		}
 
 		void ToolStripButtonFClick(object sender, EventArgs e)
@@ -964,11 +987,11 @@ namespace LF2.IDE
 				lastActiveFrame = ActiveDocument.frames;
 				if (lastActiveFrame != null && lastActiveFrame.Length > 0)
 				{
-					formTag.numericUpDown_ImageIndex.Maximum =
+					formDesing.numericUpDown_ImageIndex.Maximum =
 					formFrame.numericUpDown_pic.Maximum =
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
-					formTag.numericUpDown_ImageIndex.Value = formFrame.numericUpDown_pic.Value = formShape.numericUpDown_ImageIndex.Value = 0;
-					formTag.tagBox.Image =
+					formDesing.numericUpDown_ImageIndex.Value = formFrame.numericUpDown_pic.Value = formShape.numericUpDown_ImageIndex.Value = 0;
+					formDesing.tagBox.Image =
 					formFrame.drawBox.Image =
 					formShape.drawBox.Image = lastActiveFrame[0];
 				}
@@ -1000,11 +1023,11 @@ namespace LF2.IDE
 				lastActiveFrame = ActiveDocument.frames;
 				if (lastActiveFrame != null && lastActiveFrame.Length > 0)
 				{
-					formTag.numericUpDown_ImageIndex.Maximum =
+					formDesing.numericUpDown_ImageIndex.Maximum =
 					formFrame.numericUpDown_pic.Maximum =
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
-					formTag.numericUpDown_ImageIndex.Value = formFrame.numericUpDown_pic.Value = formShape.numericUpDown_ImageIndex.Value = 0;
-					formTag.tagBox.Image =
+					formDesing.numericUpDown_ImageIndex.Value = formFrame.numericUpDown_pic.Value = formShape.numericUpDown_ImageIndex.Value = 0;
+					formDesing.tagBox.Image =
 					formFrame.drawBox.Image =
 					formShape.drawBox.Image = lastActiveFrame[0];
 				}
@@ -1204,30 +1227,78 @@ namespace LF2.IDE
 			checkForUpdatesToolStripMenuItem.Text = "&Checking for Updates...";
 		}
 
+		public class Updater
+		{
+			public UpdateState state;
+			public string
+				version,
+				currentVersion,
+				preVersion,
+				downloadPage,
+				webPage;
+		}
+
 		public enum UpdateState : byte
 		{
 			None,
-			Available,
-			Developer
+			Release,
+			PreRelease,
+			ReleaseAndPre,
+			Developer,
+			DeveloperPre
 		}
 
-		public UpdateState CheckForUpdates()
+		string[] liner = { "\r\n" };
+
+		public Updater CheckForUpdates()
 		{
 			WebClient wc = new WebClient();
-			string ver = wc.DownloadString(Program.updateInfoLink);
+			string[] wer = wc.DownloadString(Program.updateInfoLink).Split(liner, StringSplitOptions.None);
+			string ver = wer[0],
+				prever = wer[2],
+				down = wer[5],
+				web = wer[4],
+				verS = wer[1],
+				preverS = wer[3],
+				curS = Application.ProductVersion;
 
 			string[] vs = AboutForm.AssemblyVersion.Split('.');
 			int[] v = { int.Parse(vs[0]), int.Parse(vs[1]) };
-
+			
 			Version version = new Version(ver),
+				preversion = new Version(prever),
 				current = new Version(v[0], v[1]);
 
+			Updater up = new Updater() { downloadPage = down, version = verS, preVersion = preverS, currentVersion = curS, webPage = web };
+
 			if (current > version)
-				return UpdateState.Developer;
+			{
+				if (current < preversion)
+					up.state = UpdateState.DeveloperPre;
+				else if (current == preversion)
+					up.state = UpdateState.None;
+				else
+					up.state = UpdateState.Developer;
+				return up;
+			}
 			else if (current == version)
-				return UpdateState.None;
+			{
+				if (current < preversion)
+					up.state = UpdateState.PreRelease;
+				else if (current == preversion)
+					up.state = UpdateState.PreRelease;
+				else
+					up.state = UpdateState.None;
+				return up;
+			}
 			else
-				return UpdateState.Available;
+			{
+				if (current < preversion)
+					up.state = UpdateState.ReleaseAndPre;
+				else
+					up.state = UpdateState.Release;
+				return up;
+			}
 		}
 
 		abstract class Notificable
@@ -1237,9 +1308,9 @@ namespace LF2.IDE
 
 		class UpdateInfo : Notificable
 		{
-			public UpdateState update;
+			public Updater update;
 
-			public UpdateInfo(bool notify, UpdateState update)
+			public UpdateInfo(bool notify, Updater update)
 			{
 				this.notify = notify;
 				this.update = update;
@@ -1271,6 +1342,8 @@ namespace LF2.IDE
 
 		void BackgroundUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
+			if (closed || formEventLog.Disposing || formEventLog.IsDisposed)
+				return;
 			checkForUpdatesToolStripMenuItem.Text = "&Check for Updates";
 			bool notify = ((Notificable)e.Result).notify;
 			if (e.Result is UpdateError)
@@ -1279,35 +1352,49 @@ namespace LF2.IDE
 				if (notify)
 					formEventLog.Error(error, "Update Checking Error");
 				else
-					try { formEventLog.Log("Update Check Failed", true); }
-					catch { }
+					formEventLog.Log("Update Check Failed", true);
 			}
 			else if (e.Result is UpdateInfo)
 			{
 				UpdateInfo updateInfo = (UpdateInfo)e.Result;
-				if (updateInfo.update == UpdateState.None)
+				switch (updateInfo.update.state)
 				{
-					if (updateInfo.notify)
-						MessageBox.Show(this, "I believe you have the lastest version :)", "Update Checker");
-					else
-						try { formEventLog.Log("Everthing looks up-to-date", true); }
-						catch { }
-				}
-				else
-				{
-					if (updateInfo.update == UpdateState.Available)
-					{
-						formEventLog.Log(Program.webPage + "\r\n" + Program.downloadPage, "Update Found!", true);
+					case UpdateState.None:
+						if (updateInfo.notify)
+							MessageBox.Show(this, "I believe you have the latest version :)", "Update Checker");
+						else
+							formEventLog.Log("Everthing looks up-to-date", true);
+						break;
+					case UpdateState.Release:
+						formEventLog.Log("Current Version: " + updateInfo.update.currentVersion + "\r\nLatest Version: " + updateInfo.update.version + "\r\n" + updateInfo.update.webPage + "\r\n" + updateInfo.update.downloadPage, "Update Found!", true);
+						if (updateInfo.notify)
+							MessageBox.Show(this, "New update available!", "Update Checker");
 						formEventLog.Show();
-					}
-					else
-					{
+						break;
+					case UpdateState.PreRelease:
+						formEventLog.Log("Current Version: " + updateInfo.update.currentVersion + "\r\nLatest Version: "  + updateInfo.update.version + "\r\nLatest Pre-Release Version: " + updateInfo.update.preVersion + "\r\n" + updateInfo.update.webPage + "\r\n" + updateInfo.update.downloadPage, "Update Found! (Pre-Release)", true);
+						if (updateInfo.notify)
+						{
+							MessageBox.Show(this, "There is a pre-release update", "Update Checker");
+							formEventLog.Show();
+						}
+						break;
+					case UpdateState.ReleaseAndPre:
+						formEventLog.Log("Current Version: " + updateInfo.update.currentVersion + "\r\nLatest Version: " + updateInfo.update.version + "\r\nLatest Pre-Release Version: " + updateInfo.update.preVersion + "\r\n" + updateInfo.update.webPage + "\r\n" + updateInfo.update.downloadPage, "Update Found!", true);
+						if (updateInfo.notify)
+							MessageBox.Show(this, "New update available!", "Update Checker");
+						formEventLog.Show();
+						break;
+					case UpdateState.Developer:
+						formEventLog.Log("Somehow, it appears that your current version is even higher than the latest one\r\nCurrent Version: " + updateInfo.update.currentVersion + "\r\nLatest Version: " + updateInfo.update.version + "\r\n" + updateInfo.update.webPage, "WTF!", true);
 						if (updateInfo.notify)
 							MessageBox.Show(this, "Somehow, it appears that your current version is even higher than the latest one", "Update Checker");
-						else
-							try { formEventLog.Log("Somehow, it appears that your current version is even higher than the latest one", "Update Checker", false); }
-							catch { }
-					}
+						break;
+					case UpdateState.DeveloperPre:
+						formEventLog.Log("Somehow, it appears that your current version is even higher than the latest one but still there is a pre-release available\r\nCurrent Version: " + updateInfo.update.currentVersion + "\r\nLatest Version: " + updateInfo.update.version + "\r\nLatest Pre-Release Version: " + updateInfo.update.preVersion + "\r\n" + updateInfo.update.webPage, "WTF!", true);
+						if (updateInfo.notify)
+							MessageBox.Show(this, "Somehow, it appears that your current version is even higher than the latest one but still there is a pre-release available", "Update Checker");
+						break;
 				}
 			}
 		}
@@ -1386,9 +1473,10 @@ namespace LF2.IDE
 		private void backgroundWorker_Util_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			UtilManager.UtilLock = false;
+			if (closed || formEventLog.Disposing || formEventLog.IsDisposed)
+				return;
 			TimeSpan ts = (TimeSpan)e.Result;
-			try { formEventLog.Log("Data Utils Loaded: " + ts, true); }
-			catch { }
+			formEventLog.Log("Data Utils Loaded: " + ts, true);
 		}
 
 		private void backgroundWorker_Plugin_DoWork(object sender, DoWorkEventArgs e)
@@ -1402,6 +1490,8 @@ namespace LF2.IDE
 
 		private void backgroundWorker_Plugin_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
+			if (closed || formEventLog.Disposing || formEventLog.IsDisposed)
+				return;
 			PluginLock = false;
 			TimeSpan ts = (TimeSpan)e.Result;
 			try
@@ -1440,6 +1530,15 @@ namespace LF2.IDE
 			if (e.Control && (e.KeyCode == Keys.F4 || e.KeyCode == Keys.W))
 				if (ActiveDocument != null)
 					ActiveDocument.Close();
+		}
+
+		private void closeAllDocumentsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var doc = dockPanel.DocumentsToArray();
+			for (int i = dockPanel.DocumentsCount - 1; i >= 0; i--)
+			{
+				(doc[i] as DocumentForm).Close();
+			}
 		}
 	}
 }

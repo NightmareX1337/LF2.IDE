@@ -6,6 +6,8 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using ScintillaNET;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace LF2.IDE
 {
@@ -14,7 +16,7 @@ namespace LF2.IDE
 		public static Settings Current = new Settings();
 
 		public static readonly string SettingsDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LF2.IDE",
-			SettingsPath = SettingsDir + "\\Settings.xml";
+			SettingsPath = SettingsDir + "\\settings.xml";
 
 		public string lfPath = "lf2.exe",
 			encryptionKey = "odBearBecauseHeIsVeryGoodSiuHungIsAGo",
@@ -23,7 +25,11 @@ namespace LF2.IDE
 
 		public bool checkUpdatesAuto = true,
 			autoComplete = true,
-			saveDocStates = true;
+			saveDocStates = true,
+			syncDesing = false;
+
+		public Rectangle window = new Rectangle(0, 0, 1200, 550);
+		public FormWindowState windowState = FormWindowState.Maximized;
 
 		public List<string> recentFileHistory = new List<string>(8),
 			activePlugins = new List<string>();

@@ -60,7 +60,7 @@ namespace LF2.IDE
 			str.Append(textBox_hit_ja.Text.Trim() == "" ? "" : "  hit_ja: " + textBox_hit_ja.Text.Trim());
 			str.Append(textBox_sound.Text.Trim() == "" ? "" : "\r\n  sound: " + textBox_sound.Text.Trim());
 			
-			string tags = mainForm.formTag.Generate();
+			string tags = mainForm.formDesing.Generate();
 
 			if (checkBox_AddTags.Checked && tags != "")
 				str.Append("\r\n" + tags);

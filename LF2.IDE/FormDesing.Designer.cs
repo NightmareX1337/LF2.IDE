@@ -1257,7 +1257,8 @@
             "1",
             "2",
             "3",
-            "4"});
+            "4",
+            "20"});
 			this.itr_effect.Location = new System.Drawing.Point(184, 137);
 			this.itr_effect.Name = "itr_effect";
 			this.itr_effect.Size = new System.Drawing.Size(55, 21);

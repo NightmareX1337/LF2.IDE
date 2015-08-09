@@ -580,9 +580,11 @@ namespace LF2.IDE
 				{
 					lastActiveDoc = ActiveDocument;
 					lastActiveFrame = lastActiveDoc.frames;
-					formDesing.numericUpDown_ImageIndex.Maximum =
-					formFrame.numericUpDown_pic.Maximum =
+					formDesing.EditIn();
+					formDesing.numericUpDown_ImageIndex.Maximum = 
+					formFrame.numericUpDown_pic.Maximum = 
 					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
+					formDesing.EditOut();
 					formFrame.numericUpDown_pic.Value = lastActiveDoc.frameIndexFrame;
 					formShape.numericUpDown_ImageIndex.Value = lastActiveDoc.frameIndexShape;
 					formDesing.tagBox.Image = lastActiveFrame[lastActiveDoc.frameIndexTag];

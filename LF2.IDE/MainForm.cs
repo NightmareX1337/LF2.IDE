@@ -1250,12 +1250,12 @@ namespace LF2.IDE
 			DeveloperPre
 		}
 
-		string[] liner = { "\r\n" };
+		char[] liner = { '\r', '\n' };
 
 		public Updater CheckForUpdates()
 		{
 			WebClient wc = new WebClient();
-			string[] wer = wc.DownloadString(Program.updateInfoLink).Split(liner, StringSplitOptions.None);
+			string[] wer = wc.DownloadString(Program.updateInfoLink).Split(liner, StringSplitOptions.RemoveEmptyEntries);
 			string ver = wer[0],
 				prever = wer[2],
 				down = wer[5],
@@ -1276,9 +1276,16 @@ namespace LF2.IDE
 			if (current > version)
 			{
 				if (current < preversion)
+				{
 					up.state = UpdateState.DeveloperPre;
+				}
 				else if (current == preversion)
-					up.state = UpdateState.None;
+				{
+					if (Program.preRelease)
+						up.state = UpdateState.None;
+					else
+						up.state = UpdateState.PreRelease;
+				}
 				else
 					up.state = UpdateState.Developer;
 				return up;
@@ -1286,9 +1293,16 @@ namespace LF2.IDE
 			else if (current == version)
 			{
 				if (current < preversion)
+				{
 					up.state = UpdateState.PreRelease;
+				}
 				else if (current == preversion)
-					up.state = UpdateState.PreRelease;
+				{
+					if (Program.preRelease)
+						up.state = UpdateState.None;
+					else
+						up.state = UpdateState.PreRelease;
+				}
 				else
 					up.state = UpdateState.None;
 				return up;
@@ -1296,9 +1310,13 @@ namespace LF2.IDE
 			else
 			{
 				if (current < preversion)
+				{
 					up.state = UpdateState.ReleaseAndPre;
+				}
 				else
+				{
 					up.state = UpdateState.Release;
+				}
 				return up;
 			}
 		}

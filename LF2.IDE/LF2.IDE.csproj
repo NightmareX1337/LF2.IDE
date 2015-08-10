@@ -392,9 +392,6 @@
       <Link>SciLexer64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="docking.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Main.ico" />
     <Content Include="Main_.ico" />
     <Content Include="Resources\Bitmap Icons\favicon128x128.bmp" />

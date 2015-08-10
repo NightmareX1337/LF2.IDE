@@ -40,11 +40,21 @@ namespace LF2.IDE
 		{
 			if (File.Exists(SettingsPath))
 			{
-				using (FileStream settings = new FileStream(SettingsPath, FileMode.Open, FileAccess.Read))
+				try
 				{
-					XmlSerializer xs = new XmlSerializer(typeof(Settings));
-					Current = (Settings)xs.Deserialize(settings);
-					settings.Close();
+					using (FileStream settings = new FileStream(SettingsPath, FileMode.Open, FileAccess.Read))
+					{
+						XmlSerializer xs = new XmlSerializer(typeof(Settings));
+						Current = (Settings)xs.Deserialize(settings);
+					}
+				}
+				catch
+				{
+					try
+					{
+						File.Delete(SettingsPath);
+					}
+					finally { }
 				}
 			}
 		}
@@ -57,7 +67,6 @@ namespace LF2.IDE
 			{
 				XmlSerializer xs = new XmlSerializer(typeof(Settings));
 				xs.Serialize(settings, Current);
-				settings.Close();
 			}
 		}
 	}

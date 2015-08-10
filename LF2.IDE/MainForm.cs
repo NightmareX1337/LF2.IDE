@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace LF2.IDE
@@ -34,13 +35,47 @@ namespace LF2.IDE
 
 			if (File.Exists(Program.dockingPath))
 			{
-				dockPanel.LoadFromXml(Program.dockingPath, new WeifenLuo.WinFormsUI.Docking.DeserializeDockContent(DockingDeserializer));
-				isLoaded = true;
+				try
+				{
+					dockPanel.LoadFromXml(Program.dockingPath, new WeifenLuo.WinFormsUI.Docking.DeserializeDockContent(DockingDeserializer));
+					isLoaded = true;
+				}
+				catch (ArgumentException)
+				{
+					File.Delete(Program.dockingPath);
+					if (File.Exists(Program.nearDockingPath))
+					{
+						try
+						{
+							dockPanel.LoadFromXml(Program.nearDockingPath, new WeifenLuo.WinFormsUI.Docking.DeserializeDockContent(DockingDeserializer));
+							isLoaded = true;
+						}
+						catch (ArgumentException)
+						{
+							try
+							{
+								File.Delete(Program.nearDockingPath);
+							}
+							finally { }
+						}
+					}
+				}
 			}
 			else if (File.Exists(Program.nearDockingPath))
 			{
-				dockPanel.LoadFromXml(Program.nearDockingPath, new WeifenLuo.WinFormsUI.Docking.DeserializeDockContent(DockingDeserializer));
-				isLoaded = true;
+				try
+				{
+					dockPanel.LoadFromXml(Program.nearDockingPath, new WeifenLuo.WinFormsUI.Docking.DeserializeDockContent(DockingDeserializer));
+					isLoaded = true;
+				}
+				catch (ArgumentException)
+				{
+					try
+					{
+						File.Delete(Program.nearDockingPath);
+					}
+					finally { }
+				}
 			}
 			else
 			{
@@ -1350,13 +1385,16 @@ namespace LF2.IDE
 
 		void BackgroundUpdater_DoWork(object sender, DoWorkEventArgs e)
 		{
+			bool n = (bool)e.Argument;
 			try
 			{
-				e.Result = new UpdateInfo((bool)e.Argument, CheckForUpdates());
+				if (!n)
+					Thread.Sleep(1000);
+				e.Result = new UpdateInfo(n, CheckForUpdates());
 			}
 			catch (Exception ex)
 			{
-				e.Result = new UpdateError((bool)e.Argument, ex);
+				e.Result = new UpdateError(n, ex);
 			}
 		}
 
@@ -1390,6 +1428,8 @@ namespace LF2.IDE
 						if (updateInfo.notify)
 							MessageBox.Show(this, "New update available!", "Update Checker");
 						formEventLog.Show();
+						dockPanel.ActiveAutoHideContent = formEventLog;
+						formEventLog.Activate();
 						break;
 					case UpdateState.PreRelease:
 						formEventLog.Log("Current Version: " + updateInfo.update.currentVersion + "\r\nLatest Version: "  + updateInfo.update.version + "\r\nLatest Pre-Release Version: " + updateInfo.update.preVersion + "\r\n" + updateInfo.update.webPage + "\r\n" + updateInfo.update.downloadPage, "Update Found! (Pre-Release)", true);
@@ -1397,6 +1437,8 @@ namespace LF2.IDE
 						{
 							MessageBox.Show(this, "There is a pre-release update", "Update Checker");
 							formEventLog.Show();
+							dockPanel.ActiveAutoHideContent = formEventLog;
+							formEventLog.Activate();
 						}
 						break;
 					case UpdateState.ReleaseAndPre:
@@ -1404,6 +1446,8 @@ namespace LF2.IDE
 						if (updateInfo.notify)
 							MessageBox.Show(this, "New update available!", "Update Checker");
 						formEventLog.Show();
+						dockPanel.ActiveAutoHideContent = formEventLog;
+						formEventLog.Activate();
 						break;
 					case UpdateState.Developer:
 						formEventLog.Log("Somehow, it appears that your current version is even higher than the latest one\r\nCurrent Version: " + updateInfo.update.currentVersion + "\r\nLatest Version: " + updateInfo.update.version + "\r\n" + updateInfo.update.webPage, "WTF!", true);

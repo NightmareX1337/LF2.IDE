@@ -509,7 +509,7 @@ namespace LF2.IDE
 			toolStripStatusLabel_SelLines.Text = (scintilla.Selection.Length > 0 ? sel : 0).ToString();
 			if (!justEdited)
 			{
-				SyncToDesing(auto = true);
+				SyncToDesign(auto = true);
 			}
 		}
 
@@ -520,9 +520,9 @@ namespace LF2.IDE
 		}
 
 		// God save us from ever needing to write this kind of creepy code
-		public bool SyncToDesing(bool auto = false)
+		public bool SyncToDesign(bool auto = false)
 		{
-			if (documentType != DocumentType.ObjectData || auto && !mainForm.formDesing.checkBoxLinkage.Checked)
+			if (documentType != DocumentType.ObjectData || auto && !mainForm.formDesign.checkBoxLinkage.Checked)
 				return false;
 			try
 			{
@@ -535,122 +535,122 @@ namespace LF2.IDE
 				var fr = Scintilla.GetRange(fs, fe + 11);
 				{
 					var frame = LF2DataUtils.ReadFrame(fr.Text);
-					mainForm.formDesing.EditIn();
+					mainForm.formDesign.EditIn();
 					if (frame.pic.HasValue)
-						mainForm.formDesing.numericUpDown_ImageIndex.Value = frame.pic.Value;
-					mainForm.formDesing.textBox_caption.Text = frame.caption;
+						mainForm.formDesign.numericUpDown_ImageIndex.Value = frame.pic.Value;
+					mainForm.formDesign.textBox_caption.Text = frame.caption;
 					if (frame.bdys != null)
 					{
-						mainForm.formDesing.tagBox.BdyTags = new List<TagBox.Bdy>(frame.bdys.Select<LF2DataUtils.Bdy, TagBox.Bdy>((LF2DataUtils.Bdy bdy) => (TagBox.Bdy)bdy));
-						if (mainForm.formDesing.tagBox.BdyTags.Count >= 0)
-							mainForm.formDesing.tagBox.ActiveBdyIndex = mainForm.formDesing.tagBox.BdyTags.Count - 1;
+						mainForm.formDesign.tagBox.BdyTags = new List<TagBox.Bdy>(frame.bdys.Select<LF2DataUtils.Bdy, TagBox.Bdy>((LF2DataUtils.Bdy bdy) => (TagBox.Bdy)bdy));
+						if (mainForm.formDesign.tagBox.BdyTags.Count >= 0)
+							mainForm.formDesign.tagBox.ActiveBdyIndex = mainForm.formDesign.tagBox.BdyTags.Count - 1;
 						else
-							mainForm.formDesing.tagBox.ActiveBdyIndex = null;
-						if (mainForm.formDesing.tagBox.ActiveBdyIndex.HasValue)
+							mainForm.formDesign.tagBox.ActiveBdyIndex = null;
+						if (mainForm.formDesign.tagBox.ActiveBdyIndex.HasValue)
 						{
-							LF2DataUtils.Bdy bdy = frame.bdys[mainForm.formDesing.tagBox.ActiveBdyIndex.Value];
+							LF2DataUtils.Bdy bdy = frame.bdys[mainForm.formDesign.tagBox.ActiveBdyIndex.Value];
 							if (bdy != null)
 							{
-								mainForm.formDesing.bdy_h.Text = bdy.h.HasValue ? bdy.h.ToString() : "";
-								mainForm.formDesing.bdy_kind.Text = bdy.kind.HasValue ? bdy.kind.ToString() : "";
-								mainForm.formDesing.bdy_w.Text = bdy.w.HasValue ? bdy.w.ToString() : "";
-								mainForm.formDesing.bdy_x.Text = bdy.x.HasValue ? bdy.x.ToString() : "";
-								mainForm.formDesing.bdy_y.Text = bdy.y.HasValue ? bdy.y.ToString() : "";
+								mainForm.formDesign.bdy_h.Text = bdy.h.HasValue ? bdy.h.ToString() : "";
+								mainForm.formDesign.bdy_kind.Text = bdy.kind.HasValue ? bdy.kind.ToString() : "";
+								mainForm.formDesign.bdy_w.Text = bdy.w.HasValue ? bdy.w.ToString() : "";
+								mainForm.formDesign.bdy_x.Text = bdy.x.HasValue ? bdy.x.ToString() : "";
+								mainForm.formDesign.bdy_y.Text = bdy.y.HasValue ? bdy.y.ToString() : "";
 							}
 						}
 					}
 					else
 					{
-						mainForm.formDesing.tagBox.ClearBdyList();
-						mainForm.formDesing.bdy_h.Text = 
-						mainForm.formDesing.bdy_kind.Text = 
-						mainForm.formDesing.bdy_w.Text = 
-						mainForm.formDesing.bdy_x.Text = 
-						mainForm.formDesing.bdy_y.Text = "";
+						mainForm.formDesign.tagBox.ClearBdyList();
+						mainForm.formDesign.bdy_h.Text = 
+						mainForm.formDesign.bdy_kind.Text = 
+						mainForm.formDesign.bdy_w.Text = 
+						mainForm.formDesign.bdy_x.Text = 
+						mainForm.formDesign.bdy_y.Text = "";
 					}
 					if (frame.itrs != null)
 					{
-						mainForm.formDesing.tagBox.ItrTags = new List<TagBox.Itr>(frame.itrs.Select<LF2DataUtils.Itr, TagBox.Itr>((LF2DataUtils.Itr itr) => (TagBox.Itr)itr));
-						if (mainForm.formDesing.tagBox.ItrTags.Count >= 0)
-							mainForm.formDesing.tagBox.activeItrIndex = mainForm.formDesing.tagBox.ItrTags.Count - 1;
-						if (mainForm.formDesing.tagBox.ActiveItrIndex.HasValue)
+						mainForm.formDesign.tagBox.ItrTags = new List<TagBox.Itr>(frame.itrs.Select<LF2DataUtils.Itr, TagBox.Itr>((LF2DataUtils.Itr itr) => (TagBox.Itr)itr));
+						if (mainForm.formDesign.tagBox.ItrTags.Count >= 0)
+							mainForm.formDesign.tagBox.activeItrIndex = mainForm.formDesign.tagBox.ItrTags.Count - 1;
+						if (mainForm.formDesign.tagBox.ActiveItrIndex.HasValue)
 						{
-							LF2DataUtils.Itr itr = frame.itrs[mainForm.formDesing.tagBox.ActiveItrIndex.Value];
+							LF2DataUtils.Itr itr = frame.itrs[mainForm.formDesign.tagBox.ActiveItrIndex.Value];
 							if (itr != null)
 							{
-								mainForm.formDesing.itr_arest.Text = itr.arest.HasValue ? itr.arest.ToString() : "";
-								mainForm.formDesing.itr_bdefend.Text = itr.bdefend.HasValue ? itr.bdefend.ToString() : "";
-								mainForm.formDesing.itr_catchingact.Text = itr.catchingact.HasValue ? itr.catchingact.ToString() : "";
-								mainForm.formDesing.itr_caughtact.Text = itr.caughtact.HasValue ? itr.caughtact.ToString() : "";
-								mainForm.formDesing.itr_dvx.Text = itr.dvx.HasValue ? itr.dvx.ToString() : "";
-								mainForm.formDesing.itr_dvy.Text = itr.dvy.HasValue ? itr.dvy.ToString() : "";
-								mainForm.formDesing.itr_effect.Text = itr.effect.HasValue ? itr.effect.ToString() : "";
-								mainForm.formDesing.itr_fall.Text = itr.fall.HasValue ? itr.fall.ToString() : "";
-								mainForm.formDesing.itr_h.Text = itr.h.HasValue ? itr.h.ToString() : "";
-								mainForm.formDesing.itr_injury.Text = itr.injury.HasValue ? itr.injury.ToString() : "";
-								mainForm.formDesing.itr_kind.Text = itr.kind.HasValue ? itr.kind.ToString() : "";
-								mainForm.formDesing.itr_vrest.Text = itr.vrest.HasValue ? itr.vrest.ToString() : "";
-								mainForm.formDesing.itr_w.Text = itr.w.HasValue ? itr.w.ToString() : "";
-								mainForm.formDesing.itr_x.Text = itr.x.HasValue ? itr.x.ToString() : "";
-								mainForm.formDesing.itr_y.Text = itr.y.HasValue ? itr.y.ToString() : "";
-								mainForm.formDesing.itr_zwidth.Text = itr.zwidth.HasValue ? itr.zwidth.ToString() : "";
+								mainForm.formDesign.itr_arest.Text = itr.arest.HasValue ? itr.arest.ToString() : "";
+								mainForm.formDesign.itr_bdefend.Text = itr.bdefend.HasValue ? itr.bdefend.ToString() : "";
+								mainForm.formDesign.itr_catchingact.Text = itr.catchingact.HasValue ? itr.catchingact.ToString() : "";
+								mainForm.formDesign.itr_caughtact.Text = itr.caughtact.HasValue ? itr.caughtact.ToString() : "";
+								mainForm.formDesign.itr_dvx.Text = itr.dvx.HasValue ? itr.dvx.ToString() : "";
+								mainForm.formDesign.itr_dvy.Text = itr.dvy.HasValue ? itr.dvy.ToString() : "";
+								mainForm.formDesign.itr_effect.Text = itr.effect.HasValue ? itr.effect.ToString() : "";
+								mainForm.formDesign.itr_fall.Text = itr.fall.HasValue ? itr.fall.ToString() : "";
+								mainForm.formDesign.itr_h.Text = itr.h.HasValue ? itr.h.ToString() : "";
+								mainForm.formDesign.itr_injury.Text = itr.injury.HasValue ? itr.injury.ToString() : "";
+								mainForm.formDesign.itr_kind.Text = itr.kind.HasValue ? itr.kind.ToString() : "";
+								mainForm.formDesign.itr_vrest.Text = itr.vrest.HasValue ? itr.vrest.ToString() : "";
+								mainForm.formDesign.itr_w.Text = itr.w.HasValue ? itr.w.ToString() : "";
+								mainForm.formDesign.itr_x.Text = itr.x.HasValue ? itr.x.ToString() : "";
+								mainForm.formDesign.itr_y.Text = itr.y.HasValue ? itr.y.ToString() : "";
+								mainForm.formDesign.itr_zwidth.Text = itr.zwidth.HasValue ? itr.zwidth.ToString() : "";
 							}
 						}
 					}
 					else
 					{
-						mainForm.formDesing.tagBox.ClearItrList();
+						mainForm.formDesign.tagBox.ClearItrList();
 					}
 					if (frame.centerx.HasValue && frame.centery.HasValue)
 					{
-						mainForm.formDesing.tagBox.TagData.center = new Point(frame.centerx.Value, frame.centery.Value);
+						mainForm.formDesign.tagBox.TagData.center = new Point(frame.centerx.Value, frame.centery.Value);
 					}
 					else
 					{
-						mainForm.formDesing.tagBox.TagData.center = null;
+						mainForm.formDesign.tagBox.TagData.center = null;
 					}
 					if (frame.bpoint != null)
 					{
-						mainForm.formDesing.tagBox.TagData.bpoint = (Point)frame.bpoint;
+						mainForm.formDesign.tagBox.TagData.bpoint = (Point)frame.bpoint;
 					}
 					else
 					{
-						mainForm.formDesing.tagBox.TagData.bpoint = null;
+						mainForm.formDesign.tagBox.TagData.bpoint = null;
 					}
 					if (frame.cpoint != null)
 					{
-						mainForm.formDesing.tagBox.TagData.cpoint = (TagBox.CPoint)frame.cpoint;
+						mainForm.formDesign.tagBox.TagData.cpoint = (TagBox.CPoint)frame.cpoint;
 					}
 					else
 					{
-						mainForm.formDesing.tagBox.TagData.cpoint = null;
+						mainForm.formDesign.tagBox.TagData.cpoint = null;
 					}
 					if (frame.opoint != null)
 					{
-						mainForm.formDesing.tagBox.TagData.opoint = (TagBox.OPoint)frame.opoint;
+						mainForm.formDesign.tagBox.TagData.opoint = (TagBox.OPoint)frame.opoint;
 					}
 					else
 					{
-						mainForm.formDesing.tagBox.TagData.opoint = null;
+						mainForm.formDesign.tagBox.TagData.opoint = null;
 					}
 					if (frame.wpoint != null)
 					{
-						mainForm.formDesing.tagBox.TagData.wpoint = (TagBox.WPoint)frame.wpoint;
+						mainForm.formDesign.tagBox.TagData.wpoint = (TagBox.WPoint)frame.wpoint;
 					}
 					else
 					{
-						mainForm.formDesing.tagBox.TagData.wpoint = null;
+						mainForm.formDesign.tagBox.TagData.wpoint = null;
 					}
-					mainForm.formDesing.RefreshAllTextBoxes();
+					mainForm.formDesign.RefreshAllTextBoxes();
 				}
-				mainForm.formDesing.EditReset();
-				mainForm.formDesing.tagBox.Refresh();
+				mainForm.formDesign.EditReset();
+				mainForm.formDesign.tagBox.Refresh();
 				return true;
 			}
 			catch
 			{
-				mainForm.formDesing.EditReset();
-				mainForm.formDesing.tagBox.Invalidate();
+				mainForm.formDesign.EditReset();
+				mainForm.formDesign.tagBox.Invalidate();
 				return false;
 			}
 		}
@@ -661,7 +661,7 @@ namespace LF2.IDE
 			{
 				justEdited = false;
 				syncTimer.Stop();
-				SyncToDesing(true);
+				SyncToDesign(true);
 			});
 			this.BeginInvoke(func);
 		}

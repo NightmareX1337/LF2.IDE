@@ -30,7 +30,6 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFrame));
-			this.drawBox = new DrawBox.DrawBox();
 			this.tabControl3 = new System.Windows.Forms.TabControl();
 			this.button_NewLine = new System.Windows.Forms.Button();
 			this.button_Clip = new System.Windows.Forms.Button();
@@ -120,6 +119,9 @@
 			this.numericUpDown_rangeEnd = new System.Windows.Forms.NumericUpDown();
 			this.label1 = new System.Windows.Forms.Label();
 			this.button_Merge = new System.Windows.Forms.Button();
+			this.checkBoxInc_index = new System.Windows.Forms.CheckBox();
+			this.checkBoxInc_pic = new System.Windows.Forms.CheckBox();
+			this.drawBox = new DrawBox.DrawBox();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_pic)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_frameIndex)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
@@ -131,31 +133,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_rangeStart)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_rangeEnd)).BeginInit();
 			this.SuspendLayout();
-			// 
-			// drawBox
-			// 
-			this.drawBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.drawBox.BackgroundImage = global::LF2.IDE.Properties.Resources.check;
-			this.drawBox.Center = new System.Drawing.Point(-1, -1);
-			this.drawBox.ControlKey = false;
-			this.drawBox.Cursor = System.Windows.Forms.Cursors.Cross;
-			this.drawBox.Interpolation = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			this.drawBox.Location = new System.Drawing.Point(57, 59);
-			this.drawBox.MultiRectangleMode = false;
-			this.drawBox.Name = "drawBox";
-			this.drawBox.OneRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
-			this.drawBox.PictureMode = DrawBox.PictureMode.ShrinkOnly;
-			this.drawBox.Point = new System.Drawing.Point(-1, -1);
-			this.drawBox.Rectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
-			this.drawBox.Rectangles = ((System.Collections.Generic.List<System.Drawing.Rectangle>)(resources.GetObject("drawBox.Rectangles")));
-			this.drawBox.ShiftKey = false;
-			this.drawBox.Size = new System.Drawing.Size(100, 125);
-			this.drawBox.TabIndex = 28;
-			this.drawBox.Table = new System.Drawing.Point(-1, -1);
-			this.drawBox.TabStop = false;
-			this.drawBox.Trancparency = true;
-			this.drawBox.Vector = new System.Drawing.Point(-1, -1);
 			// 
 			// tabControl3
 			// 
@@ -1013,6 +990,8 @@
 			// splitContainer.Panel1
 			// 
 			this.splitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
+			this.splitContainer.Panel1.Controls.Add(this.checkBoxInc_pic);
+			this.splitContainer.Panel1.Controls.Add(this.checkBoxInc_index);
 			this.splitContainer.Panel1.Controls.Add(this.checkBoxMerge_caption);
 			this.splitContainer.Panel1.Controls.Add(this.checkBoxMerge_index);
 			this.splitContainer.Panel1.Controls.Add(this.checkBoxMerge_sound);
@@ -1289,6 +1268,54 @@
 			this.button_Merge.UseVisualStyleBackColor = true;
 			this.button_Merge.Click += new System.EventHandler(this.Merge);
 			// 
+			// checkBoxInc_index
+			// 
+			this.checkBoxInc_index.AutoSize = true;
+			this.checkBoxInc_index.Location = new System.Drawing.Point(126, 7);
+			this.checkBoxInc_index.Name = "checkBoxInc_index";
+			this.checkBoxInc_index.Size = new System.Drawing.Size(38, 17);
+			this.checkBoxInc_index.TabIndex = 33;
+			this.checkBoxInc_index.Text = "++";
+			this.toolTip.SetToolTip(this.checkBoxInc_index, "Increment the value every frame");
+			this.checkBoxInc_index.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxInc_pic
+			// 
+			this.checkBoxInc_pic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBoxInc_pic.AutoSize = true;
+			this.checkBoxInc_pic.Location = new System.Drawing.Point(163, 141);
+			this.checkBoxInc_pic.Name = "checkBoxInc_pic";
+			this.checkBoxInc_pic.Size = new System.Drawing.Size(38, 17);
+			this.checkBoxInc_pic.TabIndex = 33;
+			this.checkBoxInc_pic.Text = "++";
+			this.toolTip.SetToolTip(this.checkBoxInc_pic, "Increment the value every frame");
+			this.checkBoxInc_pic.UseVisualStyleBackColor = true;
+			// 
+			// drawBox
+			// 
+			this.drawBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.drawBox.BackgroundImage = global::LF2.IDE.Properties.Resources.check;
+			this.drawBox.Center = new System.Drawing.Point(-1, -1);
+			this.drawBox.ControlKey = false;
+			this.drawBox.Cursor = System.Windows.Forms.Cursors.Cross;
+			this.drawBox.Interpolation = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+			this.drawBox.Location = new System.Drawing.Point(57, 59);
+			this.drawBox.MultiRectangleMode = false;
+			this.drawBox.Name = "drawBox";
+			this.drawBox.OneRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+			this.drawBox.PictureMode = DrawBox.PictureMode.ShrinkOnly;
+			this.drawBox.Point = new System.Drawing.Point(-1, -1);
+			this.drawBox.Rectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+			this.drawBox.Rectangles = ((System.Collections.Generic.List<System.Drawing.Rectangle>)(resources.GetObject("drawBox.Rectangles")));
+			this.drawBox.ShiftKey = false;
+			this.drawBox.Size = new System.Drawing.Size(100, 125);
+			this.drawBox.TabIndex = 28;
+			this.drawBox.Table = new System.Drawing.Point(-1, -1);
+			this.drawBox.TabStop = false;
+			this.drawBox.Trancparency = true;
+			this.drawBox.Vector = new System.Drawing.Point(-1, -1);
+			// 
 			// FormFrame
 			// 
 			this.AcceptButton = this.button_Generate;
@@ -1313,7 +1340,6 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.TabText = "Frame";
 			this.Text = "Frame";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormFrame_Closing);
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_pic)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_frameIndex)).EndInit();
 			this.splitContainer.Panel1.ResumeLayout(false);
@@ -1419,5 +1445,7 @@
 		private System.Windows.Forms.CheckBox checkBoxMerge_hit_Fa;
 		private System.Windows.Forms.CheckBox checkBoxMerge_sound;
 		public System.Windows.Forms.Label label2;
+		private System.Windows.Forms.CheckBox checkBoxInc_pic;
+		private System.Windows.Forms.CheckBox checkBoxInc_index;
 	}
 }

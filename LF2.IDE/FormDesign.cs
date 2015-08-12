@@ -12,9 +12,9 @@ using System.Linq;
 
 namespace LF2.IDE
 {
-	public partial class FormDesing : WeifenLuo.WinFormsUI.Docking.DockContent
+	public partial class FormDesign : WeifenLuo.WinFormsUI.Docking.DockContent
 	{
-		public FormDesing(MainForm main)
+		public FormDesign(MainForm main)
 		{
 			mainForm = main;
 			InitializeComponent();
@@ -1061,7 +1061,7 @@ namespace LF2.IDE
 
 		private void checkBoxLinkage_CheckedChanged(object sender, EventArgs e)
 		{
-			Settings.Current.syncDesing = checkBoxLinkage.Checked;
+			Settings.Current.syncDesign = checkBoxLinkage.Checked;
 			checkBoxLinkage.ImageIndex = checkBoxLinkage.Checked ? 0 : 1;
 		}
 		
@@ -1787,9 +1787,9 @@ namespace LF2.IDE
 			SyncToEditor(mainForm.ActiveDocument, true);
 		}
 
-		private void buttonSyncToDesing_Click(object sender, EventArgs e)
+		private void buttonSyncToDesign_Click(object sender, EventArgs e)
 		{
-			mainForm.ActiveDocument.SyncToDesing();
+			mainForm.ActiveDocument.SyncToDesign();
 		}
 
 		private void textBox_caption_TextChanged(object sender, EventArgs e)

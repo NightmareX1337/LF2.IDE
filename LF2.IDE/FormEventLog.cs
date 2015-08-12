@@ -72,13 +72,7 @@ namespace LF2.IDE
 
 		private void StepCaret(bool condition = true)
 		{
-			if (condition)
-			{
-				scintilla.Caret.LineNumber = scintilla.Lines.Count - 1;
-				scintilla.Caret.EnsureVisible();
-				scintilla.Update();
-				scintilla.Refresh();
-			}
+			StepCaret(scintilla.Lines.Count - 1, condition);
 		}
 
 		private void StepCaret(int caretLine, bool condition = true)
@@ -87,18 +81,14 @@ namespace LF2.IDE
 			{
 				scintilla.Caret.LineNumber = caretLine;
 				scintilla.Caret.EnsureVisible();
-				scintilla.Update();
 				scintilla.Refresh();
 			}
 		}
 
 		public void Clean()
 		{
-			scintilla.IsReadOnly = false;
 			scintilla.ResetText();
-			scintilla.Update();
 			scintilla.Refresh();
-			scintilla.IsReadOnly = true;
 		}
 
 		void scintilla_LinkClicked(object sender, LinkClickedEventArgs e)

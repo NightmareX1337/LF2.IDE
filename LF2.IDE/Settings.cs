@@ -26,7 +26,7 @@ namespace LF2.IDE
 		public bool checkUpdatesAuto = true,
 			autoComplete = true,
 			saveDocStates = true,
-			syncDesing = false;
+			syncDesign = false;
 
 		public Rectangle window = new Rectangle(0, 0, 1200, 550);
 		public FormWindowState windowState = FormWindowState.Maximized;

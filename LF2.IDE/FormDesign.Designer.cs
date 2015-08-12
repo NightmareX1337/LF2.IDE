@@ -1,6 +1,6 @@
 ﻿namespace LF2.IDE
 {
-	partial class FormDesing
+	partial class FormDesign
 	{
 		/// <summary>
 		/// Designer variable used to keep track of non-visual components.
@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDesing));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDesign));
 			this.cpoint_decrease = new System.Windows.Forms.TextBox();
 			this.cpoint_x = new System.Windows.Forms.TextBox();
 			this.label_c_throwvz = new System.Windows.Forms.Label();
@@ -192,7 +192,7 @@
 			this.checkBox_c = new System.Windows.Forms.CheckBox();
 			this.checkBox_b = new System.Windows.Forms.CheckBox();
 			this.checkBox_center = new System.Windows.Forms.CheckBox();
-			this.buttonSyncToDesing = new System.Windows.Forms.Button();
+			this.buttonSyncToDesign = new System.Windows.Forms.Button();
 			this.buttonSyncToEditor = new System.Windows.Forms.Button();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.textBox_caption = new System.Windows.Forms.TextBox();
@@ -1924,17 +1924,17 @@
 			this.checkBox_center.UseVisualStyleBackColor = true;
 			this.checkBox_center.CheckedChanged += new System.EventHandler(this.checkBox_tag_CheckedChanged);
 			// 
-			// buttonSyncToDesing
+			// buttonSyncToDesign
 			// 
-			this.buttonSyncToDesing.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.buttonSyncToDesing.Location = new System.Drawing.Point(0, 0);
-			this.buttonSyncToDesing.Name = "buttonSyncToDesing";
-			this.buttonSyncToDesing.Size = new System.Drawing.Size(70, 23);
-			this.buttonSyncToDesing.TabIndex = 101;
-			this.buttonSyncToDesing.TabStop = false;
-			this.buttonSyncToDesing.Text = ">>  Sync";
-			this.buttonSyncToDesing.UseVisualStyleBackColor = true;
-			this.buttonSyncToDesing.Click += new System.EventHandler(this.buttonSyncToDesing_Click);
+			this.buttonSyncToDesign.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buttonSyncToDesign.Location = new System.Drawing.Point(0, 0);
+			this.buttonSyncToDesign.Name = "buttonSyncToDesign";
+			this.buttonSyncToDesign.Size = new System.Drawing.Size(70, 23);
+			this.buttonSyncToDesign.TabIndex = 101;
+			this.buttonSyncToDesign.TabStop = false;
+			this.buttonSyncToDesign.Text = ">>  Sync";
+			this.buttonSyncToDesign.UseVisualStyleBackColor = true;
+			this.buttonSyncToDesign.Click += new System.EventHandler(this.buttonSyncToDesign_Click);
 			// 
 			// buttonSyncToEditor
 			// 
@@ -1962,7 +1962,7 @@
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.Controls.Add(this.buttonSyncToDesing);
+			this.splitContainer1.Panel2.Controls.Add(this.buttonSyncToDesign);
 			this.splitContainer1.Size = new System.Drawing.Size(146, 23);
 			this.splitContainer1.SplitterDistance = 72;
 			this.splitContainer1.TabIndex = 113;
@@ -2018,7 +2018,7 @@
 			this.tagBox.ActiveVectorChanged += new System.EventHandler(this.TagBoxVectorChanged);
 			this.tagBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tagBox_MouseUp);
 			// 
-			// FormDesing
+			// FormDesign
 			// 
 			this.AutoHidePortion = 500D;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2049,12 +2049,12 @@
 			this.KeyPreview = true;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.Name = "FormDesing";
+			this.Name = "FormDesign";
 			this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockRightAutoHide;
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.TabText = "Desing";
-			this.Text = "Desing";
+			this.TabText = "Design";
+			this.Text = "Design";
 			this.ToolTipText = "Tag Generator";
 			this.Load += new System.EventHandler(this.FormTag_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormTag_KeyDown);
@@ -2245,7 +2245,7 @@
 		public System.Windows.Forms.Label label_center_y;
 		public System.Windows.Forms.Label label_center_x;
 		private System.Windows.Forms.ImageList imageList;
-		public System.Windows.Forms.Button buttonSyncToDesing;
+		public System.Windows.Forms.Button buttonSyncToDesign;
 		public System.Windows.Forms.Button buttonSyncToEditor;
 		public System.Windows.Forms.Button button_oReset;
 		public System.Windows.Forms.Label label1;

@@ -46,49 +46,96 @@ namespace LF2.IDE
 
 		private void Generate(object sender, EventArgs e)
 		{
-			int nextStep; int.TryParse(textBox_next.Text.Trim(), out nextStep);
-			StringBuilder str = new StringBuilder().AppendFormat("<frame> {0} {1}\r\n   pic: {2}  state: {3}  wait: {4}  next: {5}  dvx: {6}  dvy: {7}{8}  centerx: {9}  centery: {10}", numericUpDown_frameIndex.Value, comboBox_caption.Text.Trim(), numericUpDown_pic.Value, comboBox_state.Text.Trim(), textBox_wait.Text.Trim(), textBox_next.Text.Trim(), textBox_dvx.Text.Trim(), textBox_dvy.Text.Trim(), (textBox_dvz.Text != "" ? "  dvz: " + textBox_dvz.Text.Trim() : ""), textBox_centerx.Text.Trim(), textBox_centery.Text.Trim());
-			str.Append(textBox_hit_a.Text.Trim() == "" ? "" : "  hit_a: " + textBox_hit_a.Text.Trim());
-			str.Append(textBox_hit_d.Text.Trim() == "" ? "" : "  hit_d: " + textBox_hit_d.Text.Trim());
-			str.Append(textBox_hit_j.Text.Trim() == "" ? "" : "  hit_j: " + textBox_hit_j.Text.Trim());
-			str.Append(textBox_hit_Fa.Text.Trim() == "" ? "" : "  hit_Fa: " + textBox_hit_Fa.Text.Trim());
-			str.Append(textBox_hit_Ua.Text.Trim() == "" ? "" : "  hit_Ua: " + textBox_hit_Ua.Text.Trim());
-			str.Append(textBox_hit_Da.Text.Trim() == "" ? "" : "  hit_Da: " + textBox_hit_Da.Text.Trim());
-			str.Append(textBox_hit_Fj.Text.Trim() == "" ? "" : "  hit_Fj: " + textBox_hit_Fj.Text.Trim());
-			str.Append(textBox_hit_Uj.Text.Trim() == "" ? "" : "  hit_Uj: " + textBox_hit_Uj.Text.Trim());
-			str.Append(textBox_hit_Dj.Text.Trim() == "" ? "" : "  hit_Dj: " + textBox_hit_Dj.Text.Trim());
-			str.Append(textBox_hit_ja.Text.Trim() == "" ? "" : "  hit_ja: " + textBox_hit_ja.Text.Trim());
-			str.Append(textBox_sound.Text.Trim() == "" ? "" : "\r\n  sound: " + textBox_sound.Text.Trim());
-			
-			string tags = mainForm.formDesing.Generate();
+			int index = (int)numericUpDown_frameIndex.Value,
+				pic = (int)numericUpDown_pic.Value,
+				next;
+			int.TryParse(textBox_next.Text.Trim(), out next);
 
-			if (checkBox_AddTags.Checked && tags != "")
-				str.Append("\r\n" + tags);
-			str.Append("\r\n<frame_end>");
+			bool indexStep = checkBoxInc_index.Checked,
+				picStep = checkBoxInc_pic.Checked;
 
-			for (int i = 1; i < frameCount.Value; i++)
+			string state = comboBox_state.Text.Trim(), 
+				wait = textBox_wait.Text.Trim(), 
+				dvx = textBox_dvx.Text.Trim(), 
+				dvy = textBox_dvy.Text.Trim(), 
+				dvz = textBox_dvz.Text.Trim(), 
+				centerx = textBox_centerx.Text.Trim(), 
+				centery = textBox_centery.Text.Trim(), 
+				hit_a = textBox_hit_a.Text.Trim(), 
+				hit_d = textBox_hit_d.Text.Trim(), 
+				hit_j = textBox_hit_j.Text.Trim(), 
+				hit_Fa = textBox_hit_Fa.Text.Trim(), 
+				hit_Ua = textBox_hit_Ua.Text.Trim(), 
+				hit_Da = textBox_hit_Da.Text.Trim(), 
+				hit_Fj = textBox_hit_Fj.Text.Trim(),
+				hit_Uj = textBox_hit_Uj.Text.Trim(),
+				hit_Dj = textBox_hit_Dj.Text.Trim(),
+				hit_ja = textBox_hit_ja.Text.Trim(),
+				sound = textBox_sound.Text.Trim();
+
+			StringBuilder str = new StringBuilder(256);
+
+			string tags = mainForm.formDesign.Generate();
+
+			for (int i = 0; i < frameCount.Value; i++)
 			{
-				str.AppendFormat("\r\n\r\n<frame> {0} {1}\r\n   pic: {2}  state: {3}  wait: {4}  next: {5}  dvx: {6}  dvy: {7}{8}  centerx: {9}  centery: {10}", numericUpDown_frameIndex.Value, comboBox_caption.Text.Trim(), numericUpDown_pic.Value, comboBox_state.Text.Trim(), textBox_wait.Text.Trim(), textBox_next.Text.Trim(), textBox_dvx.Text.Trim(), textBox_dvy.Text.Trim(), (textBox_dvz.Text != "" ? "  dvz: " + textBox_dvz.Text.Trim() : ""), textBox_centerx.Text.Trim(), textBox_centery.Text.Trim());
-				str.Append(textBox_hit_a.Text.Trim() == "" ? "" : "  hit_a: " + textBox_hit_a.Text.Trim());
-				str.Append(textBox_hit_d.Text.Trim() == "" ? "" : "  hit_d: " + textBox_hit_d.Text.Trim());
-				str.Append(textBox_hit_j.Text.Trim() == "" ? "" : "  hit_j: " + textBox_hit_j.Text.Trim());
-				str.Append(textBox_hit_Fa.Text.Trim() == "" ? "" : "  hit_Fa: " + textBox_hit_Fa.Text.Trim());
-				str.Append(textBox_hit_Ua.Text.Trim() == "" ? "" : "  hit_Ua: " + textBox_hit_Ua.Text.Trim());
-				str.Append(textBox_hit_Da.Text.Trim() == "" ? "" : "  hit_Da: " + textBox_hit_Da.Text.Trim());
-				str.Append(textBox_hit_Fj.Text.Trim() == "" ? "" : "  hit_Fj: " + textBox_hit_Fj.Text.Trim());
-				str.Append(textBox_hit_Uj.Text.Trim() == "" ? "" : "  hit_Uj: " + textBox_hit_Uj.Text.Trim());
-				str.Append(textBox_hit_Dj.Text.Trim() == "" ? "" : "  hit_Dj: " + textBox_hit_Dj.Text.Trim());
-				str.Append(textBox_hit_ja.Text.Trim() == "" ? "" : "  hit_ja: " + textBox_hit_ja.Text.Trim());
-				str.Append(textBox_sound.Text.Trim() == "" ? "" : "\r\n  sound: " + textBox_sound.Text.Trim());
+				if (i > 0)
+					str.Append("\n\n");
+				str.Append("<frame> ").Append(index).Append(' ').Append(comboBox_caption.Text.Trim()).Append("\n ");
+				str.Append("  pic: ").Append(pic);
+				if (!string.IsNullOrWhiteSpace(state))
+					str.Append("  state: ").Append(state);
+				if (!string.IsNullOrWhiteSpace(wait))
+					str.Append("  wait: ").Append(wait);
+				str.Append("  next: ").Append(i == frameCount.Value - 1 ? nextOfLastFrame.Text.Trim() : next.ToString());
+				if (!string.IsNullOrWhiteSpace(dvx))
+					str.Append("  dvx: ").Append(dvx);
+				if (!string.IsNullOrWhiteSpace(dvy))
+					str.Append("  dvy: ").Append(dvy);
+				if (!string.IsNullOrWhiteSpace(dvz))
+					str.Append("  dvz: ").Append(dvz);
+				if (!string.IsNullOrWhiteSpace(centerx))
+					str.Append("  centerx: ").Append(centerx);
+				if (!string.IsNullOrWhiteSpace(centery))
+					str.Append("  centery: ").Append(centery);
+				if (!string.IsNullOrWhiteSpace(hit_a))
+					str.Append("  hit_a: ").Append(hit_a);
+				if (!string.IsNullOrWhiteSpace(hit_d))
+					str.Append("  hit_d: ").Append(hit_d);
+				if (!string.IsNullOrWhiteSpace(hit_j))
+					str.Append("  hit_j: ").Append(hit_j);
+				if (!string.IsNullOrWhiteSpace(hit_Fa))
+					str.Append("  hit_Fa: ").Append(hit_Fa);
+				if (!string.IsNullOrWhiteSpace(hit_Ua))
+					str.Append("  hit_Ua: ").Append(hit_Ua);
+				if (!string.IsNullOrWhiteSpace(hit_Da))
+					str.Append("  hit_Da: ").Append(hit_Da);
+				if (!string.IsNullOrWhiteSpace(hit_Fj))
+					str.Append("  hit_Fj: ").Append(hit_Fj);
+				if (!string.IsNullOrWhiteSpace(hit_Uj))
+					str.Append("  hit_Uj: ").Append(hit_Uj);
+				if (!string.IsNullOrWhiteSpace(hit_Dj))
+					str.Append("  hit_Dj: ").Append(hit_Dj);
+				if (!string.IsNullOrWhiteSpace(hit_ja))
+					str.Append("  hit_ja: ").Append(hit_ja);
+				if (!string.IsNullOrWhiteSpace(sound))
+					str.Append("\n   sound: ").Append(sound);
+
 				if (checkBox_AddTags.Checked && tags != "")
-					str.Append("\r\n" + tags);
-				str.Append("\r\n<frame_end>");
+					str.Append('\n').Append(tags);
+				str.Append("\n<frame_end>");
+
+				if (indexStep)
+					index++;
+				if (picStep)
+					pic++;
+				next++;
 			}
 
 			if (string.IsNullOrEmpty(richTextBox.Text))
 				richTextBox.Text = str.ToString();
 			else
-				richTextBox.Text += "\r\n\r\n" + str.ToString();
+				richTextBox.Text += "\n\n" + str.ToString();
 
 			richTextBox.SelectionStart = richTextBox.Text.Length;
 			richTextBox.ScrollToCaret();

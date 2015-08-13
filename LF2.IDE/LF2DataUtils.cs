@@ -217,7 +217,6 @@ namespace LF2.IDE
 			public int? x;
 			public int? y;
 
-			// God save us from ever needing to write this kind of creepy code
 			public override string ToString()
 			{
 				StringBuilder str = new StringBuilder(32);
@@ -231,7 +230,6 @@ namespace LF2.IDE
 				return str.ToString();
 			}
 
-			// God save us from ever needing to write this kind of creepy code
 			public static explicit operator Point?(Bpoint obj)
 			{
 				if (obj.x.HasValue && obj.y.HasValue)
@@ -240,7 +238,6 @@ namespace LF2.IDE
 					return null;
 			}
 
-			// God save us from ever needing to write this kind of creepy code
 			public static explicit operator Bpoint(Point? obj)
 			{
 				return obj.HasValue ? new Bpoint() { x = obj.Value.X, y = obj.Value.Y } : new Bpoint();

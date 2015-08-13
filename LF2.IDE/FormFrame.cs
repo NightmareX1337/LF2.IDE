@@ -212,8 +212,8 @@ namespace LF2.IDE
 			if(doc == null)
 				return;
 			int index = (int)numericUpDown_frameIndex.Value,
-				next,
-				pic = (int)numericUpDown_pic.Value;
+				pic = (int)numericUpDown_pic.Value,
+				next;
 			int.TryParse(textBox_next.Text, out next);
 			using (UndoHandler undoHandler = new UndoHandler(doc.Scintilla))
 			{

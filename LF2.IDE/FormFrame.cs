@@ -203,7 +203,7 @@ namespace LF2.IDE
 			}
 		}
 
-		char[] sep = { ' ', '\r', '\n', '\t' };
+		readonly char[] sep = { ' ', '\r', '\n', '\t' };
 
 		// This is fucking performance not-wise if slicing was possible I would be so happy
 		private void Merge(object sender, EventArgs e)
@@ -222,7 +222,16 @@ namespace LF2.IDE
 					var frameRange = doc.Scintilla.GetRange(i, j + 11);
 					string frame = frameRange.Text;
 					GroupCollection match = Regex.Match(frame, LF2DataUtils.Pattern.frame).Groups;
-					int num = int.Parse(match[1].Value);
+					int num;
+					try
+					{
+						num = int.Parse(match[1].Value);
+					}
+					catch (Exception ex)
+					{
+						mainForm.formEventLog.Error(new LF2.IDE.LF2DataUtils.DataSyntaxException("Frame index could not be read\r\nFrame starting at line: " + doc.Scintilla.Lines.FromPosition(i).Number, ex), "Data Syntax Error");
+						return;
+					}
 					if (num >= numericUpDown_rangeStart.Value && num <= numericUpDown_rangeEnd.Value)
 					{
 						LF2DataUtils.Frame frameDat;
@@ -235,9 +244,14 @@ namespace LF2.IDE
 							mainForm.formEventLog.Error(ex, "Data Syntax Error");
 							return;
 						}
-						
+
+						if (checkBoxMerge_index.CheckState == CheckState.Checked)
+							frameDat.index = index;
+						if (checkBoxMerge_caption.CheckState == CheckState.Checked || checkBoxMerge_caption.CheckState == CheckState.Indeterminate && frameDat.caption != null)
+							frameDat.caption = comboBox_caption.Text;
+
 						if (checkBoxMerge_pic.CheckState == CheckState.Checked || checkBoxMerge_pic.CheckState == CheckState.Indeterminate && frameDat.pic.HasValue)
-							frameDat.pic = (int)numericUpDown_pic.Value;
+							frameDat.pic = pic;
 						if (checkBoxMerge_state.CheckState == CheckState.Checked || checkBoxMerge_state.CheckState == CheckState.Indeterminate && frameDat.state.HasValue)
 							frameDat.state = int.Parse(comboBox_state.Text);
 						if (checkBoxMerge_wait.CheckState == CheckState.Checked || checkBoxMerge_wait.CheckState == CheckState.Indeterminate && frameDat.wait.HasValue)
@@ -279,9 +293,11 @@ namespace LF2.IDE
 
 						frameRange.Text = frameDat.ToString();
 
-						index++;
+						if(checkBoxInc_index.Checked)
+							index++;
+						if(checkBoxInc_pic.Checked)
+							pic++;
 						next++;
-						pic++;
 					}
 				}
 			}

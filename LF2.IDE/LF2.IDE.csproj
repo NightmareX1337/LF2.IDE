@@ -168,6 +168,7 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataType.cs" />
     <Compile Include="Properties\Settings1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -484,6 +485,8 @@
     <Content Include="Resources\Icons\wav0.ico" />
     <Content Include="Resources\Icons\wav1.ico" />
     <Content Include="Resources\Icons\_favicon16x16.ico" />
+    <Content Include="Resources\link.png" />
+    <Content Include="Resources\link_break.png" />
     <Content Include="Resources\Menu\bigger.png" />
     <Content Include="Resources\Menu\collapse.png" />
     <Content Include="Resources\Menu\ControlPanel.png" />

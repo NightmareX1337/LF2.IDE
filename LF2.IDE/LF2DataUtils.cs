@@ -36,7 +36,7 @@ namespace LF2.IDE
 			int dec, pass;
 			byte[] buffer = File.ReadAllBytes(filepath);
 			byte[] decryptedtext = new byte[dec = Math.Max(0, buffer.Length - 123)];
-			byte* password = stackalloc byte[pass = EncryptionKey.Length]; // if file is too big then it will crash
+			byte* password = stackalloc byte[pass = EncryptionKey.Length];
 
 			if (pass == 0) return Encoding.Default.GetString(buffer);
 
@@ -80,7 +80,7 @@ namespace LF2.IDE
 		{
 			int len, pass, txt;
 			byte[] dat = new byte[len = 123 + (txt = text.Length)];
-			byte* password = stackalloc byte[pass = DecryptionKey.Length]; // if file is too big then it will crash
+			byte* password = stackalloc byte[pass = DecryptionKey.Length];
 
 			for (int i = 0; i < pass; i++)
 				password[i] = (byte)DecryptionKey[i];

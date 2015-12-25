@@ -11,34 +11,17 @@ namespace LF2.IDE
 	{
 		MainForm mainForm;
 
-		public FormTransparencyTools(Bitmap img, string path, MainForm main)
+		public FormTransparencyTools(string path, MainForm main)
 		{
 			InitializeComponent();
 			mainForm = main;
-			allowedFormats.Add(PixelFormat.Format16bppRgb555);
-			allowedFormats.Add(PixelFormat.Format16bppRgb565);
-			allowedFormats.Add(PixelFormat.Format24bppRgb);
-			allowedFormats.Add(PixelFormat.Format32bppArgb);
-			allowedFormats.Add(PixelFormat.Format32bppPArgb);
-			allowedFormats.Add(PixelFormat.Format32bppRgb);
-			allowedFormats.Add(PixelFormat.Format48bppRgb);
-			allowedFormats.Add(PixelFormat.Format64bppArgb);
-			allowedFormats.Add(PixelFormat.Format64bppPArgb);
+			Bitmap img = HelperTools.GetClonedBitmap(path);
 
-			if (!allowedFormats.Contains(img.PixelFormat))
-			{
-				bmp = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppRgb);
-				using (Graphics g = Graphics.FromImage(bmp))
-				{
-					g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height));
-				}
-				original = (Bitmap)bmp.Clone();
-			}
-			else
-			{
-				original = (Bitmap)img.Clone();
-				bmp = (Bitmap)original.Clone();
-			}
+			bmp = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppRgb);
+			using (Graphics g = Graphics.FromImage(bmp))
+				g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height));
+
+			original = (Bitmap)bmp.Clone();
 
 			this.path = path;
 		}
@@ -53,11 +36,9 @@ namespace LF2.IDE
 			set { FormTextureEditor.Texture = value; }
 		}
 
-		readonly List<PixelFormat> allowedFormats = new List<PixelFormat>(9);
-
 		void FormTransparentLoad(object sender, EventArgs e)
 		{
-			pictureBoxOriginal.Image = (Image)bmp.Clone();
+			pictureBoxOriginal.Image = original;
 			pictureBoxModified.Image = (Image)bmp.Clone();
 
 			hScrollBarO.Maximum = Math.Max(0, pictureBoxOriginal.Width - panelOriginal.Width);
@@ -256,49 +237,38 @@ namespace LF2.IDE
 
 		void FormTransparentKeyDown(object sender, KeyEventArgs e)
 		{
+			bool handled = true;
 			switch (e.KeyData)
 			{
 				case Keys.W:
 					buttonScrollU.PerformClick();
-					e.Handled = true;
-					e.SuppressKeyPress = true;
 					break;
 				case Keys.S:
 					buttonScrollD.PerformClick();
-					e.Handled = true;
-					e.SuppressKeyPress = true;
 					break;
 				case Keys.D:
 					buttonScrollR.PerformClick();
-					e.Handled = true;
-					e.SuppressKeyPress = true;
 					break;
 				case Keys.A:
 					buttonScrollL.PerformClick();
-					e.Handled = true;
-					e.SuppressKeyPress = true;
 					break;
 				case Keys.T:
 					ScrollVertical(false);
-					e.Handled = true;
-					e.SuppressKeyPress = true;
 					break;
 				case Keys.G:
 					ScrollVertical(true);
-					e.Handled = true;
-					e.SuppressKeyPress = true;
 					break;
 				case Keys.H:
 					ScrollHorizontal(true);
-					e.Handled = true;
-					e.SuppressKeyPress = true;
 					break;
 				case Keys.F:
 					ScrollHorizontal(false);
-					e.Handled = true;
-					e.SuppressKeyPress = true;
+					break;
+				default:
+					handled = false;
 					break;
 			}
+			e.Handled = e.SuppressKeyPress = handled;
 		}
 
 		void ScrollHorizontal(bool right)
@@ -545,21 +515,26 @@ namespace LF2.IDE
 		{
 			EditIn();
 
-			xBox.Text = pictureBoxOriginal.Rectangle.X.ToString();
-			yBox.Text = pictureBoxOriginal.Rectangle.Y.ToString();
-			wBox.Text = pictureBoxOriginal.Rectangle.Width.ToString();
-			hBox.Text = pictureBoxOriginal.Rectangle.Height.ToString();
-			rightBox.Text = pictureBoxOriginal.Rectangle.Right.ToString();
-			bottomBox.Text = pictureBoxOriginal.Rectangle.Bottom.ToString();
+			try
+			{
+				xBox.Text = pictureBoxOriginal.Rectangle.X.ToString();
+				yBox.Text = pictureBoxOriginal.Rectangle.Y.ToString();
+				wBox.Text = pictureBoxOriginal.Rectangle.Width.ToString();
+				hBox.Text = pictureBoxOriginal.Rectangle.Height.ToString();
+				rightBox.Text = pictureBoxOriginal.Rectangle.Right.ToString();
+				bottomBox.Text = pictureBoxOriginal.Rectangle.Bottom.ToString();
 
-			xBox.Refresh();
-			yBox.Refresh();
-			wBox.Refresh();
-			hBox.Refresh();
-			rightBox.Refresh();
-			bottomBox.Refresh();
-
-			EditOut();
+				xBox.Refresh();
+				yBox.Refresh();
+				wBox.Refresh();
+				hBox.Refresh();
+				rightBox.Refresh();
+				bottomBox.Refresh();
+			}
+			finally
+			{
+				EditOut();
+			}
 		}
 	}
 }

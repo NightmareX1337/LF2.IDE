@@ -12,45 +12,23 @@ namespace LF2.IDE
 	{
 		MainForm mainForm;
 
-		public FormSpriteMirrorer(Bitmap img, string path, MainForm main)
+		public FormSpriteMirrorer(string path, MainForm main)
 		{
 			InitializeComponent();
 			mainForm = main;
-			allowedFormats.Add(PixelFormat.Format16bppRgb555);
-			allowedFormats.Add(PixelFormat.Format16bppRgb565);
-			allowedFormats.Add(PixelFormat.Format24bppRgb);
-			allowedFormats.Add(PixelFormat.Format32bppArgb);
-			allowedFormats.Add(PixelFormat.Format32bppPArgb);
-			allowedFormats.Add(PixelFormat.Format32bppRgb);
-			allowedFormats.Add(PixelFormat.Format48bppRgb);
-			allowedFormats.Add(PixelFormat.Format64bppArgb);
-			allowedFormats.Add(PixelFormat.Format64bppPArgb);
+			Bitmap img = HelperTools.GetClonedBitmap(path);
 
 			foreach (string rft in RotateFlipType.GetNames(typeof(RotateFlipType)))
 				comboBox_Mode.Items.Add(rft);
 
-			if (!allowedFormats.Contains(img.PixelFormat))
-			{
-				bmp = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppRgb);
-				using (Graphics g = Graphics.FromImage(bmp))
-					g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height));
-				drawBox_OriginalSprite.Image = original = (Bitmap)bmp.Clone();
-				drawBox_ModifedSprite.Image = bmp;
+			drawBox_OriginalSprite.Image = original = img;
+			drawBox_ModifedSprite.Image = (Bitmap)original.Clone();
 
-			}
-			else
-			{
-				drawBox_OriginalSprite.Image = original = (Bitmap)img.Clone();
-				drawBox_ModifedSprite.Image = bmp = (Bitmap)original.Clone();
-			}
 			this.path = Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + "_mirror" + Path.GetExtension(path);
 		}
 
-		Bitmap bmp;
-		readonly Bitmap original;
+		Bitmap original;
 		string path;
-
-		readonly List<PixelFormat> allowedFormats = new List<PixelFormat>(9);
 
 		void FormMirrorerLoad(object sender, EventArgs e)
 		{
@@ -59,12 +37,14 @@ namespace LF2.IDE
 
 		void ComboBoxModeSelectedIndexChanged(object sender, EventArgs e)
 		{
-			(drawBox_ModifedSprite.Image = bmp = (Bitmap)original.Clone()).RotateFlip((RotateFlipType)RotateFlipType.Parse(typeof(RotateFlipType), (string)comboBox_Mode.SelectedItem));
+			drawBox_ModifedSprite.Image.RotateFlip((RotateFlipType)RotateFlipType.Parse(typeof(RotateFlipType), (string)comboBox_Mode.SelectedItem));
+			drawBox_ModifedSprite.Refresh();
 		}
 		
 		void ButtonApplyClick(object sender, EventArgs e)
 		{
-			FormImageSaver saver = new FormImageSaver(bmp, path, false, mainForm);
+			original.RotateFlip((RotateFlipType)RotateFlipType.Parse(typeof(RotateFlipType), (string)comboBox_Mode.SelectedItem));
+			FormImageSaver saver = new FormImageSaver(original, path, false, mainForm);
 			saver.ShowDialog();
 		}
 	}

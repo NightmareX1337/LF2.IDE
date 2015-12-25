@@ -71,6 +71,7 @@ namespace LF2.IDE
 		public static readonly string utilDir = exeDir + "\\DataUtils";
 		public static readonly string plugDir = exeDir + "\\Plugins";
 		public static readonly string templateDir = exeDir + "\\Templates";
+		public const string githubPage = "https://github.com/NightmareX1337/LF2.IDE";
 		public const string downloadPage = "https://github.com/NightmareX1337/LF2.IDE/releases";
 		public const string webPage = "http://www.lf-empire.de/forum/showthread.php?tid=9064";
 		public const string updateInfoLink = "https://raw.githubusercontent.com/NightmareX1337/LF2.IDE/master/UPDATE";

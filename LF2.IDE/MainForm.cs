@@ -262,6 +262,8 @@ namespace LF2.IDE
 			else if (persistString == docPersist && Settings.Current.saveDocStates && docLoop < Settings.Current.documentSettings.Count)
 			{
 				DocSet ds = Settings.Current.documentSettings[docLoop++];
+				if (!File.Exists(ds.filePath))
+					return null;
 				DocumentForm df = Open(ds.filePath, true);
 				df.Scintilla.LineWrapping.Mode = ds.lineWrappingMode;
 				df.Scintilla.Lines.FirstVisibleIndex = ds.firstVisibleLine;
@@ -317,27 +319,6 @@ namespace LF2.IDE
 			}
 			else
 				Open(fns, true);
-		}
-
-		private void argsTransClick(object sender, EventArgs e)
-		{
-			Bitmap img = (sender as ToolStripMenuItem).OwnerItem.Tag as Bitmap;
-			FormTransparencyTools ft = new FormTransparencyTools(img, (sender as ToolStripMenuItem).OwnerItem.Text, this);
-			ft.Show(this);
-		}
-
-		private void argsPixClick(object sender, EventArgs e)
-		{
-			Bitmap img = (sender as ToolStripMenuItem).OwnerItem.Tag as Bitmap;
-			FormImageSaver ft = new FormImageSaver(img, (sender as ToolStripMenuItem).OwnerItem.Text, true, this);
-			ft.ShowDialog(this);
-		}
-
-		private void argsMirClick(object sender, EventArgs e)
-		{
-			Bitmap img = (sender as ToolStripMenuItem).OwnerItem.Tag as Bitmap;
-			FormSpriteMirrorer ft = new FormSpriteMirrorer(img, (sender as ToolStripMenuItem).OwnerItem.Text, this);
-			ft.ShowDialog(this);
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -674,7 +655,7 @@ namespace LF2.IDE
 				toolStripIncrementalSearcher.Scintilla = null;
 		}
 
-		void ToolStripLabel1Click(object sender, EventArgs e)
+		void ToolStripLabelIndex_Click(object sender, EventArgs e)
 		{
 			if (ActiveDocument != null)
 			{
@@ -690,7 +671,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void ToolStripLabel2Click(object sender, EventArgs e)
+		void ToolStripLabelCaption_Click(object sender, EventArgs e)
 		{
 			if (ActiveDocument != null)
 			{
@@ -706,7 +687,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void ToolStripButtonlnClick(object sender, EventArgs e)
+		void ToolStripButtonLine_Click(object sender, EventArgs e)
 		{
 			if (ActiveDocument != null)
 			{
@@ -733,17 +714,15 @@ namespace LF2.IDE
 				Open(Program.langPath, true);
 		}
 
+		static Regex dummyRgx = new Regex("<frame> *?399.*?<frame_end>", RegexOptions.Singleline | RegexOptions.RightToLeft);
+
 		void DummyToolStripButtonClick(object sender, EventArgs e)
 		{
 			if (ActiveDocument != null)
 			{
-				string wew = ActiveDocument.Scintilla.Text;
-				int ff = wew.LastIndexOf("<frame> 399 ");
-				if (ff < 0) return;
-				int fg = wew.IndexOf("<frame_end>", ff);
-				if (fg < 0) return;
-				wew = wew.Substring(ff, (fg + 11) - ff);
-				ActiveDocument.Scintilla.Selection.Text = wew;
+				Match wew = dummyRgx.Match(ActiveDocument.Scintilla.Text);
+				if (wew.Success)
+					ActiveDocument.Scintilla.Selection.Text = wew.Value;
 			}
 		}
 
@@ -770,14 +749,15 @@ namespace LF2.IDE
 				if (dr == DialogResult.No)
 					return;
 				else
-					Reopen(ActiveDocument, fns);
+					Reopen(ActiveDocument);
 			}
 			else
-				Reopen(ActiveDocument, fns);
+				Reopen(ActiveDocument);
 		}
 
-		void Reopen(DocumentForm doc, string file)
+		void Reopen(DocumentForm doc)
 		{
+			string file = doc.FilePath;
 			if (file.EndsWith(".dat"))
 			{
 				doc.Scintilla.Text = "";
@@ -791,29 +771,14 @@ namespace LF2.IDE
 				doc.Scintilla.AppendText(File.ReadAllText(file, Encoding.Default));
 				doc.Scintilla.UndoRedo.EmptyUndoBuffer();
 				doc.Scintilla.Modified = false;
-				doc.Show(dockPanel);
 			}
+			doc.SetLanguage();
 		}
 
 		void AboutToolStripButtonClick(object sender, EventArgs e)
 		{
 			AboutForm af = new AboutForm();
 			af.ShowDialog();
-		}
-
-		void ShowTagWindowToolStripMenuItemClick(object sender, EventArgs e)
-		{
-			formDesign.Show();
-		}
-
-		void ShowFrameWindowToolStripMenuItemClick(object sender, EventArgs e)
-		{
-			formFrame.Show();
-		}
-
-		void ShowShapeWindowToolStripMenuItemClick(object sender, EventArgs e)
-		{
-			formShape.Show();
 		}
 
 		void ExitToolStripMenuItemClick(object sender, EventArgs e)
@@ -943,14 +908,18 @@ namespace LF2.IDE
 				psi.FileName = Settings.Current.lfPath;
 				psi.WorkingDirectory = Path.GetDirectoryName(Settings.Current.lfPath);
 				lfProc = Process.Start(psi);
-				lfProc.PriorityClass = ProcessPriorityClass.High;
 				FormWindowState fws = this.WindowState;
 				this.WindowState = FormWindowState.Minimized;
+				Thread.Sleep(800);
+
+				IDL.SendGameStartMsg(lfProc.MainWindowHandle);
 				//record = new Queue<Bitmap>(1024);
 				//backgroundWorkerLF2Recorder.RunWorkerAsync(lfProc);
 				//backgroundWorkerRecordStreamer.RunWorkerAsync(AviRecordDir);
 				while (!lfProc.HasExited)
+				{
 					Application.DoEvents();
+				}
 				//backgroundWorkerLF2Recorder.CancelAsync();
 				//backgroundWorkerRecordStreamer.CancelAsync();
 				this.WindowState = fws;
@@ -976,12 +945,64 @@ namespace LF2.IDE
 
 		void ShowMediaWindowToolStripMenuItemClick(object sender, EventArgs e)
 		{
+			try
+			{
+				if ((media.DockState & (WeifenLuo.WinFormsUI.Docking.DockState.DockBottomAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockLeftAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockRightAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockTopAutoHide)) != 0)
+					dockPanel.ActiveAutoHideContent = media;
+			}
+			catch (InvalidOperationException) { }
 			media.Show();
 		}
 
 		void ShowSolutionWindowToolStripMenuItemClick(object sender, EventArgs e)
 		{
+			try
+			{
+				if ((solutionExplorer.DockState & (WeifenLuo.WinFormsUI.Docking.DockState.DockBottomAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockLeftAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockRightAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockTopAutoHide)) != 0)
+					dockPanel.ActiveAutoHideContent = solutionExplorer;
+			}
+			catch (InvalidOperationException) { }
 			solutionExplorer.Show();
+		}
+
+		void ShowTagWindowToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			try
+			{
+				if ((formDesign.DockState & (WeifenLuo.WinFormsUI.Docking.DockState.DockBottomAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockLeftAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockRightAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockTopAutoHide)) != 0)
+					dockPanel.ActiveAutoHideContent = formDesign;
+			}
+			catch (InvalidOperationException) { }
+			formDesign.Show();
+		}
+
+		void ShowFrameWindowToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			try
+			{
+				if ((formFrame.DockState & (WeifenLuo.WinFormsUI.Docking.DockState.DockBottomAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockLeftAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockRightAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockTopAutoHide)) != 0)
+					dockPanel.ActiveAutoHideContent = formFrame;
+			}
+			catch (InvalidOperationException) { }
+			formFrame.Show();
+		}
+
+		void ShowShapeWindowToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			try
+			{
+				if ((formShape.DockState & (WeifenLuo.WinFormsUI.Docking.DockState.DockBottomAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockLeftAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockRightAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockTopAutoHide)) != 0)
+					dockPanel.ActiveAutoHideContent = formShape;
+			}
+			catch (InvalidOperationException) { }
+			formShape.Show();
+		}
+
+		void ErrorLogToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			if ((formEventLog.DockState & (WeifenLuo.WinFormsUI.Docking.DockState.DockBottomAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockLeftAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockRightAutoHide | WeifenLuo.WinFormsUI.Docking.DockState.DockTopAutoHide)) != 0)
+				dockPanel.ActiveAutoHideContent = formEventLog;
+			formEventLog.Show();
 		}
 
 		void ToolStripButtonQuickCheckedChanged(object sender, EventArgs e)
@@ -989,20 +1010,6 @@ namespace LF2.IDE
 			toolStripIncrementalSearcher.Enabled = quickToolStripButton.Checked;
 		}
 
-		void ErrorLogToolStripMenuItemClick(object sender, EventArgs e)
-		{
-			formEventLog.Show();
-		}
-
-		void TransparencyToolToolStripMenuItemClick(object sender, EventArgs e)
-		{
-			if (openFileDialog_Image.ShowDialog() == DialogResult.OK)
-			{
-				Bitmap img = (Bitmap)Image.FromFile(openFileDialog_Image.FileName);
-				FormTransparencyTools ft = new FormTransparencyTools(img, openFileDialog_Image.FileName, this);
-				ft.Show(this);
-			}
-		}
 
 		void ResetCurrentZoomToolStripMenuItemClick(object sender, EventArgs e)
 		{
@@ -1015,16 +1022,6 @@ namespace LF2.IDE
 			foreach (DocumentForm doc in dockPanel.Documents)
 			{
 				doc.Scintilla.Zoom = 0;
-			}
-		}
-
-		void PixelFormatterToolStripMenuItemClick(object sender, EventArgs e)
-		{
-			if (openFileDialog_Image.ShowDialog() == DialogResult.OK)
-			{
-				Bitmap img = (Bitmap)Image.FromFile(openFileDialog_Image.FileName);
-				FormImageSaver ft = new FormImageSaver(img, openFileDialog_Image.FileName, true, this);
-				ft.ShowDialog(this);
 			}
 		}
 
@@ -1153,13 +1150,80 @@ namespace LF2.IDE
 
 		//}
 
+		private void argsTransClick(object sender, EventArgs e)
+		{
+			FormTransparencyTools ftt = new FormTransparencyTools(openFileDialog_Image.FileName, this);
+			ftt.Show(this);
+		}
+
+		private void argsPixClick(object sender, EventArgs e)
+		{
+			FormImageSaver fis = new FormImageSaver(openFileDialog_Image.FileName, true, this);
+			fis.ShowDialog(this);
+		}
+
+		private void argsMirClick(object sender, EventArgs e)
+		{
+			FormSpriteMirrorer fsm = new FormSpriteMirrorer(openFileDialog_Image.FileName, this);
+			fsm.Show(this);
+		}
+
+		void TransparencyToolToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			if (openFileDialog_Image.ShowDialog() == DialogResult.OK)
+			{
+				FormTransparencyTools ftt = new FormTransparencyTools(openFileDialog_Image.FileName, this);
+				ftt.Show(this);
+			}
+		}
+
+		void PixelFormatterToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			if (openFileDialog_Image.ShowDialog() == DialogResult.OK)
+			{
+				FormImageSaver fis = new FormImageSaver(openFileDialog_Image.FileName, true, this);
+				fis.ShowDialog(this);
+			}
+		}
+
 		void SpriteMirrorerToolStripMenuItemClick(object sender, EventArgs e)
 		{
 			if (openFileDialog_Image.ShowDialog() == DialogResult.OK)
 			{
-				Bitmap img = (Bitmap)Image.FromFile(openFileDialog_Image.FileName);
-				FormSpriteMirrorer fm = new FormSpriteMirrorer(img, openFileDialog_Image.FileName, this);
-				fm.Show(this);
+				FormSpriteMirrorer fsm = new FormSpriteMirrorer(openFileDialog_Image.FileName, this);
+				fsm.Show(this);
+			}
+		}
+
+		private void mirrorAllSpritesInADirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			folderBrowserDialog_Sprite.SelectedPath = Path.GetDirectoryName(Settings.Current.lfPath);
+			if(folderBrowserDialog_Sprite.ShowDialog() == DialogResult.OK)
+			{
+				string path = folderBrowserDialog_Sprite.SelectedPath;
+				try
+				{
+					var fs = Directory.EnumerateFiles(path, "*.bmp", Directory.Exists(path + "\\" + "sys") ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+					foreach (string sprite in fs)
+					{
+						string fileName = Path.GetFileNameWithoutExtension(sprite), 
+							fileDir = Path.GetDirectoryName(sprite), 
+							file = Path.GetFileName(sprite), 
+							mirrored = fileDir + "\\" + fileName + "_mirror.bmp";
+
+						if (file.EndsWith("_mirror.bmp") || File.Exists(mirrored) || file.EndsWith("_s.bmp") || file.EndsWith("_f.bmp") || file == "s.bmp" || file == "face.bmp")
+							continue;
+						using (Bitmap bmp = new Bitmap(sprite))
+						{
+							bmp.RotateFlip(RotateFlipType.RotateNoneFlipX);
+							bmp.Save(mirrored, System.Drawing.Imaging.ImageFormat.Bmp);
+						}
+					}
+				}
+				catch(Exception ex)
+				{
+					formEventLog.Error(ex, "Sprite Mirroring Error");
+				}
 			}
 		}
 
@@ -1231,13 +1295,11 @@ namespace LF2.IDE
 			}
 			else if (file.EndsWith(".bmp") || file.EndsWith(".dib") || file.EndsWith(".png") || file.EndsWith(".jpg") || file.EndsWith(".jpeg") || file.EndsWith(".jpe") || file.EndsWith(".jfif") || file.EndsWith(".gif") || file.EndsWith(".emf") || file.EndsWith(".tif") || file.EndsWith(".tiff") || file.EndsWith(".wmf"))
 			{
-				Bitmap img = (Bitmap)Image.FromFile(file);
-				img.Tag = Path.GetFileName(file);
-				ToolStripMenuItem item = new ToolStripMenuItem(img.Tag as string),
+				ToolStripMenuItem item = new ToolStripMenuItem(Path.GetFileName(file)),
 				trans = new ToolStripMenuItem("Make Transparent"),
 				pix = new ToolStripMenuItem("Change Pixel Format"),
 				mir = new ToolStripMenuItem("Make Mirrored");
-				item.Tag = img;
+				item.Tag = file;
 				trans.Click += new EventHandler(argsTransClick);
 				pix.Click += new EventHandler(argsPixClick);
 				mir.Click += new EventHandler(argsMirClick);
@@ -1645,6 +1707,17 @@ namespace LF2.IDE
 			{
 				(doc[i] as DocumentForm).Close();
 			}
+		}
+
+		FormIDL fidl = null;
+
+		private void toolStripSplitButtonIDL_ButtonClick(object sender, EventArgs e)
+		{
+			if (fidl == null)
+				fidl = new FormIDL(this);
+
+			if(ActiveDocument != null)
+				fidl.ShowDialog();
 		}
 	}
 }

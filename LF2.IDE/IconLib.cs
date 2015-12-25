@@ -230,12 +230,12 @@ namespace LF2.IDE
 				if (ManageBothSizes)
 				{
 					//managing two lists, so add it to small first, then large
-					((ImageList)_imageLists[0]).Images.Add(IconReader.GetFileIcon(filePath, IconReader.IconSize.Small, false));
-					((ImageList)_imageLists[1]).Images.Add(IconReader.GetFileIcon(filePath, IconReader.IconSize.Large, false));
+					_imageLists[0].Images.Add(IconReader.GetFileIcon(filePath, IconReader.IconSize.Small, false));
+					_imageLists[1].Images.Add(IconReader.GetFileIcon(filePath, IconReader.IconSize.Large, false));
 				}
 				else
 					//only doing one size, so use IconSize as specified in _iconSize.
-					((ImageList)_imageLists[0]).Images.Add(IconReader.GetFileIcon(filePath, _iconSize, false));	//add to image list
+					_imageLists[0].Images.Add(IconReader.GetFileIcon(filePath, _iconSize, false));	//add to image list
 
 				AddExtension(repeaters.Contains(extension) ? filePath : extension.ToUpper(), pos);	// add to hash table
 				return pos;

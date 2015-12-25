@@ -178,7 +178,7 @@ $end$
     <AutoComplete>
       <List>
         stage stage_end phase phase_end boss soldier end
-        id bound music hp times ratio when_clear_goto_phase reserve mp act
+        id bound music hp times ratio when_clear_goto_phase reserve mp act x
       </List>
     </AutoComplete>
     <Lexer LexerName="vb" WordChars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_" LineCommentPrefix="#">
@@ -187,7 +187,7 @@ $end$
       </Keywords>
       <Keywords List="1" Inherit="False" />
       <Keywords List="2" Inherit="False">
-        id bound music hp times ratio when_clear_goto_phase reserve mp act
+        id bound music hp times ratio when_clear_goto_phase reserve mp act x
       </Keywords>
     </Lexer>
     <Indentation TabWidth="3" UseTabs="False" SmartIndentType="cpp"/>
@@ -222,7 +222,7 @@ $end$
     <AutoComplete>
       <List>
         layer layer_end
-        name x y width loop rect zboundary shadow shadowsize transparency cc c1 c2
+        name x y width height loop rect zboundary shadow shadowsize transparency cc c1 c2
       </List>
     </AutoComplete>
     <Lexer LexerName="vb" WordChars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_" LineCommentPrefix="#">
@@ -231,7 +231,7 @@ $end$
         layer layer_end
       </Keywords>
       <Keywords List="2" Inherit="False">
-        name x y width loop rect zboundary shadow shadowsize transparency cc c1 c2
+        name x y width height loop rect zboundary shadow shadowsize transparency cc c1 c2
       </Keywords>
     </Lexer>
     <Indentation TabWidth="3" UseTabs="False" SmartIndentType="cpp"/>

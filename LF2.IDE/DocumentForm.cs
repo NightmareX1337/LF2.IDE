@@ -189,31 +189,7 @@ namespace LF2.IDE
 				ToolTipText = _filePath = saveFileDialog.FileName;
 				TabText = Path.GetFileName(_filePath);
 
-				switch (Path.GetExtension(TabText))
-				{
-					case ".dat":
-						SetLanguage("dat");
-						break;
-					case ".txt":
-						SetLanguage("txt");
-						break;
-					case ".as":
-						SetLanguage("as");
-						break;
-					case ".xml":
-						SetLanguage("xml");
-						break;
-					case ".html":
-					case ".htm":
-						SetLanguage("html");
-						break;
-					case ".cs":
-						SetLanguage("cs");
-						break;
-					default:
-						SetLanguage("default");
-						break;
-				}
+				SetLanguage();
 
 				return Save(_filePath);
 			}
@@ -244,32 +220,8 @@ namespace LF2.IDE
 
 		void DocumentFormLoad(object sender, EventArgs e)
 		{
-			ToolTipText = _filePath == null ? TabText : _filePath;
-			switch (Path.GetExtension(TabText.TrimEnd(' ', '*')))
-			{
-				case ".dat":
-					SetLanguage("dat");
-					break;
-				case ".txt":
-					SetLanguage("txt");
-					break;
-				case ".as":
-					SetLanguage("as");
-					break;
-				case ".xml":
-					SetLanguage("xml");
-					break;
-				case ".html":
-				case ".htm":
-					SetLanguage("html");
-					break;
-				case ".cs":
-					SetLanguage("cs");
-					break;
-				default:
-					SetLanguage("default");
-					break;
-			}
+			ToolTipText = _filePath ?? TabText;
+			SetLanguage();
 			scintilla.NativeInterface.SendMessageDirect(2516, true);
 			SetMarginAuto();
 
@@ -342,6 +294,40 @@ namespace LF2.IDE
 
 		bool auto = false, smart = false;
 
+		public void SetLanguage()
+		{
+			SetLanguageByExtension(Path.GetExtension(TabText.TrimEnd('*', ' ')));
+		}
+
+		public void SetLanguageByExtension(string ext)
+		{
+			switch (ext)
+			{
+				case ".dat":
+					SetLanguage("dat");
+					break;
+				case ".txt":
+					SetLanguage("txt");
+					break;
+				case ".as":
+					SetLanguage("as");
+					break;
+				case ".xml":
+					SetLanguage("xml");
+					break;
+				case ".html":
+				case ".htm":
+					SetLanguage("html");
+					break;
+				case ".cs":
+					SetLanguage("cs");
+					break;
+				default:
+					SetLanguage("default");
+					break;
+			}
+		}
+
 		public void SetLanguage(string language)
 		{
 			language = language.ToLowerInvariant();
@@ -360,7 +346,7 @@ namespace LF2.IDE
 							this.Scintilla.ConfigurationManager.Language = "stage_dat";
 							documentType = DocumentType.StageData;
 						}
-						else if (Scintilla.Text.Contains("layer:"))
+						else if (Scintilla.Text.Contains("zboundary:"))
 						{
 							Scintilla.Indentation.TabWidth = 2;
 							this.Scintilla.ConfigurationManager.Language = "bg_dat";
@@ -383,7 +369,7 @@ namespace LF2.IDE
 						if (TabText.TrimEnd(' ', '*') != "data.txt")
 							goto default;
 						Scintilla.Indentation.UseTabs = false;
-						Scintilla.Indentation.TabWidth = 1;
+						Scintilla.Indentation.TabWidth = 4;
 						Scintilla.EndOfLine.Mode = EndOfLineMode.Crlf;
 						this.Icon = Properties.Resources.DocumentDAT;
 						auto = true;

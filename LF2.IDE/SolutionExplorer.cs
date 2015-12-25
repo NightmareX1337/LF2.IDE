@@ -1118,8 +1118,7 @@ namespace LF2.IDE
 				nodeFileInfo.Refresh();
 				if (nodeFileInfo.Exists)
 				{
-					Bitmap img = (Bitmap)Image.FromFile(nodeFileInfo.FullName);
-					FormTransparencyTools ft = new FormTransparencyTools(img, nodeFileInfo.FullName, mainForm);
+					FormTransparencyTools ft = new FormTransparencyTools(nodeFileInfo.FullName, mainForm);
 					ft.Show(mainForm);
 				}
 				else
@@ -1140,8 +1139,7 @@ namespace LF2.IDE
 				nodeFileInfo.Refresh();
 				if (nodeFileInfo.Exists)
 				{
-					Bitmap img = (Bitmap)Image.FromFile(nodeFileInfo.FullName);
-					FormImageSaver ft = new FormImageSaver(img, nodeFileInfo.FullName, true, mainForm);
+					FormImageSaver ft = new FormImageSaver(nodeFileInfo.FullName, true, mainForm);
 					ft.ShowDialog(mainForm);
 					this.Show();
 				}
@@ -1212,8 +1210,7 @@ namespace LF2.IDE
 				nodeFileInfo.Refresh();
 				if (nodeFileInfo.Exists)
 				{
-					Bitmap img = (Bitmap)Image.FromFile(nodeFileInfo.FullName);
-					FormSpriteMirrorer ft = new FormSpriteMirrorer(img, nodeFileInfo.FullName, mainForm);
+					FormSpriteMirrorer ft = new FormSpriteMirrorer(nodeFileInfo.FullName, mainForm);
 					ft.ShowDialog(mainForm);
 					this.Show();
 				}

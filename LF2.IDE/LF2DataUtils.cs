@@ -25,8 +25,11 @@ namespace LF2.IDE
 
 			if (string.IsNullOrEmpty(password)) return Encoding.Default.GetString(buffer);
 
-			for (int i = 0, j = 123; i < decryptedtext.Length; i++, j++)
-				decryptedtext[i] = (byte)(buffer[j] - (byte)password[i % password.Length]);
+				for (int i = 0, j = 123; i < decryptedtext.Length; i++, j++)
+					unchecked
+					{
+						decryptedtext[i] = (byte)(buffer[j] - (byte)password[i % password.Length]);
+					}
 
 			return Encoding.Default.GetString(decryptedtext);
 		}
@@ -46,7 +49,11 @@ namespace LF2.IDE
 			fixed (byte* b = buffer, d = decryptedtext)
 			{
 				for (int i = 0, j = 123; i < dec; i++, j++)
-					d[i] = (byte)(b[j] - password[i % pass]);
+					unchecked
+					{
+						d[i] = (byte)(b[j] - password[i % pass]);
+					}
+
 			}
 
 			return Encoding.Default.GetString(decryptedtext);

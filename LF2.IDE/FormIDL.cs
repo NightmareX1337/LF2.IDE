@@ -45,8 +45,8 @@ namespace LF2.IDE
 		//}
 		#endregion WndProc
 
-		[DllImport("user32.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Winapi)]
-		public static extern IntPtr SetFocus(IntPtr window);
+		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Winapi)]
+		public static extern bool SetForegroundWindow(IntPtr window);
 
 		private void buttonLoad_Click(object sender, EventArgs e)
 		{
@@ -74,7 +74,7 @@ namespace LF2.IDE
 				{
 					threads[i] = p.Threads[i].Id;
 				}
-
+				
 				int suspendResult;
 				var suspend = (int[])threads.Clone();
 				var resume = (int[])threads.Clone();
@@ -84,14 +84,14 @@ namespace LF2.IDE
 					{
 						throw new ApplicationException("Process suspending failed: " + p.Id);
 					}
-					result = IDL.InstantLoad(dat, dat.Length, 
-						p.Id, 
-						(DataType)comboBox_DataType.SelectedIndex, 
-						comboBox_DataType.SelectedIndex == 0 ? comboBox_ObjId.SelectedIndex : 
-						comboBox_DataType.SelectedIndex == 1 ? (-1) : // not to be used
-						dataTxt.backgrounds[comboBox_BgId.SelectedIndex].id, 
-						comboBox_DataType.SelectedIndex == 0 ? (ObjectType)comboBox_ObjType.SelectedIndex : ObjectType.Invalid, 
-						this.Handle);
+					result =  IDL.InstantLoad(dat, dat.Length,
+						 p.Id,
+						 (DataType)comboBox_DataType.SelectedIndex,
+						 comboBox_DataType.SelectedIndex == 0 ? comboBox_ObjId.SelectedIndex :
+						 comboBox_DataType.SelectedIndex == 1 ? (-1) : // not to be used
+						 dataTxt.backgrounds[comboBox_BgId.SelectedIndex].id,
+						 comboBox_DataType.SelectedIndex == 0 ? (ObjectType)comboBox_ObjType.SelectedIndex : ObjectType.Invalid,
+						 this.Handle);
 				}
 				finally
 				{
@@ -99,7 +99,7 @@ namespace LF2.IDE
 					if (result == 0)
 					{
 						label_Result.Text = "Successful";
-						SetFocus(p.MainWindowHandle);
+						SetForegroundWindow(p.MainWindowHandle);
 					}
 					else
 					{

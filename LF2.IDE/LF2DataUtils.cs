@@ -25,36 +25,11 @@ namespace LF2.IDE
 
 			if (string.IsNullOrEmpty(password)) return Encoding.Default.GetString(buffer);
 
-				for (int i = 0, j = 123; i < decryptedtext.Length; i++, j++)
-					unchecked
-					{
-						decryptedtext[i] = (byte)(buffer[j] - (byte)password[i % password.Length]);
-					}
-
-			return Encoding.Default.GetString(decryptedtext);
-		}
-
-		public static unsafe string DecryptUnsafe(string filepath)
-		{
-			int dec, pass;
-			byte[] buffer = File.ReadAllBytes(filepath);
-			byte[] decryptedtext = new byte[dec = Math.Max(0, buffer.Length - 123)];
-			byte* password = stackalloc byte[pass = EncryptionKey.Length];
-
-			if (pass == 0) return Encoding.Default.GetString(buffer);
-
-			for (int i = 0; i < pass; i++)
-				password[i] = (byte)EncryptionKey[i];
-
-			fixed (byte* b = buffer, d = decryptedtext)
-			{
-				for (int i = 0, j = 123; i < dec; i++, j++)
-					unchecked
-					{
-						d[i] = (byte)(b[j] - password[i % pass]);
-					}
-
-			}
+			for (int i = 0, j = 123; i < decryptedtext.Length; i++, j++)
+				unchecked
+				{
+					decryptedtext[i] = (byte)(buffer[j] - (byte)password[i % password.Length]);
+				}
 
 			return Encoding.Default.GetString(decryptedtext);
 		}
@@ -81,6 +56,32 @@ namespace LF2.IDE
 					dat[j] = (byte)((byte)text[i] + (byte)password[i % password.Length]);
 
 			File.WriteAllBytes(filepath, dat);
+		}
+		
+		/*
+		public static unsafe string DecryptUnsafe(string filepath)
+		{
+			int dec, pass;
+			byte[] buffer = File.ReadAllBytes(filepath);
+			byte[] decryptedtext = new byte[dec = Math.Max(0, buffer.Length - 123)];
+			byte* password = stackalloc byte[pass = EncryptionKey.Length];
+
+			if (pass == 0) return Encoding.Default.GetString(buffer);
+
+			for (int i = 0; i < pass; i++)
+				password[i] = (byte)EncryptionKey[i];
+
+			fixed (byte* b = buffer, d = decryptedtext)
+			{
+				for (int i = 0, j = 123; i < dec; i++, j++)
+					unchecked
+					{
+						d[i] = (byte)(b[j] - password[i % pass]);
+					}
+
+			}
+
+			return Encoding.Default.GetString(decryptedtext);
 		}
 
 		public static unsafe void EncryptUnsafe(string text, string filepath)
@@ -110,6 +111,7 @@ namespace LF2.IDE
 
 			File.WriteAllBytes(filepath, dat);
 		}
+		*/
 
 		public static List<string> GetFrames(string dat)
 		{

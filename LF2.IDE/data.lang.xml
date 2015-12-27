@@ -178,7 +178,7 @@ $end$
     <AutoComplete>
       <List>
         stage stage_end phase phase_end boss soldier end
-        id bound music hp times ratio when_clear_goto_phase reserve mp act x
+        id bound music hp times ratio when_clear_goto_phase reserve mp act x join
       </List>
     </AutoComplete>
     <Lexer LexerName="vb" WordChars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_" LineCommentPrefix="#">
@@ -187,7 +187,7 @@ $end$
       </Keywords>
       <Keywords List="1" Inherit="False" />
       <Keywords List="2" Inherit="False">
-        id bound music hp times ratio when_clear_goto_phase reserve mp act x
+        id bound music hp times ratio when_clear_goto_phase reserve mp act x join
       </Keywords>
     </Lexer>
     <Indentation TabWidth="3" UseTabs="False" SmartIndentType="cpp"/>

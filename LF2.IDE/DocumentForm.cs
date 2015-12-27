@@ -522,7 +522,7 @@ namespace LF2.IDE
 				{
 					var frame = LF2DataUtils.ReadFrame(fr.Text);
 					mainForm.formDesign.EditIn();
-					if (frame.pic.HasValue)
+					if (frame.pic.HasValue && frame.pic.Value <= mainForm.formDesign.numericUpDown_ImageIndex.Maximum)
 						mainForm.formDesign.numericUpDown_ImageIndex.Value = frame.pic.Value;
 					mainForm.formDesign.textBox_caption.Text = frame.caption;
 					if (frame.bdys != null)

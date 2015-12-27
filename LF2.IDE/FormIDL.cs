@@ -46,7 +46,7 @@ namespace LF2.IDE
 		#endregion WndProc
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Winapi)]
-		public static extern bool SetForegroundWindow(IntPtr window);
+		public static extern bool SetForegroundWindow(HandleRef window);
 
 		private void buttonLoad_Click(object sender, EventArgs e)
 		{
@@ -99,7 +99,7 @@ namespace LF2.IDE
 					if (result == 0)
 					{
 						label_Result.Text = "Successful";
-						SetForegroundWindow(p.MainWindowHandle);
+						SetForegroundWindow(new HandleRef(p, p.MainWindowHandle));
 					}
 					else
 					{

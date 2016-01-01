@@ -151,6 +151,9 @@
 			this.spriteHandlerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.refreshAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.refreshCurrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.ınstantDataLoaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.autoLoadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.argsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.webToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -173,9 +176,6 @@
 			this.backgroundWorker_Util = new System.ComponentModel.BackgroundWorker();
 			this.backgroundWorker_Plugin = new System.ComponentModel.BackgroundWorker();
 			this.folderBrowserDialog_Sprite = new System.Windows.Forms.FolderBrowserDialog();
-			this.ınstantDataLoaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.autoLoadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mainToolStrip.SuspendLayout();
 			this.jumpToToolStrip.SuspendLayout();
 			this.mainMenuStrip.SuspendLayout();
@@ -253,7 +253,7 @@
 			dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
 			this.dockPanel.Skin = dockPanelSkin1;
 			this.dockPanel.TabIndex = 0;
-			this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.DockPanelActiveDocumentChanged);
+			this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.DockPanel_ActiveDocumentChanged);
 			// 
 			// newToolStripButton
 			// 
@@ -1248,6 +1248,32 @@
 			this.refreshCurrentToolStripMenuItem.Text = "Reparse &Current";
 			this.refreshCurrentToolStripMenuItem.Click += new System.EventHandler(this.RefreshCurrentToolStripMenuItemClick);
 			// 
+			// ınstantDataLoaderToolStripMenuItem
+			// 
+			this.ınstantDataLoaderToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadToolStripMenuItem,
+            this.autoLoadToolStripMenuItem});
+			this.ınstantDataLoaderToolStripMenuItem.Name = "ınstantDataLoaderToolStripMenuItem";
+			this.ınstantDataLoaderToolStripMenuItem.Size = new System.Drawing.Size(121, 20);
+			this.ınstantDataLoaderToolStripMenuItem.Text = "Instant &Data Loader";
+			// 
+			// loadToolStripMenuItem
+			// 
+			this.loadToolStripMenuItem.Image = global::LF2.IDE.Properties.Resources.lightning;
+			this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+			this.loadToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F9;
+			this.loadToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.loadToolStripMenuItem.Text = "&Load...";
+			this.loadToolStripMenuItem.Click += new System.EventHandler(this.toolStripSplitButtonIDL_ButtonClick);
+			// 
+			// autoLoadToolStripMenuItem
+			// 
+			this.autoLoadToolStripMenuItem.Name = "autoLoadToolStripMenuItem";
+			this.autoLoadToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F10;
+			this.autoLoadToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.autoLoadToolStripMenuItem.Text = "&Auto Load";
+			this.autoLoadToolStripMenuItem.Click += new System.EventHandler(this.autoLoadToolStripMenuItem_Click);
+			// 
 			// argsToolStripMenuItem
 			// 
 			this.argsToolStripMenuItem.AutoToolTip = true;
@@ -1434,31 +1460,6 @@
 			// 
 			this.folderBrowserDialog_Sprite.RootFolder = System.Environment.SpecialFolder.MyComputer;
 			this.folderBrowserDialog_Sprite.ShowNewFolderButton = false;
-			// 
-			// ınstantDataLoaderToolStripMenuItem
-			// 
-			this.ınstantDataLoaderToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadToolStripMenuItem,
-            this.autoLoadToolStripMenuItem});
-			this.ınstantDataLoaderToolStripMenuItem.Name = "ınstantDataLoaderToolStripMenuItem";
-			this.ınstantDataLoaderToolStripMenuItem.Size = new System.Drawing.Size(121, 20);
-			this.ınstantDataLoaderToolStripMenuItem.Text = "Instant &Data Loader";
-			// 
-			// loadToolStripMenuItem
-			// 
-			this.loadToolStripMenuItem.Image = global::LF2.IDE.Properties.Resources.lightning;
-			this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-			this.loadToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F9;
-			this.loadToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-			this.loadToolStripMenuItem.Text = "&Load...";
-			this.loadToolStripMenuItem.Click += new System.EventHandler(this.toolStripSplitButtonIDL_ButtonClick);
-			// 
-			// autoLoadToolStripMenuItem
-			// 
-			this.autoLoadToolStripMenuItem.Name = "autoLoadToolStripMenuItem";
-			this.autoLoadToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F10;
-			this.autoLoadToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-			this.autoLoadToolStripMenuItem.Text = "&Auto Load";
 			// 
 			// MainForm
 			// 

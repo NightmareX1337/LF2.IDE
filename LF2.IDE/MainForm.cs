@@ -523,16 +523,61 @@ namespace LF2.IDE
 			}
 		}
 
+		void DebugToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			string lfpath = Settings.Current.lfPath;
+			if (File.Exists(lfpath))
+			{
+				FormWindowState fws = this.WindowState;
+				this.WindowState = FormWindowState.Minimized;
+
+				lfProc = ExecuteLF2();
+
+				while (!lfProc.HasExited)
+				{
+					Application.DoEvents();
+				}
+				lfProc = null;
+				this.WindowState = fws;
+			}
+		}
+
+		void RestartToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			foreach (Process prc in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Settings.Current.lfPath)))
+			{
+				if (!prc.HasExited)
+				{
+					prc.CloseMainWindow();
+					ProcessStartInfo psi = new ProcessStartInfo(Settings.Current.lfPath);
+					psi.WorkingDirectory = Path.GetDirectoryName(Settings.Current.lfPath);
+					Process.Start(psi);
+				}
+			}
+		}
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Winapi)]
+		public static extern int SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
 		void StartToolStripMenuItemClick(object sender, EventArgs e)
 		{
 			string lfpath = Settings.Current.lfPath;
 			if (File.Exists(lfpath))
 			{
-				ProcessStartInfo psi = new ProcessStartInfo();
-				psi.FileName = Settings.Current.lfPath;
-				psi.WorkingDirectory = Path.GetDirectoryName(Settings.Current.lfPath);
-				Process.Start(psi);
+				ExecuteLF2();
 			}
+		}
+
+		public Process ExecuteLF2()
+		{
+			ProcessStartInfo psi = new ProcessStartInfo();
+			psi.FileName = Settings.Current.lfPath;
+			psi.WorkingDirectory = Path.GetDirectoryName(Settings.Current.lfPath);
+			Process lfp = Process.Start(psi);
+			Thread.Sleep(1000);
+			SetWindowPos(lfp.MainWindowHandle, IntPtr.Zero, (Screen.PrimaryScreen.WorkingArea.Width - 800) / 2, (Screen.PrimaryScreen.WorkingArea.Height - 578) / 2, 800, 578, 0);
+			IDL.SendGameStartMsg(lfp.MainWindowHandle);
+			return lfp;
 		}
 
 		public static Process lfProc = null;
@@ -610,9 +655,11 @@ namespace LF2.IDE
 		public DocumentForm lastActiveDoc;
 		bool closed = false;
 
-		void DockPanelActiveDocumentChanged(object sender, EventArgs e)
+		void DockPanel_ActiveDocumentChanged(object sender, EventArgs e)
 		{
 			if (closed) return;
+			if (fidl != null && fidl.Visible)
+				fidl.FreshLoad();
 			if (ActiveDocument != null)
 			{
 				if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.None)
@@ -866,79 +913,6 @@ namespace LF2.IDE
 					{
 						linear.ToggleFoldExpanded();
 					}
-				}
-			}
-		}
-
-		//[StructLayout(LayoutKind.Sequential)]
-		//public struct Rect
-		//{
-		//	public int left;
-		//	public int top;
-		//	public int right;
-		//	public int bottom;
-		//}
-
-		//[DllImport("user32.dll")]
-		//public static extern IntPtr GetWindowRect(IntPtr hWnd, ref Rect rect);
-
-		//public Bitmap CaptureWindow(IntPtr windowHandle)
-		//{
-		//	Rect rect = new Rect();
-		//	GetWindowRect(windowHandle, ref rect);
-
-		//	int width = rect.right - rect.left;
-		//	int height = rect.bottom - rect.top;
-
-		//	Bitmap bmp = new Bitmap(width, height, PixelFormat.Format32bppRgb);
-		//	using (Graphics g = Graphics.FromImage(bmp))
-		//		g.CopyFromScreen(rect.left, rect.top, 0, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
-
-		//	return bmp;
-		//}
-
-		//public string AviRecordDir { get { return Path.GetDirectoryName(Settings.Current.lfPath) + "\\Records"; } }
-
-		void DebugToolStripMenuItemClick(object sender, EventArgs e)
-		{
-			string lfpath = Settings.Current.lfPath;
-			if (File.Exists(lfpath))
-			{
-				ProcessStartInfo psi = new ProcessStartInfo();
-				psi.FileName = Settings.Current.lfPath;
-				psi.WorkingDirectory = Path.GetDirectoryName(Settings.Current.lfPath);
-				lfProc = Process.Start(psi);
-				FormWindowState fws = this.WindowState;
-				this.WindowState = FormWindowState.Minimized;
-				Thread.Sleep(800);
-
-				IDL.SendGameStartMsg(lfProc.MainWindowHandle);
-				//record = new Queue<Bitmap>(1024);
-				//backgroundWorkerLF2Recorder.RunWorkerAsync(lfProc);
-				//backgroundWorkerRecordStreamer.RunWorkerAsync(AviRecordDir);
-				while (!lfProc.HasExited)
-				{
-					Application.DoEvents();
-				}
-				//backgroundWorkerLF2Recorder.CancelAsync();
-				//backgroundWorkerRecordStreamer.CancelAsync();
-				this.WindowState = fws;
-				lfProc = null;
-			}
-		}
-
-		//		volatile Queue<Bitmap> record;
-
-		void RestartToolStripMenuItemClick(object sender, EventArgs e)
-		{
-			foreach (Process prc in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Settings.Current.lfPath)))
-			{
-				if (!prc.HasExited)
-				{
-					prc.Kill();
-					ProcessStartInfo psi = new ProcessStartInfo(Settings.Current.lfPath);
-					psi.WorkingDirectory = Path.GetDirectoryName(Settings.Current.lfPath);
-					Process.Start(psi);
 				}
 			}
 		}
@@ -1713,11 +1687,153 @@ namespace LF2.IDE
 
 		private void toolStripSplitButtonIDL_ButtonClick(object sender, EventArgs e)
 		{
-			if (fidl == null)
+			if (fidl == null || fidl.IsDisposed)
 				fidl = new FormIDL(this);
 
-			if(ActiveDocument != null)
-				fidl.ShowDialog();
+			if (ActiveDocument != null)
+			{
+				if (!fidl.Visible)
+					fidl.Show(this);
+				else
+					fidl.Activate();
+			}
+		}
+
+		private void autoLoadToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			DocumentForm doc = ActiveDocument;
+			if(doc == null)
+			{
+				return;
+			}
+			int objId = -1;
+			int dataType = -1;
+			int objType = -1;
+			int bgId = -1;
+
+			Process[] procs = Process.GetProcessesByName("lf2");
+			Process lfp = null;
+			if(Settings.Current.lfPath != null)
+				foreach (Process proc in procs)
+					if(string.Equals(proc.MainModule.FileName, Settings.Current.lfPath, StringComparison.InvariantCultureIgnoreCase))
+					{
+						lfp = proc;
+						break;
+					}
+			if (lfp == null)
+				return;
+
+			switch (doc.DocumentType)
+			{
+				case DocumentType.ObjectData:
+					dataType = 0;
+					break;
+				case DocumentType.StageData:
+					dataType = 1;
+					break;
+				case DocumentType.BgData:
+					dataType = 2;
+					break;
+				default:
+					return;
+			}
+			string lfDir = Path.GetDirectoryName(Settings.Current.lfPath), dataTxtFile = lfDir + "\\data\\data.txt";
+			if (!File.Exists(dataTxtFile))
+			{
+				MessageBox.Show("'data.txt' could not found. Make sure you set 'LF2 Path' correct in the settings menu.", Program.Title);
+				this.Close();
+				return;
+			}
+			DateTime modification = File.GetLastWriteTime(dataTxtFile);
+			if (modification > FormIDL.dataTxtLastModification)
+			{
+				dataTxtFile = File.ReadAllText(dataTxtFile);
+				if (IDL.ReadDataTxt(dataTxtFile, dataTxtFile.Length, ref FormIDL.dataTxt.objects, ref FormIDL.dataTxt.objCount, ref FormIDL.dataTxt.backgrounds, ref FormIDL.dataTxt.bgCount, this.Handle) != 0)
+					return;
+
+				FormIDL.dataTxtLastModification = modification;
+			}
+
+			for (int i = 0; i < FormIDL.dataTxt.objCount; i++)
+			{
+				if (doc.FilePath != null ? doc.FilePath.EndsWith(FormIDL.dataTxt.objects[i].file, StringComparison.InvariantCultureIgnoreCase) : doc.TabText.EndsWith(FormIDL.dataTxt.objects[i].file, StringComparison.InvariantCultureIgnoreCase))
+				{
+					objId = i;
+					objType = (int)FormIDL.dataTxt.objects[i].type;
+					dataType = 0;
+					break;
+				}
+			}
+
+			for (int i = 0; i < FormIDL.dataTxt.bgCount; i++)
+			{
+				if (doc.FilePath != null ? doc.FilePath.EndsWith(FormIDL.dataTxt.backgrounds[i].file, StringComparison.InvariantCultureIgnoreCase) : doc.TabText.EndsWith(FormIDL.dataTxt.backgrounds[i].file, StringComparison.InvariantCultureIgnoreCase))
+				{
+					bgId = i;
+					dataType = 2;
+					break;
+				}
+			}
+			if (dataType == (int)DataType.Char && objId < 0 || dataType == (int)DataType.Background && bgId < 0 || dataType < 0)
+				return;
+
+			int result = int.MinValue;
+			try
+			{
+				string dat = ActiveDocument.Scintilla.Text;
+
+				Process p = lfp;
+				if (p.HasExited)
+					return;
+
+				int[] threads = new int[p.Threads.Count];
+				for (int i = 0; i < threads.Length; i++)
+				{
+					threads[i] = p.Threads[i].Id;
+				}
+
+				int suspendResult;
+				var suspend = (int[])threads.Clone();
+				var resume = (int[])threads.Clone();
+				try
+				{
+					if ((suspendResult = IDL.SuspendThreadList(suspend, threads.Length, 1)) != 0)
+					{
+						throw new ApplicationException("Failed to suspend LF2 process: " + p.Id);
+					}
+					result = IDL.InstantLoad(dat, dat.Length,
+						p.Id,
+						(DataType)dataType,
+						dataType == 0 ? objId :
+						dataType == 1 ? (-1) : // not to be used
+						FormIDL.dataTxt.backgrounds[bgId].id,
+						dataType == 0 ? (ObjectType)objType : ObjectType.Invalid,
+						this.Handle);
+					if (result == 0)
+					{
+						FormIDL.SetForegroundWindow(new HandleRef(p, p.MainWindowHandle));
+					}
+				}
+				finally
+				{
+					IDL.SuspendThreadList(resume, threads.Length, 0);
+				}
+			}
+			catch (DllNotFoundException)
+			{
+				MessageBox.Show("'IDL.dll' could not be found, it's required to make instant data loading possible.\r\n" +
+					"If you think it supposed to come with the download please contact me (the developer) at LFE Forums (Help/Web...) or report a bug at GitHub:\r\n" +
+					Program.githubPage,
+					Program.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			catch (ApplicationException ex)
+			{
+				MessageBox.Show(ex.ToString(), "Instant Data Loading Error");
+			}
+			catch (Exception ex)
+			{
+				formEventLog.Error(ex, "Instant Data Loading Error");
+			}
 		}
 	}
 }

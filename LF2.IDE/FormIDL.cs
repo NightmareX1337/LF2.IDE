@@ -50,6 +50,16 @@ namespace LF2.IDE
 
 		private void buttonLoad_Click(object sender, EventArgs e)
 		{
+			if (mainForm.ActiveDocument == null)
+			{
+				label_Result.Text = "No active document";
+				return;
+			}
+			if (mainForm.ActiveDocument.DocumentType != DocumentType.BgData && mainForm.ActiveDocument.DocumentType != DocumentType.ObjectData && mainForm.ActiveDocument.DocumentType != DocumentType.StageData)
+			{
+				label_Result.Text = "Unsupported document type: " + mainForm.ActiveDocument.DocumentType;
+				return;
+			}
 			int result = int.MinValue;
 			try
 			{
@@ -59,7 +69,7 @@ namespace LF2.IDE
 					(comboBox_DataType.SelectedIndex == 2 && (comboBox_BgId.SelectedIndex < 0)))
 					return;
 
-				string dat = doc.Scintilla.Text;
+				string dat = mainForm.ActiveDocument.Scintilla.Text;
 				
 				Process p = procs[comboBox_Process.SelectedIndex];
 				if(p.HasExited)
@@ -100,6 +110,7 @@ namespace LF2.IDE
 					{
 						label_Result.Text = "Successful";
 						SetForegroundWindow(new HandleRef(p, p.MainWindowHandle));
+						this.Close();
 					}
 					else
 					{
@@ -143,14 +154,21 @@ namespace LF2.IDE
 		}
 
 		Process[] procs;
-		DataTxt dataTxt;
-		DateTime dataTxtLastModification = DateTime.MinValue;
-		DocumentForm doc;
+		public static DataTxt dataTxt;
+		public static DateTime dataTxtLastModification = DateTime.MinValue;
 
 		private void FormIDL_Load(object sender, EventArgs e)
 		{
-			doc = mainForm.ActiveDocument;
+			FreshLoad();
+		}
 
+		public void FreshLoad()
+		{
+			DocumentForm doc = mainForm.ActiveDocument;
+			if(doc == null)
+			{
+				return;
+			}
 			comboBox_ObjId.SelectedIndex = -1;
 			comboBox_DataType.SelectedIndex = -1;
 			comboBox_ObjType.SelectedIndex = -1;
@@ -163,16 +181,22 @@ namespace LF2.IDE
 			{
 				case DocumentType.ObjectData:
 					comboBox_DataType.SelectedIndex = 0;
+					comboBox_DataType.Enabled = true;
 					break;
 				case DocumentType.StageData:
 					comboBox_DataType.SelectedIndex = 1;
+					comboBox_DataType.Enabled = true;
 					break;
 				case DocumentType.BgData:
 					comboBox_DataType.SelectedIndex = 2;
+					comboBox_DataType.Enabled = true;
 					break;
 				default:
-					MessageBox.Show("Unsupported document type: " + doc.DocumentType.ToString(), Program.Title, MessageBoxButtons.OK);
-					this.Close();
+					label_Result.Text = "Unsupported document type: " + doc.DocumentType.ToString();
+					comboBox_ObjId.Enabled = false;
+					comboBox_DataType.Enabled = false;
+					comboBox_ObjType.Enabled = false;
+					comboBox_BgId.Enabled = false;
 					break;
 			}
 			string lfDir = Path.GetDirectoryName(Settings.Current.lfPath), dataTxtFile = lfDir + "\\data\\data.txt";
@@ -185,8 +209,6 @@ namespace LF2.IDE
 			DateTime modification = File.GetLastWriteTime(dataTxtFile);
 			if (modification > dataTxtLastModification)
 			{
-				dataTxtLastModification = modification;
-				
 				comboBox_BgId.Items.Clear();
 				comboBox_ObjId.Items.Clear();
 				
@@ -194,6 +216,8 @@ namespace LF2.IDE
 				if (IDL.ReadDataTxt(dataTxtFile, dataTxtFile.Length, ref dataTxt.objects, ref dataTxt.objCount, ref dataTxt.backgrounds, ref dataTxt.bgCount, this.Handle) != 0)
 					return;
 
+				dataTxtLastModification = modification;
+				
 				for (int i = 0; i < dataTxt.objCount; i++)
 					comboBox_ObjId.Items.Add(string.Format("id: {0}  type: {1}  file: {2}", dataTxt.objects[i].id, (byte)dataTxt.objects[i].type, dataTxt.objects[i].file));
 
@@ -203,7 +227,7 @@ namespace LF2.IDE
 
 			for(int i = 0; i < dataTxt.objCount; i++)
 			{
-				if(doc.FilePath.EndsWith(dataTxt.objects[i].file, StringComparison.InvariantCultureIgnoreCase))
+				if (doc.FilePath != null ? doc.FilePath.EndsWith(dataTxt.objects[i].file, StringComparison.InvariantCultureIgnoreCase) : doc.TabText.EndsWith(dataTxt.objects[i].file, StringComparison.InvariantCultureIgnoreCase))
 				{
 					comboBox_ObjId.SelectedIndex = i;
 					comboBox_ObjType.SelectedIndex = (int)dataTxt.objects[i].type;
@@ -214,7 +238,7 @@ namespace LF2.IDE
 
 			for (int i = 0; i < dataTxt.bgCount; i++)
 			{
-				if (doc.FilePath.EndsWith(dataTxt.backgrounds[i].file, StringComparison.InvariantCultureIgnoreCase))
+				if (doc.FilePath != null ? doc.FilePath.EndsWith(dataTxt.backgrounds[i].file, StringComparison.InvariantCultureIgnoreCase) : doc.TabText.EndsWith(dataTxt.backgrounds[i].file, StringComparison.InvariantCultureIgnoreCase))
 				{
 					comboBox_BgId.SelectedIndex = i;
 					comboBox_DataType.SelectedIndex = 2;

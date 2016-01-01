@@ -1215,6 +1215,7 @@ namespace LF2.IDE
 			{
 				if (theDoc == null || theDoc.DocumentType != DocumentType.ObjectData)
 					return false;
+				theDoc.syncing = true;
 				int fs = theDoc.Scintilla.Text.LastIndexOf("<frame>", theDoc.Scintilla.Lines.Current.EndPosition);
 				if (fs < 0)
 					return false;
@@ -1341,6 +1342,11 @@ namespace LF2.IDE
 				return true;
 			}
 			catch { return false; }
+			finally
+			{
+				if (theDoc != null)
+					theDoc.syncing = false;
+			}
 		}
 
 		private void tagBox_MouseUp(object sender, MouseEventArgs e)

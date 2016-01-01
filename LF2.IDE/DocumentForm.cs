@@ -21,7 +21,7 @@ namespace LF2.IDE
 		private bool _issaved;
 		private DocumentType documentType = DocumentType.Default;
 		private System.Timers.Timer syncTimer = new System.Timers.Timer(1000) { AutoReset = true };
-		bool justEdited = false;
+		public bool justEdited = false, syncing = false;
 
 		public List<SpriteSheet> spriteList = new List<SpriteSheet>(0);
 		public Bitmap[] frames;
@@ -467,9 +467,14 @@ namespace LF2.IDE
 
 		void ScintillaTextChanged(object sender, EventArgs e)
 		{
-			justEdited = true;
-			SetMarginAuto();
-			syncTimer.Start();
+			if (!syncing)
+			{
+				justEdited = true;
+				SetMarginAuto();
+				syncTimer.Start();
+			}
+			else
+				syncTimer.Stop();
 		}
 
 		public void SetMarginAuto()

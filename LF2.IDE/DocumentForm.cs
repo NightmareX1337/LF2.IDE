@@ -654,7 +654,10 @@ namespace LF2.IDE
 				syncTimer.Stop();
 				SyncToDesign(true);
 			});
-			this.BeginInvoke(func);
+			if (this.InvokeRequired)
+				this.BeginInvoke(func);
+			else
+				func();
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)

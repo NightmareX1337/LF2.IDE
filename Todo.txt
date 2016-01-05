@@ -1,0 +1,5 @@
+- Implement INotifyPropertyChanged in TagBox
+- Arrange control tab-stops
+- More testing and debugging
+
+- Cleanly rewrite design sync and fix it's bugs

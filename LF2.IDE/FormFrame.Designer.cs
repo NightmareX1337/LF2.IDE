@@ -122,6 +122,7 @@
 			this.numericUpDown_rangeEnd = new System.Windows.Forms.NumericUpDown();
 			this.label1 = new System.Windows.Forms.Label();
 			this.button_Merge = new System.Windows.Forms.Button();
+			this.checkBoxInc_next = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_pic)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_frameIndex)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
@@ -429,7 +430,7 @@
 			// 
 			// nextPlus
 			// 
-			this.nextPlus.Location = new System.Drawing.Point(154, 242);
+			this.nextPlus.Location = new System.Drawing.Point(152, 235);
 			this.nextPlus.Name = "nextPlus";
 			this.nextPlus.Size = new System.Drawing.Size(36, 20);
 			this.nextPlus.TabIndex = 7;
@@ -442,7 +443,7 @@
 			// 
 			// nextMinus
 			// 
-			this.nextMinus.Location = new System.Drawing.Point(119, 242);
+			this.nextMinus.Location = new System.Drawing.Point(117, 235);
 			this.nextMinus.Name = "nextMinus";
 			this.nextMinus.Size = new System.Drawing.Size(36, 20);
 			this.nextMinus.TabIndex = 7;
@@ -912,24 +913,30 @@
 			// checkBoxInc_index
 			// 
 			this.checkBoxInc_index.AutoSize = true;
+			this.checkBoxInc_index.Checked = true;
+			this.checkBoxInc_index.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.checkBoxInc_index.Location = new System.Drawing.Point(126, 7);
 			this.checkBoxInc_index.Name = "checkBoxInc_index";
 			this.checkBoxInc_index.Size = new System.Drawing.Size(38, 17);
 			this.checkBoxInc_index.TabIndex = 33;
+			this.checkBoxInc_index.TabStop = false;
 			this.checkBoxInc_index.Text = "++";
-			this.toolTip.SetToolTip(this.checkBoxInc_index, "Increment the value every frame");
+			this.toolTip.SetToolTip(this.checkBoxInc_index, "Increment index value every frame");
 			this.checkBoxInc_index.UseVisualStyleBackColor = true;
 			// 
 			// checkBoxInc_pic
 			// 
 			this.checkBoxInc_pic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.checkBoxInc_pic.AutoSize = true;
+			this.checkBoxInc_pic.Checked = true;
+			this.checkBoxInc_pic.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.checkBoxInc_pic.Location = new System.Drawing.Point(163, 141);
 			this.checkBoxInc_pic.Name = "checkBoxInc_pic";
 			this.checkBoxInc_pic.Size = new System.Drawing.Size(38, 17);
 			this.checkBoxInc_pic.TabIndex = 33;
+			this.checkBoxInc_pic.TabStop = false;
 			this.checkBoxInc_pic.Text = "++";
-			this.toolTip.SetToolTip(this.checkBoxInc_pic, "Increment the value every frame");
+			this.toolTip.SetToolTip(this.checkBoxInc_pic, "Increment pic value every frame");
 			this.checkBoxInc_pic.UseVisualStyleBackColor = true;
 			// 
 			// textBox_sound
@@ -1012,6 +1019,7 @@
 			// splitContainer.Panel1
 			// 
 			this.splitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
+			this.splitContainer.Panel1.Controls.Add(this.checkBoxInc_next);
 			this.splitContainer.Panel1.Controls.Add(this.checkBoxInc_pic);
 			this.splitContainer.Panel1.Controls.Add(this.checkBoxInc_index);
 			this.splitContainer.Panel1.Controls.Add(this.checkBoxMerge_caption);
@@ -1315,6 +1323,21 @@
 			this.button_Merge.UseVisualStyleBackColor = true;
 			this.button_Merge.Click += new System.EventHandler(this.Merge);
 			// 
+			// checkBoxInc_next
+			// 
+			this.checkBoxInc_next.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBoxInc_next.AutoSize = true;
+			this.checkBoxInc_next.Checked = true;
+			this.checkBoxInc_next.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.checkBoxInc_next.Location = new System.Drawing.Point(117, 254);
+			this.checkBoxInc_next.Name = "checkBoxInc_next";
+			this.checkBoxInc_next.Size = new System.Drawing.Size(38, 17);
+			this.checkBoxInc_next.TabIndex = 33;
+			this.checkBoxInc_next.TabStop = false;
+			this.checkBoxInc_next.Text = "++";
+			this.toolTip.SetToolTip(this.checkBoxInc_next, "Increment next value every frame");
+			this.checkBoxInc_next.UseVisualStyleBackColor = true;
+			// 
 			// FormFrame
 			// 
 			this.AcceptButton = this.button_Generate;
@@ -1446,5 +1469,6 @@
 		public System.Windows.Forms.Label label2;
 		private System.Windows.Forms.CheckBox checkBoxInc_pic;
 		private System.Windows.Forms.CheckBox checkBoxInc_index;
+		private System.Windows.Forms.CheckBox checkBoxInc_next;
 	}
 }

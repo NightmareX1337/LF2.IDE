@@ -297,7 +297,8 @@ namespace LF2.IDE
 							index++;
 						if(checkBoxInc_pic.Checked)
 							pic++;
-						next++;
+						if(checkBoxInc_next.Checked)
+							next++;
 					}
 				}
 			}

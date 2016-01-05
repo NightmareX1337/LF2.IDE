@@ -217,13 +217,13 @@ namespace LF2.IDE
 					return;
 
 				dataTxtLastModification = modification;
-				
-				for (int i = 0; i < dataTxt.objCount; i++)
-					comboBox_ObjId.Items.Add(string.Format("id: {0}  type: {1}  file: {2}", dataTxt.objects[i].id, (byte)dataTxt.objects[i].type, dataTxt.objects[i].file));
-
-				for (int i = 0; i < dataTxt.bgCount; i++)
-					comboBox_BgId.Items.Add(string.Format("id: {0}  file: {1}", dataTxt.backgrounds[i].id, dataTxt.backgrounds[i].file));
 			}
+
+			for (int i = 0; i < dataTxt.objCount; i++)
+				comboBox_ObjId.Items.Add(string.Format("id: {0}  type: {1}  file: {2}", dataTxt.objects[i].id, (byte)dataTxt.objects[i].type, dataTxt.objects[i].file));
+
+			for (int i = 0; i < dataTxt.bgCount; i++)
+				comboBox_BgId.Items.Add(string.Format("id: {0}  file: {1}", dataTxt.backgrounds[i].id, dataTxt.backgrounds[i].file));
 
 			for(int i = 0; i < dataTxt.objCount; i++)
 			{

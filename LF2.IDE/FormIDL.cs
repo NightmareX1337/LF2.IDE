@@ -99,7 +99,7 @@ namespace LF2.IDE
 						 (DataType)comboBox_DataType.SelectedIndex,
 						 comboBox_DataType.SelectedIndex == 0 ? comboBox_ObjId.SelectedIndex :
 						 comboBox_DataType.SelectedIndex == 1 ? (-1) : // not to be used
-						 dataTxt.backgrounds[comboBox_BgId.SelectedIndex].id,
+						 comboBox_BgId.SelectedIndex,
 						 comboBox_DataType.SelectedIndex == 0 ? (ObjectType)comboBox_ObjType.SelectedIndex : ObjectType.Invalid,
 						 this.Handle);
 				}

@@ -534,9 +534,12 @@ namespace LF2.IDE
 					mainForm.formDesign.textBox_caption.Text = frame.caption;
 					if (frame.bdys != null)
 					{
+						var bi = mainForm.formDesign.tagBox.ActiveBdyIndex;
 						mainForm.formDesign.tagBox.BdyTags = new List<TagBox.Bdy>(frame.bdys.Select<LF2DataUtils.Bdy, TagBox.Bdy>((LF2DataUtils.Bdy bdy) => (TagBox.Bdy)bdy));
-						if (mainForm.formDesign.tagBox.BdyTags.Count >= 0)
-							mainForm.formDesign.tagBox.ActiveBdyIndex = mainForm.formDesign.tagBox.BdyTags.Count - 1;
+						if (mainForm.formDesign.tagBox.BdyTags.Count == 1)
+							mainForm.formDesign.tagBox.ActiveBdyIndex = 0;
+						else if (bi.HasValue && bi.Value < mainForm.formDesign.tagBox.BdyTags.Count)
+							mainForm.formDesign.tagBox.ActiveBdyIndex = bi;
 						else
 							mainForm.formDesign.tagBox.ActiveBdyIndex = null;
 						if (mainForm.formDesign.tagBox.ActiveBdyIndex.HasValue)
@@ -563,9 +566,14 @@ namespace LF2.IDE
 					}
 					if (frame.itrs != null)
 					{
+						var ti = mainForm.formDesign.tagBox.ActiveItrIndex;
 						mainForm.formDesign.tagBox.ItrTags = new List<TagBox.Itr>(frame.itrs.Select<LF2DataUtils.Itr, TagBox.Itr>((LF2DataUtils.Itr itr) => (TagBox.Itr)itr));
-						if (mainForm.formDesign.tagBox.ItrTags.Count >= 0)
-							mainForm.formDesign.tagBox.activeItrIndex = mainForm.formDesign.tagBox.ItrTags.Count - 1;
+						if (mainForm.formDesign.tagBox.ItrTags.Count == 1)
+							mainForm.formDesign.tagBox.ActiveItrIndex = 0;
+						else if (ti.HasValue && ti.Value < mainForm.formDesign.tagBox.ItrTags.Count)
+							mainForm.formDesign.tagBox.ActiveItrIndex = ti;
+						else
+							mainForm.formDesign.tagBox.ActiveItrIndex = null;
 						if (mainForm.formDesign.tagBox.ActiveItrIndex.HasValue)
 						{
 							LF2DataUtils.Itr itr = frame.itrs[mainForm.formDesign.tagBox.ActiveItrIndex.Value];

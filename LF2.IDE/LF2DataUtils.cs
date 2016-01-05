@@ -462,8 +462,10 @@ namespace LF2.IDE
 			public int? arest;
 			public int? vrest;
 			public int? effect;
-			public int? catchingact;
-			public int? caughtact;
+			public int? catchingact1;
+			public int? caughtact1;
+			public int? catchingact2;
+			public int? caughtact2;
 			public int? bdefend;
 			public int? injury;
 			public int? zwidth;
@@ -495,16 +497,18 @@ namespace LF2.IDE
 					str.Append("vrest: ").Append(vrest.Value).Append("  ");
 				if (effect.HasValue)
 					str.Append("effect: ").Append(effect.Value).Append("  ");
-				if (catchingact.HasValue)
-					str.Append("catchingact: ").Append(catchingact.Value).Append("  ");
-				if (caughtact.HasValue)
-					str.Append("caughtact: ").Append(caughtact.Value).Append("  ");
 				if (bdefend.HasValue)
 					str.Append("bdefend: ").Append(bdefend.Value).Append("  ");
 				if (injury.HasValue)
 					str.Append("injury: ").Append(injury.Value).Append("  ");
 				if (zwidth.HasValue)
 					str.Append("zwidth: ").Append(zwidth.Value).Append("  ");
+				if (catchingact1.HasValue || catchingact2.HasValue || caughtact1.HasValue || caughtact2.HasValue)
+					str.Append("\n      ");
+				if (catchingact1.HasValue && catchingact2.HasValue)
+					str.Append("catchingact: ").Append(catchingact1.Value).Append(" ").Append(catchingact2.Value).Append("  ");
+				if (caughtact1.HasValue && caughtact2.HasValue)
+					str.Append("caughtact: ").Append(caughtact1.Value).Append(" ").Append(caughtact2.Value).Append("  ");
 				str.Remove(str.Length - 2, 2);
 				str.Append("\n   itr_end:");
 				return str.ToString();
@@ -517,8 +521,10 @@ namespace LF2.IDE
 				{
 					arest = obj.arest,
 					bdefend = obj.bdefend,
-					catchingact = obj.catchingact,
-					caughtact = obj.caughtact,
+					catchingact1 = obj.catchingact1,
+					catchingact2 = obj.catchingact2,
+					caughtact1 = obj.caughtact1,
+					caughtact2 = obj.caughtact2,
 					dvx = obj.dvx.HasValue ? obj.dvx.Value : 0,
 					dvy = obj.dvy.HasValue ? obj.dvy.Value : 0,
 					effect = obj.effect,
@@ -541,8 +547,10 @@ namespace LF2.IDE
 				{
 					arest = obj.arest,
 					bdefend = obj.bdefend,
-					catchingact = obj.catchingact,
-					caughtact = obj.caughtact,
+					catchingact1 = obj.catchingact1,
+					catchingact2 = obj.catchingact2,
+					caughtact1 = obj.caughtact1,
+					caughtact2 = obj.caughtact2,
 					dvx = obj.dvx,
 					dvy = obj.dvy,
 					effect = obj.effect,
@@ -1090,10 +1098,12 @@ namespace LF2.IDE
 								itr.effect = int.Parse(frameTokens[++i]);
 								break;
 							case "catchingact:":
-								itr.catchingact = int.Parse(frameTokens[++i]);
+								itr.catchingact1 = int.Parse(frameTokens[++i]);
+								itr.catchingact2 = int.Parse(frameTokens[++i]);
 								break;
 							case "caughtact:":
-								itr.caughtact = int.Parse(frameTokens[++i]);
+								itr.caughtact1 = int.Parse(frameTokens[++i]);
+								itr.caughtact2 = int.Parse(frameTokens[++i]);
 								break;
 							case "bdefend:":
 								itr.bdefend = int.Parse(frameTokens[++i]);

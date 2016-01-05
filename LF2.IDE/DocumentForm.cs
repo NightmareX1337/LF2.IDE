@@ -581,8 +581,10 @@ namespace LF2.IDE
 							{
 								mainForm.formDesign.itr_arest.Text = itr.arest.HasValue ? itr.arest.ToString() : "";
 								mainForm.formDesign.itr_bdefend.Text = itr.bdefend.HasValue ? itr.bdefend.ToString() : "";
-								mainForm.formDesign.itr_catchingact.Text = itr.catchingact.HasValue ? itr.catchingact.ToString() : "";
-								mainForm.formDesign.itr_caughtact.Text = itr.caughtact.HasValue ? itr.caughtact.ToString() : "";
+								mainForm.formDesign.itr_catchingact1.Text = itr.catchingact1.HasValue ? itr.catchingact1.ToString() : "";
+								mainForm.formDesign.itr_catchingact2.Text = itr.catchingact2.HasValue ? itr.catchingact2.ToString() : "";
+								mainForm.formDesign.itr_caughtact1.Text = itr.caughtact1.HasValue ? itr.caughtact1.ToString() : "";
+								mainForm.formDesign.itr_caughtact2.Text = itr.caughtact2.HasValue ? itr.caughtact2.ToString() : "";
 								mainForm.formDesign.itr_dvx.Text = itr.dvx.HasValue ? itr.dvx.ToString() : "";
 								mainForm.formDesign.itr_dvy.Text = itr.dvy.HasValue ? itr.dvy.ToString() : "";
 								mainForm.formDesign.itr_effect.Text = itr.effect.HasValue ? itr.effect.ToString() : "";

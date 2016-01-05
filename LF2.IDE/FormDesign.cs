@@ -131,7 +131,8 @@ namespace LF2.IDE
 					dvx = tagy.dvx.ToString(), dvy = tagy.dvy.ToString(), arest = tagy.arest.ToString(), vrest = tagy.vrest.ToString(),
 					fall = tagy.fall.ToString(), bdefend = tagy.bdefend.ToString(),
 					injury = tagy.injury.ToString(), zwidth = tagy.zwidth.ToString(), effect = tagy.effect.ToString(),
-					catchingact = tagy.catchingact.ToString(), caughtact = tagy.caughtact.ToString(),
+					catchingact1 = tagy.catchingact1.ToString(), caughtact1 = tagy.caughtact1.ToString(),
+					catchingact2 = tagy.catchingact2.ToString(), caughtact2 = tagy.caughtact2.ToString(),
 					kind = tagy.kind.ToString();
 				if (newLineState)
 					txt.AppendLine();
@@ -144,7 +145,7 @@ namespace LF2.IDE
 						break;
 					case "1":
 					case "3":
-						txt.Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append("  catchingact: ").Append(catchingact).Append("  caughtact: ").Append(caughtact);
+						txt.Append("  x: ").Append(x).Append("  y: ").Append(y).Append("  w: ").Append(w).Append("  h: ").Append(h).Append("  catchingact: ").Append(catchingact1).Append(" ").Append(catchingact2).Append("  caughtact: ").Append(caughtact1).Append(" ").Append(caughtact2);
 						break;
 					case "2":
 					case "7":
@@ -198,10 +199,10 @@ namespace LF2.IDE
 							txt.Append("  zwidth: ").Append(zwidth);
 						if (effect != "")
 							txt.Append("\r\n      effect: ").Append(effect);
-						if (catchingact != "")
-							txt.Append("  catchingact: ").Append(catchingact);
-						if (caughtact != "")
-							txt.Append("  caughtact: ").Append(caughtact);
+						if (catchingact1 != "" && catchingact2 != "")
+							txt.Append("  catchingact: ").Append(catchingact1).Append(" ").Append(catchingact2);
+						if (caughtact1 != "" && caughtact2 != "")
+							txt.Append("  caughtact: ").Append(caughtact1).Append(" ").Append(caughtact2);
 						break;
 				}
 				txt.Append("\r\n   itr_end:");
@@ -1185,8 +1186,8 @@ namespace LF2.IDE
 				{
 					itr_arest.Text =
 					itr_bdefend.Text =
-					itr_catchingact.Text =
-					itr_caughtact.Text =
+					itr_catchingact1.Text =
+					itr_caughtact1.Text =
 					itr_dvx.Text =
 					itr_dvy.Text =
 					itr_effect.Text =
@@ -1497,7 +1498,8 @@ namespace LF2.IDE
 			{
 				try
 				{
-					tagBox.ActiveItr.catchingact = int.Parse(itr_catchingact.Text);
+					tagBox.ActiveItr.catchingact1 = int.Parse(itr_catchingact1.Text);
+					tagBox.ActiveItr.catchingact2 = int.Parse(itr_catchingact2.Text);
 				}
 				catch { }
 				SyncToEditor(mainForm.ActiveDocument, true);
@@ -1512,7 +1514,8 @@ namespace LF2.IDE
 			{
 				try
 				{
-					tagBox.ActiveItr.caughtact = int.Parse(itr_caughtact.Text);
+					tagBox.ActiveItr.caughtact1 = int.Parse(itr_caughtact1.Text);
+					tagBox.ActiveItr.caughtact2 = int.Parse(itr_caughtact2.Text);
 				}
 				catch { }
 				SyncToEditor(mainForm.ActiveDocument, true);
@@ -1770,8 +1773,10 @@ namespace LF2.IDE
 			{
 				itr_arest.Text = itr.arest.ToString();
 				itr_bdefend.Text = itr.bdefend.ToString();
-				itr_catchingact.Text = itr.catchingact.ToString();
-				itr_caughtact.Text = itr.caughtact.ToString();
+				itr_catchingact1.Text = itr.catchingact1.ToString();
+				itr_catchingact2.Text = itr.catchingact2.ToString();
+				itr_caughtact1.Text = itr.caughtact1.ToString();
+				itr_caughtact2.Text = itr.caughtact2.ToString();
 				itr_dvx.Text = itr.dvx.ToString();
 				itr_dvy.Text = itr.dvy.ToString();
 				itr_effect.Text = itr.effect.ToString();

@@ -248,13 +248,13 @@ namespace TagBox
 		}
 		public event EventHandler EffectChanged;
 
-		private int? _catchingact;
-		public int? catchingact
+		private int? _catchingact1;
+		public int? catchingact1
 		{
-			get { return _catchingact; }
+			get { return _catchingact1; }
 			set
 			{
-				_catchingact = value;
+				_catchingact1 = value;
 
 				if (CatchingactChanged != null)
 					CatchingactChanged(this, EventArgs.Empty);
@@ -264,13 +264,13 @@ namespace TagBox
 		}
 		public event EventHandler CatchingactChanged;
 
-		private int? _caughtact;
-		public int? caughtact
+		private int? _caughtact1;
+		public int? caughtact1
 		{
-			get { return _caughtact; }
+			get { return _caughtact1; }
 			set
 			{
-				_caughtact = value;
+				_caughtact1 = value;
 
 				if (CaughtactChanged != null)
 					CaughtactChanged(this, EventArgs.Empty);
@@ -279,6 +279,36 @@ namespace TagBox
 			}
 		}
 		public event EventHandler CaughtactChanged;
+
+		private int? _catchingact2;
+		public int? catchingact2
+		{
+			get { return _catchingact2; }
+			set
+			{
+				_catchingact2 = value;
+
+				if (CatchingactChanged != null)
+					CatchingactChanged(this, EventArgs.Empty);
+				if (DataChanged != null)
+					DataChanged(this, EventArgs.Empty);
+			}
+		}
+
+		private int? _caughtact2;
+		public int? caughtact2
+		{
+			get { return _caughtact2; }
+			set
+			{
+				_caughtact2 = value;
+
+				if (CaughtactChanged != null)
+					CaughtactChanged(this, EventArgs.Empty);
+				if (DataChanged != null)
+					DataChanged(this, EventArgs.Empty);
+			}
+		}
 
 		public Itr() { }
 

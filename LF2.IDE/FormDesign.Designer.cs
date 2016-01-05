@@ -110,8 +110,8 @@
 			this.itr_h = new System.Windows.Forms.TextBox();
 			this.itr_w = new System.Windows.Forms.TextBox();
 			this.itr_y = new System.Windows.Forms.TextBox();
-			this.itr_caughtact = new System.Windows.Forms.TextBox();
-			this.itr_catchingact = new System.Windows.Forms.TextBox();
+			this.itr_caughtact1 = new System.Windows.Forms.TextBox();
+			this.itr_catchingact1 = new System.Windows.Forms.TextBox();
 			this.itr_zwidth = new System.Windows.Forms.TextBox();
 			this.itr_x = new System.Windows.Forms.TextBox();
 			this.label_itr_fall = new System.Windows.Forms.Label();
@@ -197,6 +197,8 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.textBox_caption = new System.Windows.Forms.TextBox();
 			this.tagBox = new TagBox.TagBox();
+			this.itr_catchingact2 = new System.Windows.Forms.TextBox();
+			this.itr_caughtact2 = new System.Windows.Forms.TextBox();
 			this.tabPage_b.SuspendLayout();
 			this.tabPage_c.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_ImageIndex)).BeginInit();
@@ -931,8 +933,10 @@
 			this.tabPage_itr.Controls.Add(this.itr_h);
 			this.tabPage_itr.Controls.Add(this.itr_w);
 			this.tabPage_itr.Controls.Add(this.itr_y);
-			this.tabPage_itr.Controls.Add(this.itr_caughtact);
-			this.tabPage_itr.Controls.Add(this.itr_catchingact);
+			this.tabPage_itr.Controls.Add(this.itr_caughtact2);
+			this.tabPage_itr.Controls.Add(this.itr_caughtact1);
+			this.tabPage_itr.Controls.Add(this.itr_catchingact2);
+			this.tabPage_itr.Controls.Add(this.itr_catchingact1);
 			this.tabPage_itr.Controls.Add(this.itr_zwidth);
 			this.tabPage_itr.Controls.Add(this.itr_x);
 			this.tabPage_itr.Controls.Add(this.label_itr_fall);
@@ -1062,21 +1066,21 @@
 			this.itr_y.TabIndex = 4;
 			this.itr_y.TextChanged += new System.EventHandler(this.ItrRectangleChanged);
 			// 
-			// itr_caughtact
+			// itr_caughtact1
 			// 
-			this.itr_caughtact.Location = new System.Drawing.Point(184, 190);
-			this.itr_caughtact.Name = "itr_caughtact";
-			this.itr_caughtact.Size = new System.Drawing.Size(55, 20);
-			this.itr_caughtact.TabIndex = 17;
-			this.itr_caughtact.TextChanged += new System.EventHandler(this.itr_caughtact_TextChanged);
+			this.itr_caughtact1.Location = new System.Drawing.Point(184, 190);
+			this.itr_caughtact1.Name = "itr_caughtact1";
+			this.itr_caughtact1.Size = new System.Drawing.Size(55, 20);
+			this.itr_caughtact1.TabIndex = 17;
+			this.itr_caughtact1.TextChanged += new System.EventHandler(this.itr_caughtact_TextChanged);
 			// 
-			// itr_catchingact
+			// itr_catchingact1
 			// 
-			this.itr_catchingact.Location = new System.Drawing.Point(184, 164);
-			this.itr_catchingact.Name = "itr_catchingact";
-			this.itr_catchingact.Size = new System.Drawing.Size(55, 20);
-			this.itr_catchingact.TabIndex = 16;
-			this.itr_catchingact.TextChanged += new System.EventHandler(this.itr_catchingact_TextChanged);
+			this.itr_catchingact1.Location = new System.Drawing.Point(184, 164);
+			this.itr_catchingact1.Name = "itr_catchingact1";
+			this.itr_catchingact1.Size = new System.Drawing.Size(55, 20);
+			this.itr_catchingact1.TabIndex = 16;
+			this.itr_catchingact1.TextChanged += new System.EventHandler(this.itr_catchingact_TextChanged);
 			// 
 			// itr_zwidth
 			// 
@@ -2018,6 +2022,22 @@
 			this.tagBox.ActiveVectorChanged += new System.EventHandler(this.TagBoxVectorChanged);
 			this.tagBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tagBox_MouseUp);
 			// 
+			// itr_catchingact2
+			// 
+			this.itr_catchingact2.Location = new System.Drawing.Point(245, 165);
+			this.itr_catchingact2.Name = "itr_catchingact2";
+			this.itr_catchingact2.Size = new System.Drawing.Size(55, 20);
+			this.itr_catchingact2.TabIndex = 16;
+			this.itr_catchingact2.TextChanged += new System.EventHandler(this.itr_catchingact_TextChanged);
+			// 
+			// itr_caughtact2
+			// 
+			this.itr_caughtact2.Location = new System.Drawing.Point(245, 191);
+			this.itr_caughtact2.Name = "itr_caughtact2";
+			this.itr_caughtact2.Size = new System.Drawing.Size(55, 20);
+			this.itr_caughtact2.TabIndex = 17;
+			this.itr_caughtact2.TextChanged += new System.EventHandler(this.itr_caughtact_TextChanged);
+			// 
 			// FormDesign
 			// 
 			this.AutoHidePortion = 500D;
@@ -2203,8 +2223,8 @@
 		public System.Windows.Forms.Label label_itr_fall;
 		public System.Windows.Forms.TextBox itr_x;
 		public System.Windows.Forms.TextBox itr_zwidth;
-		public System.Windows.Forms.TextBox itr_catchingact;
-		public System.Windows.Forms.TextBox itr_caughtact;
+		public System.Windows.Forms.TextBox itr_catchingact1;
+		public System.Windows.Forms.TextBox itr_caughtact1;
 		public System.Windows.Forms.TextBox itr_y;
 		public System.Windows.Forms.TextBox itr_w;
 		public System.Windows.Forms.TextBox itr_h;
@@ -2252,5 +2272,7 @@
 		public System.Windows.Forms.CheckBox checkBoxLinkage;
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		public System.Windows.Forms.TextBox textBox_caption;
+		public System.Windows.Forms.TextBox itr_caughtact2;
+		public System.Windows.Forms.TextBox itr_catchingact2;
 	}
 }

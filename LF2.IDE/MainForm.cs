@@ -158,8 +158,7 @@ namespace LF2.IDE
 
 			formDesign.checkBoxLinkage.Checked = Settings.Current.syncDesign;
 
-			this.Size = Settings.Current.window.Size;
-			this.Location = Settings.Current.window.Location;
+			this.Bounds = Settings.Current.window;
 			this.WindowState = Settings.Current.windowState;
 
 			formEventLog.Log("Initialized: " + stopWatch.Elapsed, true);
@@ -628,9 +627,8 @@ namespace LF2.IDE
 						});
 				}
 			}
-			Settings.Current.windowState = this.WindowState != FormWindowState.Minimized ? this.WindowState : FormWindowState.Maximized;
-			this.WindowState = FormWindowState.Normal;
-			Settings.Current.window = new Rectangle(this.Location, this.Size);
+			Settings.Current.windowState = lastWindowState;
+			Settings.Current.window = this.WindowState != FormWindowState.Normal ? this.RestoreBounds : this.Bounds;
 			Settings.Current.Save();
 			try
 			{
@@ -1088,9 +1086,10 @@ namespace LF2.IDE
 			}
 		}
 
-		void MainFormResizeEnd(object sender, EventArgs e)
+		void MainFormResize(object sender, EventArgs e)
 		{
-			if (this.WindowState != FormWindowState.Minimized) lastWindowState = this.WindowState;
+			if (this.WindowState != FormWindowState.Minimized)
+				lastWindowState = this.WindowState;
 		}
 
 		//void BackgroundWorkerLF2RecorderDoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -1806,7 +1805,7 @@ namespace LF2.IDE
 						(DataType)dataType,
 						dataType == 0 ? objId :
 						dataType == 1 ? (-1) : // not to be used
-						FormIDL.dataTxt.backgrounds[bgId].id,
+						bgId,
 						dataType == 0 ? (ObjectType)objType : ObjectType.Invalid,
 						this.Handle);
 					if (result == 0)

@@ -527,17 +527,7 @@ namespace LF2.IDE
 			string lfpath = Settings.Current.lfPath;
 			if (File.Exists(lfpath))
 			{
-				FormWindowState fws = this.WindowState;
-				this.WindowState = FormWindowState.Minimized;
-
-				lfProc = ExecuteLF2();
-
-				while (!lfProc.HasExited)
-				{
-					Application.DoEvents();
-				}
-				lfProc = null;
-				this.WindowState = fws;
+				lfProc = ExecuteLF2(true);
 			}
 		}
 
@@ -563,19 +553,23 @@ namespace LF2.IDE
 			string lfpath = Settings.Current.lfPath;
 			if (File.Exists(lfpath))
 			{
-				ExecuteLF2();
+				ExecuteLF2(false);
 			}
 		}
 
-		public Process ExecuteLF2()
+		public Process ExecuteLF2(bool startTheGame)
 		{
 			ProcessStartInfo psi = new ProcessStartInfo();
 			psi.FileName = Settings.Current.lfPath;
 			psi.WorkingDirectory = Path.GetDirectoryName(Settings.Current.lfPath);
 			Process lfp = Process.Start(psi);
-			Thread.Sleep(1000);
+			Thread.Sleep(500);
 			SetWindowPos(lfp.MainWindowHandle, IntPtr.Zero, (Screen.PrimaryScreen.WorkingArea.Width - 800) / 2, (Screen.PrimaryScreen.WorkingArea.Height - 578) / 2, 800, 578, 0);
-			IDL.SendGameStartMsg(lfp.MainWindowHandle);
+			if (startTheGame)
+			{
+				Thread.Sleep(500);
+				IDL.SendGameStartMsg(lfp.MainWindowHandle);
+			}
 			return lfp;
 		}
 

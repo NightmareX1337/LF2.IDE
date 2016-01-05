@@ -497,7 +497,7 @@ namespace LF2.IDE
 			toolStripStatusLabel_Ch.Text = (scintilla.Caret.Position - scintilla.Lines.Current.StartPosition + 1).ToString();
 			toolStripStatusLabel_SelLen.Text = (scintilla.Selection.Length).ToString();
 			int sel = scintilla.Selection.Range.EndingLine.Number - scintilla.Selection.Range.StartingLine.Number;
-			toolStripStatusLabel_SelLines.Text = (scintilla.Selection.Length > 0 ? sel : 0).ToString();
+			toolStripStatusLabel_SelLines.Text = (scintilla.Selection.Length > 0 ? sel + 1 : 0).ToString();
 			if (!justEdited)
 			{
 				SyncToDesign(auto = true);

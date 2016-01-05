@@ -406,10 +406,6 @@
       <Link>SciLexer64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\Assemblies\IDL.dll">
-      <Link>IDL.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Content Include="Main.ico" />
     <Content Include="Main_.ico" />
     <Content Include="Resources\Bitmap Icons\favicon128x128.bmp" />
@@ -558,11 +554,9 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <PropertyGroup>
     <PostBuildEvent>del "$(TargetDir)CSScriptLibrary.xml"
-del "$(TargetDir)protobuf-net.xml"
-del "$(TargetDir)protobuf-net.pdb"
-del "$(TargetDir)protobuf-net.pri"
-del "$(TargetDir)ScintillaNET.pdb"
-del "$(TargetDir)ScintillaNET.xml"</PostBuildEvent>
+del "$(TargetDir)ScintillaNET.xml"
+echo. &gt; "$(TargetDir)IDL.dll"
+xcopy /Y "$(SolutionDir)Assemblies\IDL\$(ConfigurationName)\IDL.dll" "$(TargetDir)IDL.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -9,9 +9,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("LF2 IDE")]
 [assembly: AssemblyDescription("LF2 Integrated Development Environment")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("NightmareX")]
+[assembly: AssemblyCompany("NightmareX1337")]
 [assembly: AssemblyProduct("LF2 IDE")]
-[assembly: AssemblyCopyright("Copyright © NightmareX 2015")]
+[assembly: AssemblyCopyright("Copyright © NightmareX1337 2013-2016")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -32,6 +32,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.2.*")]
-[assembly: AssemblyFileVersion("2.2")]
-[assembly: AssemblyInformationalVersion("v2.2")]
+[assembly: AssemblyVersion("3.0.*")]
+[assembly: AssemblyFileVersion("3.0")]
+[assembly: AssemblyInformationalVersion("v3.0")]

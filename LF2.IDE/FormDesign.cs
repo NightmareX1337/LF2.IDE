@@ -1213,7 +1213,7 @@ namespace LF2.IDE
 		{
 			try
 			{
-				if (theDoc == null || theDoc.DocumentType != DocumentType.ObjectData || !Settings.Current.syncDesign)
+				if (theDoc == null || theDoc.DocumentType != DocumentType.ObjectData || !Settings.Current.syncDesign || theDoc.syncing)
 					return false;
 				theDoc.syncing = true;
 				int fs = theDoc.Scintilla.Text.LastIndexOf("<frame>", theDoc.Scintilla.Lines.Current.EndPosition);

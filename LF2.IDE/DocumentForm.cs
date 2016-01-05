@@ -514,10 +514,11 @@ namespace LF2.IDE
 		// God save us from ever needing to write this kind of creepy code
 		public bool SyncToDesign(bool auto = false)
 		{
-			if (documentType != DocumentType.ObjectData || auto && !mainForm.formDesign.checkBoxLinkage.Checked)
+			if (documentType != DocumentType.ObjectData || auto && !mainForm.formDesign.checkBoxLinkage.Checked || syncing)
 				return false;
 			try
 			{
+				syncing = true;
 				int fs = Scintilla.Text.LastIndexOf("<frame>", Scintilla.Lines.Current.EndPosition);
 				if (fs < 0)
 					return false;
@@ -644,6 +645,10 @@ namespace LF2.IDE
 				mainForm.formDesign.EditReset();
 				mainForm.formDesign.tagBox.Invalidate();
 				return false;
+			}
+			finally
+			{
+				syncing = false;
 			}
 		}
 

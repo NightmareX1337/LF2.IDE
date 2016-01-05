@@ -114,6 +114,7 @@
 			this.scintilla.CharAdded += new System.EventHandler<ScintillaNET.CharAddedEventArgs>(this.ScintillaCharAdded);
 			this.scintilla.ModifiedChanged += new System.EventHandler(this.scintilla_ModifiedChanged);
 			this.scintilla.SelectionChanged += new System.EventHandler(this.scintilla_SelectionChanged);
+			this.scintilla.TextDeleted += new System.EventHandler<ScintillaNET.TextModifiedEventArgs>(this.scintilla_TextDeleted);
 			this.scintilla.ZoomChanged += new System.EventHandler(this.ScintillaZoomChanged);
 			this.scintilla.TextChanged += new System.EventHandler(this.ScintillaTextChanged);
 			this.scintilla.KeyDown += new System.Windows.Forms.KeyEventHandler(this.scintilla_KeyDown);

@@ -734,6 +734,11 @@ namespace LF2.IDE
 				Process.Start("explorer", "/select, " + _filePath);
 			}
 		}
+
+		private void scintilla_TextDeleted(object sender, TextModifiedEventArgs e)
+		{
+			scintilla.AutoComplete.Cancel();
+		}
 	}
 
 	public enum DocumentType

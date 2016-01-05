@@ -1085,11 +1085,11 @@
 			// viewToolStripMenuItem
 			// 
 			this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showMediaWindowToolStripMenuItem,
             this.showTagWindowToolStripMenuItem,
             this.showSolutionWindowToolStripMenuItem,
             this.showFrameWindowToolStripMenuItem,
             this.showShapeWindowToolStripMenuItem,
+            this.showMediaWindowToolStripMenuItem,
             this.showErrorLogWindowToolStripMenuItem});
 			this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
 			this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -1097,6 +1097,7 @@
 			// 
 			// showMediaWindowToolStripMenuItem
 			// 
+			this.showMediaWindowToolStripMenuItem.Image = global::LF2.IDE.Properties.Resources.audio0;
 			this.showMediaWindowToolStripMenuItem.Name = "showMediaWindowToolStripMenuItem";
 			this.showMediaWindowToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.showMediaWindowToolStripMenuItem.Text = "Show &Media Window";
@@ -1104,6 +1105,7 @@
 			// 
 			// showTagWindowToolStripMenuItem
 			// 
+			this.showTagWindowToolStripMenuItem.Image = global::LF2.IDE.Properties.Resources.tagpanel;
 			this.showTagWindowToolStripMenuItem.Name = "showTagWindowToolStripMenuItem";
 			this.showTagWindowToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.showTagWindowToolStripMenuItem.Text = "Show &Design Window";
@@ -1111,6 +1113,7 @@
 			// 
 			// showSolutionWindowToolStripMenuItem
 			// 
+			this.showSolutionWindowToolStripMenuItem.Image = global::LF2.IDE.Properties.Resources.folder;
 			this.showSolutionWindowToolStripMenuItem.Name = "showSolutionWindowToolStripMenuItem";
 			this.showSolutionWindowToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.showSolutionWindowToolStripMenuItem.Text = "Show S&olution Window";
@@ -1118,6 +1121,7 @@
 			// 
 			// showFrameWindowToolStripMenuItem
 			// 
+			this.showFrameWindowToolStripMenuItem.Image = global::LF2.IDE.Properties.Resources.framepanel;
 			this.showFrameWindowToolStripMenuItem.Name = "showFrameWindowToolStripMenuItem";
 			this.showFrameWindowToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.showFrameWindowToolStripMenuItem.Text = "Show &Frame Window";
@@ -1125,6 +1129,7 @@
 			// 
 			// showShapeWindowToolStripMenuItem
 			// 
+			this.showShapeWindowToolStripMenuItem.Image = global::LF2.IDE.Properties.Resources.shapepanel;
 			this.showShapeWindowToolStripMenuItem.Name = "showShapeWindowToolStripMenuItem";
 			this.showShapeWindowToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.showShapeWindowToolStripMenuItem.Text = "Show S&hape Window";
@@ -1132,6 +1137,7 @@
 			// 
 			// showErrorLogWindowToolStripMenuItem
 			// 
+			this.showErrorLogWindowToolStripMenuItem.Image = global::LF2.IDE.Properties.Resources.eventlog;
 			this.showErrorLogWindowToolStripMenuItem.Name = "showErrorLogWindowToolStripMenuItem";
 			this.showErrorLogWindowToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.showErrorLogWindowToolStripMenuItem.Text = "Show &Event Log Window";
@@ -1484,10 +1490,10 @@
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
 			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.Shown += new System.EventHandler(this.MainForm_Shown);
-			this.ResizeEnd += new System.EventHandler(this.MainFormResizeEnd);
 			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainFormDragDrop);
 			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainFormDragEnter);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
+			this.Resize += new System.EventHandler(this.MainFormResize);
 			this.mainToolStrip.ResumeLayout(false);
 			this.mainToolStrip.PerformLayout();
 			this.jumpToToolStrip.ResumeLayout(false);

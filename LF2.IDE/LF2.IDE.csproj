@@ -516,6 +516,7 @@
     <Content Include="Resources\Cursors\opoint.png" />
     <Content Include="Resources\Cursors\wpoint.png" />
     <Content Include="Resources\Icons\audio0.ico" />
+    <Content Include="Resources\Icons\audio0.png" />
     <Content Include="Resources\Icons\audio1.ico" />
     <Content Include="Resources\Icons\audio2.ico" />
     <Content Include="Resources\Icons\bitblock.ico" />
@@ -538,6 +539,7 @@
     <Content Include="Resources\Icons\file32.bmp" />
     <Content Include="Resources\Icons\filexml.ico" />
     <Content Include="Resources\Icons\folder.ico" />
+    <Content Include="Resources\Icons\folder.png" />
     <Content Include="Resources\Icons\folder0.ico" />
     <Content Include="Resources\Icons\folder1.ico" />
     <Content Include="Resources\Icons\folder16.ico" />
@@ -546,6 +548,7 @@
     <Content Include="Resources\Icons\folder48.ico" />
     <Content Include="Resources\Icons\folderG.ico" />
     <Content Include="Resources\Icons\framepanel.ico" />
+    <Content Include="Resources\Icons\framepanel.png" />
     <Content Include="Resources\Icons\lf.ico" />
     <Content Include="Resources\Icons\lf16.ico" />
     <Content Include="Resources\Icons\lf16_t.ico" />
@@ -562,7 +565,9 @@
     <Content Include="Resources\Icons\sfolder0.ico" />
     <Content Include="Resources\Icons\sfolder1.ico" />
     <Content Include="Resources\Icons\shapepanel.ico" />
+    <Content Include="Resources\Icons\shapepanel.png" />
     <Content Include="Resources\Icons\tagpanel.ico" />
+    <Content Include="Resources\Icons\tagpanel.png" />
     <Content Include="Resources\Icons\templateR.ico" />
     <Content Include="Resources\Icons\trancparent.ico" />
     <Content Include="Resources\Icons\txt.ico" />
@@ -572,20 +577,18 @@
     <Content Include="Resources\Icons\wav0.ico" />
     <Content Include="Resources\Icons\wav1.ico" />
     <Content Include="Resources\Icons\_favicon16x16.ico" />
-    <None Include="Resources\lightning.png" />
+    <Content Include="Resources\lightning.png" />
+    <Content Include="Resources\lightning.ico" />
     <Content Include="Resources\link.png" />
     <Content Include="Resources\link_break.png" />
     <Content Include="Resources\Menu\bigger.png" />
     <Content Include="Resources\Menu\collapse.png" />
     <Content Include="Resources\Menu\ControlPanel.png" />
-    <Content Include="Resources\Menu\ControlPanel16.png" />
-    <Content Include="Resources\Menu\ControlPanelCubic16.png" />
-    <Content Include="Resources\Menu\ControlPanelLinear16.png" />
     <Content Include="Resources\Menu\debugrun.png" />
     <Content Include="Resources\Menu\eol.PNG" />
     <Content Include="Resources\Menu\excoltemp.png" />
     <Content Include="Resources\Menu\execute.png" />
-    <Content Include="Resources\Menu\exit.png" />
+    <Content Include="Resources\Menu\exit16.png" />
     <Content Include="Resources\Menu\expand.png" />
     <Content Include="Resources\Menu\fnd.png" />
     <Content Include="Resources\Menu\ImageEditRedo.png" />

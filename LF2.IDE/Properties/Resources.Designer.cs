@@ -63,6 +63,16 @@ namespace LF2.IDE.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap audio0 {
+            get {
+                object obj = ResourceManager.GetObject("audio0", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap bdy {
             get {
                 object obj = ResourceManager.GetObject("bdy", resourceCulture);
@@ -381,6 +391,16 @@ namespace LF2.IDE.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap eventlog {
+            get {
+                object obj = ResourceManager.GetObject("eventlog", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap excol {
             get {
                 object obj = ResourceManager.GetObject("excol", resourceCulture);
@@ -394,6 +414,26 @@ namespace LF2.IDE.Properties {
         internal static System.Drawing.Bitmap expand {
             get {
                 object obj = ResourceManager.GetObject("expand", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap folder {
+            get {
+                object obj = ResourceManager.GetObject("folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap framepanel {
+            get {
+                object obj = ResourceManager.GetObject("framepanel", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -434,6 +474,26 @@ namespace LF2.IDE.Properties {
         internal static System.Drawing.Bitmap refresh {
             get {
                 object obj = ResourceManager.GetObject("refresh", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap shapepanel {
+            get {
+                object obj = ResourceManager.GetObject("shapepanel", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tagpanel {
+            get {
+                object obj = ResourceManager.GetObject("tagpanel", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

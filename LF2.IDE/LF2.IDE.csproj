@@ -408,6 +408,9 @@
     </None>
     <Content Include="Main.ico" />
     <Content Include="Main_.ico" />
+    <None Include="Properties\docking.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Resources\Bitmap Icons\favicon128x128.bmp" />
     <Content Include="Resources\Bitmap Icons\favicon16x16.bmp" />
     <Content Include="Resources\Bitmap Icons\favicon24x24.bmp" />

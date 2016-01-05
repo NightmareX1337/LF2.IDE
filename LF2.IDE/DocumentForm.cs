@@ -509,6 +509,12 @@ namespace LF2.IDE
 		{
 			if (e.KeyCode == Keys.Insert)
 				toolStripStatusLabel_InsOvr.Text = scintilla.OverType ? "INS" : "OVR";
+			else if (e.KeyCode == Keys.Z && e.Modifiers == (Keys.Control | Keys.Shift))
+			{
+				scintilla.UndoRedo.Redo();
+				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
 		}
 
 		// God save us from ever needing to write this kind of creepy code

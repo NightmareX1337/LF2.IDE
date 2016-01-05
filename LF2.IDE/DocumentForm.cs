@@ -21,7 +21,8 @@ namespace LF2.IDE
 		private bool _issaved;
 		private DocumentType documentType = DocumentType.Default;
 		private System.Timers.Timer syncTimer = new System.Timers.Timer(1000) { AutoReset = true };
-		public bool justEdited = false, syncing = false;
+		public bool justEdited = false;
+		public volatile bool syncing = false;
 
 		public List<SpriteSheet> spriteList = new List<SpriteSheet>(0);
 		public Bitmap[] frames;

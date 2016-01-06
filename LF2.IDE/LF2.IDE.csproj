@@ -403,7 +403,7 @@
     </None>
     <Content Include="Main.ico" />
     <Content Include="Main_.ico" />
-    <None Include="Properties\docking.xml">
+    <None Include="docking.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="Resources\Bitmap Icons\favicon128x128.bmp" />

@@ -712,17 +712,10 @@ namespace LF2.IDE
 				if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.None)
 				{
 					textWrapToolStripButton.Checked = false;
-					textWrapToolStripButton.Image = imageList.Images[0];
 				}
-				else if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.Word)
+				else
 				{
 					textWrapToolStripButton.Checked = true;
-					textWrapToolStripButton.Image = imageList.Images[0];
-				}
-				else if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.Char)
-				{
-					textWrapToolStripButton.Checked = true;
-					textWrapToolStripButton.Image = imageList.Images[1];
 				}
 				textWrapToolStripButton.ToolTipText = "Wrap: " + ActiveDocument.Scintilla.LineWrapping.Mode.ToString();
 				showAllCharsToolStripButton.Checked = ActiveDocument.Scintilla.EndOfLine.IsVisible || ActiveDocument.Scintilla.Whitespace.Mode == ScintillaNET.WhitespaceMode.VisibleAlways;
@@ -913,19 +906,11 @@ namespace LF2.IDE
 			{
 				ActiveDocument.Scintilla.LineWrapping.Mode = ScintillaNET.LineWrappingMode.Word;
 				textWrapToolStripButton.Checked = true;
-				textWrapToolStripButton.Image = imageList.Images[0];
 			}
-			else if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.Word)
-			{
-				ActiveDocument.Scintilla.LineWrapping.Mode = ScintillaNET.LineWrappingMode.Char;
-				textWrapToolStripButton.Checked = true;
-				textWrapToolStripButton.Image = imageList.Images[1];
-			}
-			else if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.Char)
+			else
 			{
 				ActiveDocument.Scintilla.LineWrapping.Mode = ScintillaNET.LineWrappingMode.None;
 				textWrapToolStripButton.Checked = false;
-				textWrapToolStripButton.Image = imageList.Images[0];
 			}
 			textWrapToolStripButton.ToolTipText = "Wrap: " + ActiveDocument.Scintilla.LineWrapping.Mode.ToString();
 		}

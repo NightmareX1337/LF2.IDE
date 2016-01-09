@@ -1828,5 +1828,31 @@ namespace LF2.IDE
 				formEventLog.Error(ex, "Instant Data Loading Error");
 			}
 		}
+
+		private void toolStripButton_DataTxt_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				string dataTxtPath = Path.GetDirectoryName(Settings.Current.lfPath) + "\\data\\data.txt";
+				if (File.Exists(dataTxtPath))
+				{
+					DocumentForm ready = null;
+					foreach (var dc in dockPanel.Documents)
+					{
+						DocumentForm df = (DocumentForm)dc;
+						if(string.Compare(df.FilePath, dataTxtPath, StringComparison.InvariantCultureIgnoreCase) == 0)
+						{
+							ready = df;
+							break;
+						}
+					}
+					if (ready != null)
+						ready.Activate();
+					else
+						Open(dataTxtPath, true);
+				}
+			}
+			catch { }
+		}
 	}
 }

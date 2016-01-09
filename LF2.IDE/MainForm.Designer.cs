@@ -176,6 +176,8 @@
 			this.backgroundWorker_Util = new System.ComponentModel.BackgroundWorker();
 			this.backgroundWorker_Plugin = new System.ComponentModel.BackgroundWorker();
 			this.folderBrowserDialog_Sprite = new System.Windows.Forms.FolderBrowserDialog();
+			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripButton_DataTxt = new System.Windows.Forms.ToolStripButton();
 			this.mainToolStrip.SuspendLayout();
 			this.jumpToToolStrip.SuspendLayout();
 			this.mainMenuStrip.SuspendLayout();
@@ -467,6 +469,8 @@
             this.toolStripButtonFolding,
             this.toolStripSeparator_mainToolStrip9,
             this.jumpToToolStripButton,
+            this.toolStripSeparator5,
+            this.toolStripButton_DataTxt,
             this.toolStripSeparator1,
             this.quickToolStripButton,
             this.toolStripIncrementalSearcher});
@@ -1467,6 +1471,20 @@
 			this.folderBrowserDialog_Sprite.RootFolder = System.Environment.SpecialFolder.MyComputer;
 			this.folderBrowserDialog_Sprite.ShowNewFolderButton = false;
 			// 
+			// toolStripSeparator5
+			// 
+			this.toolStripSeparator5.Name = "toolStripSeparator5";
+			this.toolStripSeparator5.Size = new System.Drawing.Size(6, 27);
+			// 
+			// toolStripButton_DataTxt
+			// 
+			this.toolStripButton_DataTxt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripButton_DataTxt.Name = "toolStripButton_DataTxt";
+			this.toolStripButton_DataTxt.Size = new System.Drawing.Size(50, 24);
+			this.toolStripButton_DataTxt.Text = "data.txt";
+			this.toolStripButton_DataTxt.ToolTipText = "Open data.txt file";
+			this.toolStripButton_DataTxt.Click += new System.EventHandler(this.toolStripButton_DataTxt_Click);
+			// 
 			// MainForm
 			// 
 			this.AllowDrop = true;
@@ -1637,6 +1655,8 @@
 		private System.Windows.Forms.ToolStripMenuItem ınstantDataLoaderToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem autoLoadToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+		private System.Windows.Forms.ToolStripButton toolStripButton_DataTxt;
 		/*private System.Windows.Forms.ToolStripMenuItem batToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem batToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem brokenweaponToolStripMenuItem;

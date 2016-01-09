@@ -546,7 +546,62 @@ namespace LF2.IDE
 		}
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Winapi)]
-		public static extern int SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+		public static extern BOOL SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Winapi)]
+		public static extern BOOL GetWindowRect(IntPtr hWnd, ref RECT lpRect);
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Winapi)]
+		public static extern BOOL SetCursorPos(int X, int Y);
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Winapi)]
+		public static extern IntPtr SendMessage(IntPtr hWnd, WM Msg, IntPtr wParam, IntPtr lParam);
+
+		[StructLayout(LayoutKind.Sequential)]
+		public struct RECT
+		{
+			public int left;
+			public int top;
+			public int right;
+			public int bottom;
+		}
+
+		public enum WM : int
+		{
+			MOUSEMOVE = 512,
+			LBUTTONDOWN = 513,
+			LBUTTONUP = 514
+		}
+
+		public const BOOL FALSE = BOOL.FALSE;
+		public const BOOL TRUE = BOOL.TRUE;
+
+		public enum BOOL : int
+		{
+			FALSE,
+			TRUE
+		}
+
+		/// <summary>
+		/// Sends left mouse button click message to given window handle at {X=400, Y=230} 
+		/// LF2 somehow does not respond to WM_LBUTTONDOWN x,y coordinates so the function 
+		/// manually put cursor into the right place.
+		/// </summary>
+		bool SendGameStartMsg(IntPtr window)
+		{
+			RECT rect = new RECT();
+			if(GetWindowRect(window, ref rect) == FALSE)
+				return false;
+
+			//SendMessageA(window, WM_MOUSEMOVE, 15073680, 1); // Not working
+			IntPtr xy = new IntPtr(400 | (230 << 16));
+			if (SetCursorPos(rect.left + 400, rect.top + 25 + 230) == TRUE)
+				SendMessage(window, WM.LBUTTONDOWN, xy, IntPtr.Zero);
+			else
+				return false;
+
+			return true;
+		}
 
 		void StartToolStripMenuItemClick(object sender, EventArgs e)
 		{
@@ -568,7 +623,7 @@ namespace LF2.IDE
 			if (startTheGame)
 			{
 				Thread.Sleep(500);
-				IDL.SendGameStartMsg(lfp.MainWindowHandle);
+				SendGameStartMsg(lfp.MainWindowHandle);
 			}
 			return lfp;
 		}

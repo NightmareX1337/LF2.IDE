@@ -20,9 +20,6 @@ namespace LF2.IDE
 			int bSuspend);
 
 		[DllImport("IDL.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SendGameStartMsg(IntPtr window);
-
-		[DllImport("IDL.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int ReadDataTxt(
 			[MarshalAs(UnmanagedType.LPWStr, SizeParamIndex = 1)]string dataTxtFile, int length,
 			[MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)]ref ObjectData[] objects, ref int objCount,

@@ -124,20 +124,20 @@
             this.copySelectedToolStripMenuItem,
             this.copyAllToolStripMenuItem});
 			this.contextMenuStrip.Name = "contextMenuStrip";
-			this.contextMenuStrip.Size = new System.Drawing.Size(153, 70);
+			this.contextMenuStrip.Size = new System.Drawing.Size(150, 48);
 			this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
 			// 
 			// copySelectedToolStripMenuItem
 			// 
 			this.copySelectedToolStripMenuItem.Name = "copySelectedToolStripMenuItem";
-			this.copySelectedToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.copySelectedToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
 			this.copySelectedToolStripMenuItem.Text = "Copy Selected";
 			this.copySelectedToolStripMenuItem.Click += new System.EventHandler(this.copySelectedToolStripMenuItem_Click);
 			// 
 			// copyAllToolStripMenuItem
 			// 
 			this.copyAllToolStripMenuItem.Name = "copyAllToolStripMenuItem";
-			this.copyAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.copyAllToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
 			this.copyAllToolStripMenuItem.Text = "Copy All";
 			this.copyAllToolStripMenuItem.Click += new System.EventHandler(this.copyAllToolStripMenuItem_Click);
 			// 

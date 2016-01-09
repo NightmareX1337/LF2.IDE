@@ -106,9 +106,10 @@ namespace LF2.IDE
 			SetMarginAuto();
 		}
 
+		int last_measure_lines = -1;
+
 		public void SetMarginAuto()
 		{
-			int last_measure_lines = -1;
 			int lines = scintilla.Lines.Count;
 			if (lines != last_measure_lines)
 			{
@@ -126,7 +127,7 @@ namespace LF2.IDE
 
 		private void scintilla_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (!(e.Control && e.KeyCode == Keys.C))
+			if (!(e.Modifiers == Keys.Control && e.KeyCode == Keys.C))
 				e.SuppressKeyPress = e.Handled = true;
 		}
 

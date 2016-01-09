@@ -55,8 +55,8 @@
 			this.columnHeader_Warning = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader_Web = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.groupBox_EditorSettings = new System.Windows.Forms.GroupBox();
-			this.checkBox_AutoComplete = new System.Windows.Forms.CheckBox();
 			this.checkBox_SaveDocStates = new System.Windows.Forms.CheckBox();
+			this.checkBox_AutoComplete = new System.Windows.Forms.CheckBox();
 			this.groupBox_Cryptology.SuspendLayout();
 			this.groupBox_DataUtil.SuspendLayout();
 			this.groupBox_Debugger.SuspendLayout();
@@ -347,16 +347,6 @@
 			this.groupBox_EditorSettings.TabStop = false;
 			this.groupBox_EditorSettings.Text = "Editor Settings";
 			// 
-			// checkBox_AutoComplete
-			// 
-			this.checkBox_AutoComplete.AutoSize = true;
-			this.checkBox_AutoComplete.Location = new System.Drawing.Point(6, 19);
-			this.checkBox_AutoComplete.Name = "checkBox_AutoComplete";
-			this.checkBox_AutoComplete.Size = new System.Drawing.Size(193, 17);
-			this.checkBox_AutoComplete.TabIndex = 0;
-			this.checkBox_AutoComplete.Text = "Trigger auto complete automatically";
-			this.checkBox_AutoComplete.UseVisualStyleBackColor = true;
-			// 
 			// checkBox_SaveDocStates
 			// 
 			this.checkBox_SaveDocStates.AutoSize = true;
@@ -366,6 +356,16 @@
 			this.checkBox_SaveDocStates.TabIndex = 0;
 			this.checkBox_SaveDocStates.Text = "Reload previous files on startup";
 			this.checkBox_SaveDocStates.UseVisualStyleBackColor = true;
+			// 
+			// checkBox_AutoComplete
+			// 
+			this.checkBox_AutoComplete.AutoSize = true;
+			this.checkBox_AutoComplete.Location = new System.Drawing.Point(6, 19);
+			this.checkBox_AutoComplete.Name = "checkBox_AutoComplete";
+			this.checkBox_AutoComplete.Size = new System.Drawing.Size(193, 17);
+			this.checkBox_AutoComplete.TabIndex = 0;
+			this.checkBox_AutoComplete.Text = "Trigger auto complete automatically";
+			this.checkBox_AutoComplete.UseVisualStyleBackColor = true;
 			// 
 			// FormSettings
 			// 
@@ -388,6 +388,7 @@
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Settings";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormSetFormClosed);
 			this.Load += new System.EventHandler(this.FormSetLoad);
 			this.groupBox_Cryptology.ResumeLayout(false);

@@ -5,15 +5,19 @@ using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Threading;
+using System.IO;
 
 namespace LF2.IDE
 {
 	public partial class FormSettings : Form
 	{
-		public FormSettings()
+		public FormSettings(bool forceCorrectLfPath = false)
 		{
+			this.forceCorrectLfPath = forceCorrectLfPath;
 			InitializeComponent();
 		}
+
+		bool forceCorrectLfPath = false;
 
 		void FormSetLoad(object sender, EventArgs e)
 		{
@@ -82,6 +86,8 @@ namespace LF2.IDE
 				Settings.Current.encryptionKey = textBox_EncryptionKey.Text;
 				Settings.Current.decryptionKey = textBox_DecryptionKey.Text;
 				Settings.Current.lfPath = (string.IsNullOrEmpty(textBox_Path.Text) ? "lf2.exe" : textBox_Path.Text);
+				if (File.Exists(Settings.Current.lfPath))
+					Settings.Current.ignoreIncorrectLfPath = false;
 				Settings.Current.dataUtil = (radioButton_Default.Checked || string.IsNullOrEmpty(comboBox_DataUtils.Text)) ? null : comboBox_DataUtils.Text;
 				Settings.Current.autoComplete = checkBox_AutoComplete.Checked;
 				Settings.Current.saveDocStates = checkBox_SaveDocStates.Checked;
@@ -99,6 +105,17 @@ namespace LF2.IDE
 						Settings.Current.activePlugins.Add(item.Text);
 					}
 				}
+			}
+		}
+
+		private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (forceCorrectLfPath && this.DialogResult == System.Windows.Forms.DialogResult.OK && !File.Exists(textBox_Path.Text))
+			{
+				e.Cancel = true;
+				ActiveControl = textBox_Path;
+				textBox_Path.Focus();
+				textBox_Path.SelectAll();
 			}
 		}
 	}

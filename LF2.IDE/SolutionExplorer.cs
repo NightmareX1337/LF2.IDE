@@ -70,17 +70,25 @@ namespace LF2.IDE
 				item.Tag = file;
 				rootNode.Nodes.Add(item);
 			}
+			rootNode.Expand();
 			e.Result = rootNode;
 		}
 
 		void PopulateTreeViewRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			treeView.Nodes.Clear();
-			TreeNode rootNode = e.Result as TreeNode;
-			treeView.Nodes.Add(rootNode);
-			refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-			try { mainForm.formEventLog.Log("Solution Explorer Refreshed (" + filterToolStripComboBox.Text + "): " + stopWatch.Elapsed, true); }
+			try
+			{
+				CheckForIllegalCrossThreadCalls = false;
+				treeView.Nodes.Clear();
+				TreeNode rootNode = (TreeNode)e.Result;
+				treeView.Nodes.Add(rootNode);
+				mainForm.formEventLog.Log("Solution Explorer Refreshed (" + filterToolStripComboBox.Text + "): " + stopWatch.Elapsed, true);
+			}
 			catch { }
+			finally
+			{
+				refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+			}
 			stopWatch.Reset();
 		}
 

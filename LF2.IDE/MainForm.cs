@@ -1856,10 +1856,11 @@ namespace LF2.IDE
 						p.Id,
 						(DataType)dataType,
 						dataType == 0 ? objId :
-						dataType == 1 ? (-1) : // not to be used
-						bgId,
+							dataType == 1 ? (-1) : // not to be used
+							bgId,
 						dataType == 0 ? (ObjectType)objType : ObjectType.Invalid,
-						this.Handle);
+						this.Handle,
+						null);
 					if (result == 0)
 					{
 						FormIDL.SetForegroundWindow(new HandleRef(p, p.MainWindowHandle));

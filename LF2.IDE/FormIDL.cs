@@ -94,14 +94,16 @@ namespace LF2.IDE
 					{
 						throw new ApplicationException("Process suspending failed: " + p.Id);
 					}
+					Clean();
 					result =  IDL.InstantLoad(dat, dat.Length,
-						 p.Id,
-						 (DataType)comboBox_DataType.SelectedIndex,
-						 comboBox_DataType.SelectedIndex == 0 ? comboBox_ObjId.SelectedIndex :
-						 comboBox_DataType.SelectedIndex == 1 ? (-1) : // not to be used
-						 comboBox_BgId.SelectedIndex,
-						 comboBox_DataType.SelectedIndex == 0 ? (ObjectType)comboBox_ObjType.SelectedIndex : ObjectType.Invalid,
-						 this.Handle);
+						p.Id,
+						(DataType)comboBox_DataType.SelectedIndex,
+						comboBox_DataType.SelectedIndex == 0 ? comboBox_ObjId.SelectedIndex :
+							comboBox_DataType.SelectedIndex == 1 ? (-1) : // not to be used
+							comboBox_BgId.SelectedIndex,
+						comboBox_DataType.SelectedIndex == 0 ? (ObjectType)comboBox_ObjType.SelectedIndex : ObjectType.Invalid,
+						this.Handle,
+						logFunc);
 				}
 				finally
 				{
@@ -112,18 +114,17 @@ namespace LF2.IDE
 						SetForegroundWindow(new HandleRef(p, p.MainWindowHandle));
 						this.Close();
 					}
+					else if (result == 1)
+					{
+						label_Result.Text = "Successful (warnings)";
+						StepCaret();
+					}
 					else
 					{
 						label_Result.Text = "Error code: " + result;
+						StepCaret();
 					}
 				}
-			}
-			catch(DllNotFoundException)
-			{
-				MessageBox.Show("'IDL.dll' could not be found, it's required to make instant data loading possible.\r\n" + 
-					"If you think it supposed to come with the download please contact me (the developer) at LFE Forums (Help/Web...) or report a bug at GitHub:\r\n" + 
-					Program.githubPage, 
-					Program.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 			catch(ApplicationException ex)
 			{
@@ -138,6 +139,11 @@ namespace LF2.IDE
 		private void buttonCancel_Click(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+
+		private void button_Refresh_Click(object sender, EventArgs e)
+		{
+			RefreshProcessList();
 		}
 
 		private void RefreshProcessList()
@@ -159,7 +165,19 @@ namespace LF2.IDE
 
 		private void FormIDL_Load(object sender, EventArgs e)
 		{
-			FreshLoad();
+			try
+			{
+				form = this;
+				FreshLoad();
+			}
+			catch (DllNotFoundException)
+			{
+				MessageBox.Show("'IDL.dll' could not be found, it's required to make instant data loading possible.\r\n" +
+					"If you think it supposed to come with the download please contact me (the developer) at LFE Forums (Help/Web...) or report a bug at GitHub:\r\n" +
+					Program.githubPage,
+					Program.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				this.Close();
+			}
 		}
 
 		public void FreshLoad()
@@ -206,12 +224,13 @@ namespace LF2.IDE
 				this.Close();
 				return;
 			}
+
+			comboBox_BgId.Items.Clear();
+			comboBox_ObjId.Items.Clear();
+				
 			DateTime modification = File.GetLastWriteTime(dataTxtFile);
 			if (modification > dataTxtLastModification)
 			{
-				comboBox_BgId.Items.Clear();
-				comboBox_ObjId.Items.Clear();
-				
 				dataTxtFile = File.ReadAllText(dataTxtFile);
 				if (IDL.ReadDataTxt(dataTxtFile, dataTxtFile.Length, ref dataTxt.objects, ref dataTxt.objCount, ref dataTxt.backgrounds, ref dataTxt.bgCount, this.Handle) != 0)
 					return;
@@ -269,9 +288,110 @@ namespace LF2.IDE
 			}
 		}
 
-		private void button_Refresh_Click(object sender, EventArgs e)
+		public static FormIDL form;
+
+		static readonly string[] msgStr = { "[Message] ", "[Error] ", "[Warning] " };
+
+		public static Logger logFunc = (msg, title, msgType) =>
 		{
-			RefreshProcessList();
+			try
+			{
+				if (msg != null)
+				{
+					if (title == null)
+						form.Log(msgStr[(byte)msgType] + msg);
+					else
+						form.Log(msg, title);
+				}
+			}
+			catch { }
+		};
+
+		public void Log(string logMessage, bool stepCaret = true)
+		{
+			if (!string.IsNullOrEmpty(scintilla.Text))
+				scintilla.AppendText(scintilla.EndOfLine.EolString);
+			scintilla.AppendText(logMessage);
+			StepCaret(stepCaret);
+		}
+
+		public void Log(string logMessage, string logTitle, bool stepCaret = true)
+		{
+			int caret = scintilla.Lines.Count;
+			Log(logTitle, false);
+			scintilla.AppendText(scintilla.EndOfLine.EolString + logMessage);
+			StepCaret(stepCaret);
+			StepCaret(caret, stepCaret);
+			scintilla.Lines.Current.AddMarker(scintilla.Markers.Folder);
+		}
+
+		private void StepCaret(bool condition = true)
+		{
+			StepCaret(scintilla.Lines.Count, condition);
+		}
+
+		private void StepCaret(int caretLine, bool condition = true)
+		{
+			if (condition)
+			{
+				scintilla.Caret.LineNumber = caretLine;
+				scintilla.Caret.EnsureVisible();
+				scintilla.Refresh();
+			}
+		}
+
+		public void Clean()
+		{
+			scintilla.ResetText();
+			scintilla.Refresh();
+		}
+
+		void ScintillaZoomChanged(object sender, EventArgs e)
+		{
+			SetMarginAuto();
+		}
+
+		void ScintillaTextChanged(object sender, EventArgs e)
+		{
+			SetMarginAuto();
+		}
+
+		int last_measure_lines = -1;
+
+		public void SetMarginAuto()
+		{
+			int lines = scintilla.Lines.Count;
+			if (lines != last_measure_lines)
+			{
+				last_measure_lines = lines;
+				scintilla.Margins[0].Width = TextRenderer.MeasureText(lines.ToString(), scintilla.Font).Width + scintilla.Zoom * 3;
+			}
+		}
+
+		private void scintilla_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (!(e.Modifiers == Keys.Control && e.KeyCode == Keys.C))
+				e.SuppressKeyPress = e.Handled = true;
+		}
+
+		private void copySelectedToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			scintilla.Clipboard.Copy(true);
+		}
+
+		private void copyAllToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			scintilla.Clipboard.Copy(0, scintilla.TextLength);
+		}
+
+		private void FormIDL_Activated(object sender, EventArgs e)
+		{
+			this.Opacity = 1;
+		}
+
+		private void FormIDL_Deactivate(object sender, EventArgs e)
+		{
+			this.Opacity = 0.75;
 		}
 	}
 }

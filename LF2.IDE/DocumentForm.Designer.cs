@@ -83,13 +83,13 @@
 			this.scintilla.Lexing.LineCommentPrefix = "";
 			this.scintilla.Lexing.StreamCommentPrefix = "";
 			this.scintilla.Lexing.StreamCommentSufix = "";
+			this.scintilla.LineWrapping.IndentMode = ScintillaNET.LineWrappingIndentMode.Same;
 			this.scintilla.Location = new System.Drawing.Point(0, 0);
 			this.scintilla.Margins.FoldMarginColor = System.Drawing.Color.WhiteSmoke;
 			this.scintilla.Margins.FoldMarginHighlightColor = System.Drawing.Color.WhiteSmoke;
 			this.scintilla.Margins.Left = 5;
 			this.scintilla.Margins.Margin0.Width = 38;
 			this.scintilla.Margins.Margin1.AutoToggleMarkerNumber = 0;
-			this.scintilla.Margins.Margin1.IsClickable = true;
 			this.scintilla.Margins.Margin2.Width = 16;
 			this.scintilla.Name = "scintilla";
 			this.scintilla.Scrolling.HorizontalWidth = 1;

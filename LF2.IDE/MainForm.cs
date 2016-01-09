@@ -1592,7 +1592,25 @@ namespace LF2.IDE
 
 		private void MainForm_Shown(object sender, EventArgs e)
 		{
-			if (argsToolStripMenuItem.DropDownItems.Count != 0)
+			if (!Settings.Current.ignoreIncorrectLfPath && !File.Exists(Settings.Current.lfPath))
+			{
+				if (MessageBox.Show("Seems like LF2 path is not set or incorrect.\r\n" + Program.Title + "'s cool features rely on this setting, " + 
+									"do you want to set it now?\r\nYou can do this anytime later on settings window.", 
+									Program.Title, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK)
+				{
+					var sett = new FormSettings(forceCorrectLfPath : true);
+					if (sett.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+					{
+						Settings.Current.ignoreIncorrectLfPath = false;
+						Application.Restart();
+					}
+					else
+						Settings.Current.ignoreIncorrectLfPath = true;
+				}
+				else
+					Settings.Current.ignoreIncorrectLfPath = true;
+			}
+			if (argsToolStripMenuItem.DropDownItems.Count > 0)
 				argsToolStripMenuItem.ShowDropDown();
 		}
 

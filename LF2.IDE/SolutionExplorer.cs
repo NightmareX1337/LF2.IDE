@@ -119,18 +119,16 @@ namespace LF2.IDE
 				populateTreeView.CancelAsync();
 				return;
 			}
-		rerefresh:
-			if (File.Exists(Settings.Current.lfPath))
+
+			if (!File.Exists(Settings.Current.lfPath))
 			{
-				refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
-				PopulateTreeView(DestinationFolder);
+				FormSettings fs = new FormSettings(forceCorrectLfPath : true);
+				if (fs.ShowDialog(mainForm) != DialogResult.OK)
+					return;
 			}
-			else
-			{
-				FormSettings fs = new FormSettings();
-				if (fs.ShowDialog() == DialogResult.OK)
-					goto rerefresh;
-			}
+
+			refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+			PopulateTreeView(DestinationFolder);
 			this.Show();
 		}
 

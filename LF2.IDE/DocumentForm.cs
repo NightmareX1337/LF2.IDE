@@ -268,29 +268,24 @@ namespace LF2.IDE
 
 		public void ParseFrames()
 		{
-			int top = 1;
-			foreach (SpriteSheet fm in spriteList)
-				if (fm.endIndex + 1 > top) top = fm.endIndex + 1;
-
-			frames = new Bitmap[top];
-			for (int i = 0; i < top; i++)
-				frames[i] = null;
+			var frames = new List<Bitmap>(256);
 
 			for (int i = 0; i < spriteList.Count; i++)
 			{
 				SpriteSheet fm = spriteList[i];
-				int k = fm.startIndex;
+
 				for (int r = 0; r < fm.row; r++)
 				{
-					for (int c = 0; c < fm.col && k <= fm.endIndex; c++, k++)
+					for (int c = 0; c < fm.col; c++)
 					{
 						Bitmap btm = new Bitmap(fm.w, fm.h, PixelFormat.Format32bppRgb);
 						using (Graphics g = Graphics.FromImage(btm))
 							g.DrawImage(fm.sprite, new Rectangle(0, 0, fm.w, fm.h), new Rectangle(c * (fm.w + 1), r * (fm.h + 1), fm.w, fm.h), GraphicsUnit.Pixel);
-						frames[k] = btm;
+						frames.Add(btm);
 					}
 				}
 			}
+			this.frames = frames.ToArray();
 		}
 
 		bool auto = false, smart = false;

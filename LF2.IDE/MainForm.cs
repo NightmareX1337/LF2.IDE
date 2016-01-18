@@ -1410,12 +1410,11 @@ namespace LF2.IDE
 				preverS = wer[3],
 				curS = Application.ProductVersion;
 
-			string[] vs = AboutForm.AssemblyVersion.Split('.');
-			int[] v = { int.Parse(vs[0]), int.Parse(vs[1]) };
+			string vs = AboutForm.AssemblyVersion;
 			
 			Version version = new Version(ver),
 				preversion = new Version(prever),
-				current = new Version(v[0], v[1]);
+				current = new Version(vs.Substring(0, vs.LastIndexOf('.')));
 
 			Updater up = new Updater() { downloadPage = down, version = verS, preVersion = preverS, currentVersion = curS, webPage = web };
 
@@ -1530,45 +1529,44 @@ namespace LF2.IDE
 				{
 					case UpdateState.None:
 						if (updateInfo.notify)
-							MessageBox.Show(this, "I believe you have the latest version :)", "Update Checker");
+							MessageBox.Show(this, "I believe you have the latest version :)", Program.Title);
 						else
 							formEventLog.Log("Everthing looks up-to-date", true);
 						break;
 					case UpdateState.Release:
-						formEventLog.Log("\tCurrent Version: " + updateInfo.update.currentVersion + "\t\r\nLatest Version: " + updateInfo.update.version + "\t\r\n" + updateInfo.update.webPage + "\t\r\n" + updateInfo.update.downloadPage, "Update Found!", true);
-						if (updateInfo.notify)
-							MessageBox.Show(this, "New update available!", "Update Checker");
+						formEventLog.Log("\tCurrent Version: " + updateInfo.update.currentVersion + "\r\n\tLatest Version: " + updateInfo.update.version + "\r\n" + updateInfo.update.webPage + "\r\n" + updateInfo.update.downloadPage, "Update Found!", true);
+						MessageBox.Show(this, "New update available!", Program.Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 						formEventLog.Show();
 						dockPanel.ActiveAutoHideContent = formEventLog;
 						formEventLog.Activate();
 						break;
 					case UpdateState.PreRelease:
-						formEventLog.Log("\tCurrent Version: " + updateInfo.update.currentVersion + "\t\r\nLatest Version: " + updateInfo.update.version + "\t\r\nLatest Pre-Release Version: " + updateInfo.update.preVersion + "\t\r\n" + updateInfo.update.webPage + "\t\r\n" + updateInfo.update.downloadPage, "Update Found! (Pre-Release)", true);
+						formEventLog.Log("\tCurrent Version: " + updateInfo.update.currentVersion + "\r\n\tLatest Version: " + updateInfo.update.version + "\r\n\tLatest Pre-Release Version: " + updateInfo.update.preVersion + "\r\n" + updateInfo.update.webPage + "\r\n" + updateInfo.update.downloadPage, "Update Found! (Pre-Release)", true);
 						if (updateInfo.notify)
 						{
-							MessageBox.Show(this, "There is a pre-release update", "Update Checker");
+							MessageBox.Show(this, "There is a pre-release update", Program.Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 							formEventLog.Show();
 							dockPanel.ActiveAutoHideContent = formEventLog;
 							formEventLog.Activate();
 						}
 						break;
 					case UpdateState.ReleaseAndPre:
-						formEventLog.Log("\tCurrent Version: " + updateInfo.update.currentVersion + "\t\r\nLatest Version: " + updateInfo.update.version + "\t\r\nLatest Pre-Release Version: " + updateInfo.update.preVersion + "\t\r\n" + updateInfo.update.webPage + "\t\r\n" + updateInfo.update.downloadPage, "Update Found!", true);
+						formEventLog.Log("\tCurrent Version: " + updateInfo.update.currentVersion + "\r\n\tLatest Version: " + updateInfo.update.version + "\r\n\tLatest Pre-Release Version: " + updateInfo.update.preVersion + "\r\n" + updateInfo.update.webPage + "\r\n" + updateInfo.update.downloadPage, "Update Found!", true);
 						if (updateInfo.notify)
-							MessageBox.Show(this, "New update available!", "Update Checker");
+							MessageBox.Show(this, "New update available!", Program.Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 						formEventLog.Show();
 						dockPanel.ActiveAutoHideContent = formEventLog;
 						formEventLog.Activate();
 						break;
 					case UpdateState.Developer:
-						formEventLog.Log("Somehow, it appears that your current version is even higher than the latest one\r\nCurrent Version: " + updateInfo.update.currentVersion + "\t\r\nLatest Version: " + updateInfo.update.version + "\t\r\n" + updateInfo.update.webPage, "WTF!", true);
+						formEventLog.Log("Somehow, it appears that your current version is even higher than the latest one\r\n\tCurrent Version: " + updateInfo.update.currentVersion + "\r\n\tLatest Version: " + updateInfo.update.version + "\r\n" + updateInfo.update.webPage, "WTF!", true);
 						if (updateInfo.notify)
-							MessageBox.Show(this, "Somehow, it appears that your current version is even higher than the latest one", "Update Checker");
+							MessageBox.Show(this, "Somehow, it appears that your current version is even higher than the latest one", Program.Title);
 						break;
 					case UpdateState.DeveloperPre:
-						formEventLog.Log("Somehow, it appears that your current version is even higher than the latest one but still there is a pre-release available\r\nCurrent Version: " + updateInfo.update.currentVersion + "\t\r\nLatest Version: " + updateInfo.update.version + "\t\r\nLatest Pre-Release Version: " + updateInfo.update.preVersion + "\t\r\n" + updateInfo.update.webPage, "WTF!", true);
+						formEventLog.Log("Somehow, it appears that your current version is even higher than the latest one but still there is a pre-release available\r\n\tCurrent Version: " + updateInfo.update.currentVersion + "\r\n\tLatest Version: " + updateInfo.update.version + "\r\n\tLatest Pre-Release Version: " + updateInfo.update.preVersion + "\r\n" + updateInfo.update.webPage, "WTF!", true);
 						if (updateInfo.notify)
-							MessageBox.Show(this, "Somehow, it appears that your current version is even higher than the latest one but still there is a pre-release available", "Update Checker");
+							MessageBox.Show(this, "Somehow, it appears that your current version is even higher than the latest one but still there is a pre-release available", Program.Title);
 						break;
 				}
 			}

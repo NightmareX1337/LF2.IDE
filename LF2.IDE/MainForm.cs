@@ -173,7 +173,7 @@ namespace LF2.IDE
 		public FormEventLog formEventLog;
 
 		public static Plugger<Plugin> Plugins = new Plugger<Plugin>();
-		public static bool PluginLock = true;
+		public static object PluginLock = new object();
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
@@ -1665,7 +1665,6 @@ namespace LF2.IDE
 
 		private void backgroundWorker_Util_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			UtilManager.UtilLock = false;
 			if (closed || formEventLog.Disposing || formEventLog.IsDisposed)
 				return;
 			TimeSpan ts = (TimeSpan)e.Result;
@@ -1675,8 +1674,11 @@ namespace LF2.IDE
 		private void backgroundWorker_Plugin_DoWork(object sender, DoWorkEventArgs e)
 		{
 			Stopwatch sw = Stopwatch.StartNew();
-			if (Directory.Exists(Program.plugDir))
-				Plugins.PlugOn(Program.plugDir);
+			lock (PluginLock)
+			{
+				if (Directory.Exists(Program.plugDir))
+					Plugins.PlugOn(Program.plugDir);
+			}
 			e.Result = sw.Elapsed;
 			sw.Reset();
 		}
@@ -1685,7 +1687,6 @@ namespace LF2.IDE
 		{
 			if (closed || formEventLog.Disposing || formEventLog.IsDisposed)
 				return;
-			PluginLock = false;
 			TimeSpan ts = (TimeSpan)e.Result;
 			try
 			{

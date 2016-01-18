@@ -13,10 +13,12 @@ namespace LF2.IDE
 
 		public static string Decrypt(string filepath)
 		{
-			if (!string.IsNullOrEmpty(Settings.Current.dataUtil))
+			lock (UtilManager.UtilLock)
 			{
-				while (UtilManager.UtilLock) ;
-				return UtilManager.ActiveUtil.Decrypt(filepath);
+				if (!string.IsNullOrEmpty(Settings.Current.dataUtil))
+				{
+					return UtilManager.ActiveUtil.Decrypt(filepath);
+				}
 			}
 
 			byte[] buffer = File.ReadAllBytes(filepath);
@@ -36,11 +38,13 @@ namespace LF2.IDE
 
 		public static void Encrypt(string text, string filepath)
 		{
-			if (!string.IsNullOrEmpty(Settings.Current.dataUtil))
+			lock (UtilManager.UtilLock)
 			{
-				while (UtilManager.UtilLock) ;
-				UtilManager.ActiveUtil.Encrypt(filepath, text);
-				return;
+				if (!string.IsNullOrEmpty(Settings.Current.dataUtil))
+				{
+					UtilManager.ActiveUtil.Encrypt(filepath, text);
+					return;
+				}
 			}
 
 			byte[] dat = new byte[123 + text.Length];

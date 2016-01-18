@@ -28,35 +28,31 @@ namespace LF2.IDE
 			checkBox_AutoComplete.Checked = Settings.Current.autoComplete;
 			checkBox_SaveDocStates.Checked = Settings.Current.saveDocStates;
 
-			if (UtilManager.UtilLock)
+			lock (UtilManager.UtilLock)
 			{
-				this.Dispose();
-				return;
+				foreach (string key in UtilManager.Utils.PluginKeys)
+					comboBox_DataUtils.Items.Add(key);
+				comboBox_DataUtils.SelectedItem = Settings.Current.dataUtil;
 			}
-			foreach (string key in UtilManager.Utils.PluginKeys)
-				comboBox_DataUtils.Items.Add(key);
-			comboBox_DataUtils.SelectedItem = Settings.Current.dataUtil;
 
-			if (MainForm.PluginLock)
+			lock (MainForm.PluginLock)
 			{
-				this.Dispose();
-				return;
-			}
-			foreach (string plug in MainForm.Plugins.PluginKeys)
-			{
-				ListViewItem lvi = new ListViewItem(new string[]
+				foreach (string plug in MainForm.Plugins.PluginKeys)
+				{
+					ListViewItem lvi = new ListViewItem(new string[]
 				{
 					plug,
-					MainForm.Plugins[plug].Name == null ? "<null>" : MainForm.Plugins[plug].Name,
-					MainForm.Plugins[plug].Author == null ? "<null>" : MainForm.Plugins[plug].Author,
-					MainForm.Plugins[plug].IdeVersion == null ? "<null>" : MainForm.Plugins[plug].IdeVersion,
-					MainForm.Plugins[plug].Description == null ? "<null>" : MainForm.Plugins[plug].Description,
-					MainForm.Plugins[plug].Warning == null ? "<null>" : MainForm.Plugins[plug].Warning,
-					MainForm.Plugins[plug].Web == null ? "<null>" : MainForm.Plugins[plug].Web
+					MainForm.Plugins[plug].Name ?? "<null>",
+					MainForm.Plugins[plug].Author ?? "<null>",
+					MainForm.Plugins[plug].IdeVersion ?? "<null>",
+					MainForm.Plugins[plug].Description ?? "<null>",
+					MainForm.Plugins[plug].Warning ?? "<null>",
+					MainForm.Plugins[plug].Web ?? "<null>",
 				});
-				if (Settings.Current.activePlugins.Contains(plug))
-					lvi.Checked = true;
-				listView_Plugins.Items.Add(lvi);
+					if (Settings.Current.activePlugins.Contains(plug))
+						lvi.Checked = true;
+					listView_Plugins.Items.Add(lvi);
+				}
 			}
 
 			ActiveControl = textBox_Path;
@@ -85,7 +81,7 @@ namespace LF2.IDE
 			{
 				Settings.Current.encryptionKey = textBox_EncryptionKey.Text;
 				Settings.Current.decryptionKey = textBox_DecryptionKey.Text;
-				Settings.Current.lfPath = (string.IsNullOrEmpty(textBox_Path.Text) ? "lf2.exe" : textBox_Path.Text);
+				Settings.Current.lfPath = (string.IsNullOrWhiteSpace(textBox_Path.Text) ? "lf2.exe" : textBox_Path.Text);
 				if (File.Exists(Settings.Current.lfPath))
 					Settings.Current.ignoreIncorrectLfPath = false;
 				Settings.Current.dataUtil = (radioButton_Default.Checked || string.IsNullOrEmpty(comboBox_DataUtils.Text)) ? null : comboBox_DataUtils.Text;

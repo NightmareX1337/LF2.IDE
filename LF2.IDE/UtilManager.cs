@@ -2,21 +2,25 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 
 namespace LF2.IDE
 {
 	public static class UtilManager
 	{
 		public static Plugger<DataUtil> Utils;
-		public static bool UtilLock = true;
+		public static object UtilLock = new object();
 
 		public static DataUtil ActiveUtil { get { return Utils[Settings.Current.dataUtil]; } }
 
 		public static void GetUtils(string directory)
 		{
-			Utils = new Plugger<DataUtil>();
-			if (Directory.Exists(directory))
-				Utils.PlugOn(directory);
+			lock (UtilLock)
+			{
+				Utils = new Plugger<DataUtil>();
+				if (Directory.Exists(directory))
+					Utils.PlugOn(directory);
+			}
 		}
 	}
 

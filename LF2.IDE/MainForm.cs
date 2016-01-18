@@ -1583,7 +1583,7 @@ namespace LF2.IDE
 			updateHistory();
 		}
 
-		private void toolStripComboBoxF_KeyDown(object sender, KeyEventArgs e)
+		private void toolStripButtonFold_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyData == Keys.Enter)
 			{
@@ -1592,7 +1592,7 @@ namespace LF2.IDE
 			}
 		}
 
-		private void toolStripComboBoxUF_KeyDown(object sender, KeyEventArgs e)
+		private void toolStripButtonUnfold_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyData == Keys.Enter)
 			{
@@ -1601,16 +1601,16 @@ namespace LF2.IDE
 			}
 		}
 
-		private void toolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
+		private void frameIndexToolStripButton_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyData == Keys.Enter)
 			{
 				e.SuppressKeyPress = e.Handled = true;
-				frmaeIndexToolStripButton.PerformClick();
+				frameIndexToolStripButton.PerformClick();
 			}
 		}
 
-		private void toolStripComboBox1_KeyDown(object sender, KeyEventArgs e)
+		private void frameCaptionToolStripButton_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyData == Keys.Enter)
 			{
@@ -1619,7 +1619,7 @@ namespace LF2.IDE
 			}
 		}
 
-		private void toolStripTextBox2_KeyDown(object sender, KeyEventArgs e)
+		private void lineNumberToolStripButton_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyData == Keys.Enter)
 			{

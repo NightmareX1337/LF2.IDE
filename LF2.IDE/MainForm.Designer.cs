@@ -95,7 +95,7 @@
 			this.jumpToToolStrip = new System.Windows.Forms.ToolStrip();
 			this.jumpToToolStripLabel = new System.Windows.Forms.ToolStripLabel();
 			this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
-			this.frmaeIndexToolStripButton = new System.Windows.Forms.ToolStripButton();
+			this.frameIndexToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.frameIndexToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
 			this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
 			this.frameCaptionToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -702,7 +702,7 @@
 			this.jumpToToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.jumpToToolStripLabel,
             this.toolStripSeparator10,
-            this.frmaeIndexToolStripButton,
+            this.frameIndexToolStripButton,
             this.frameIndexToolStripTextBox,
             this.toolStripSeparator9,
             this.frameCaptionToolStripButton,
@@ -727,22 +727,22 @@
 			this.toolStripSeparator10.Name = "toolStripSeparator10";
 			this.toolStripSeparator10.Size = new System.Drawing.Size(6, 25);
 			// 
-			// frmaeIndexToolStripButton
+			// frameIndexToolStripButton
 			// 
-			this.frmaeIndexToolStripButton.AutoToolTip = false;
-			this.frmaeIndexToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.frmaeIndexToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("frmaeIndexToolStripButton.Image")));
-			this.frmaeIndexToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.frmaeIndexToolStripButton.Name = "frmaeIndexToolStripButton";
-			this.frmaeIndexToolStripButton.Size = new System.Drawing.Size(81, 22);
-			this.frmaeIndexToolStripButton.Text = "Frame index :";
-			this.frmaeIndexToolStripButton.Click += new System.EventHandler(this.ToolStripLabelIndex_Click);
+			this.frameIndexToolStripButton.AutoToolTip = false;
+			this.frameIndexToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.frameIndexToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("frameIndexToolStripButton.Image")));
+			this.frameIndexToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.frameIndexToolStripButton.Name = "frameIndexToolStripButton";
+			this.frameIndexToolStripButton.Size = new System.Drawing.Size(81, 22);
+			this.frameIndexToolStripButton.Text = "Frame index :";
+			this.frameIndexToolStripButton.Click += new System.EventHandler(this.ToolStripLabelIndex_Click);
 			// 
 			// frameIndexToolStripTextBox
 			// 
 			this.frameIndexToolStripTextBox.Name = "frameIndexToolStripTextBox";
 			this.frameIndexToolStripTextBox.Size = new System.Drawing.Size(100, 25);
-			this.frameIndexToolStripTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStripTextBox1_KeyDown);
+			this.frameIndexToolStripTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frameIndexToolStripButton_KeyDown);
 			// 
 			// toolStripSeparator9
 			// 
@@ -816,7 +816,7 @@
             "hiting_ground"});
 			this.frameCaptionToolStripComboBox.Name = "frameCaptionToolStripComboBox";
 			this.frameCaptionToolStripComboBox.Size = new System.Drawing.Size(121, 25);
-			this.frameCaptionToolStripComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStripComboBox1_KeyDown);
+			this.frameCaptionToolStripComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frameCaptionToolStripButton_KeyDown);
 			// 
 			// toolStripSeparator13
 			// 
@@ -838,7 +838,7 @@
 			// 
 			this.lineNumberToolStripTextBox.Name = "lineNumberToolStripTextBox";
 			this.lineNumberToolStripTextBox.Size = new System.Drawing.Size(100, 25);
-			this.lineNumberToolStripTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStripTextBox2_KeyDown);
+			this.lineNumberToolStripTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lineNumberToolStripButton_KeyDown);
 			// 
 			// mainMenuStrip
 			// 
@@ -1399,7 +1399,7 @@
             "entry:"});
 			this.toolStripComboBoxF.Name = "toolStripComboBoxF";
 			this.toolStripComboBoxF.Size = new System.Drawing.Size(121, 25);
-			this.toolStripComboBoxF.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStripComboBoxF_KeyDown);
+			this.toolStripComboBoxF.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStripButtonFold_KeyDown);
 			// 
 			// toolStripSeparator_foldToolStrip
 			// 
@@ -1433,7 +1433,7 @@
             "entry:"});
 			this.toolStripComboBoxUF.Name = "toolStripComboBoxUF";
 			this.toolStripComboBoxUF.Size = new System.Drawing.Size(121, 25);
-			this.toolStripComboBoxUF.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStripComboBoxUF_KeyDown);
+			this.toolStripComboBoxUF.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStripButtonUnfold_KeyDown);
 			// 
 			// openFileDialog_Image
 			// 
@@ -1598,7 +1598,7 @@
 		public System.Windows.Forms.ToolStripButton frameCaptionToolStripButton;
 		public System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
 		public System.Windows.Forms.ToolStripTextBox frameIndexToolStripTextBox;
-		public System.Windows.Forms.ToolStripButton frmaeIndexToolStripButton;
+		public System.Windows.Forms.ToolStripButton frameIndexToolStripButton;
 		public System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
 		public System.Windows.Forms.ToolStripLabel jumpToToolStripLabel;
 		public System.Windows.Forms.ToolStrip jumpToToolStrip;

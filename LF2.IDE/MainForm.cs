@@ -265,11 +265,11 @@ namespace LF2.IDE
 					return null;
 				DocumentForm df = Open(ds.filePath, true);
 				df.Scintilla.LineWrapping.Mode = ds.lineWrappingMode;
-				df.Scintilla.Lines.FirstVisibleIndex = ds.firstVisibleLine;
 				df.Scintilla.Selection.Start = ds.selectionStart;
 				df.Scintilla.Selection.End = ds.selectionEnd;
 				df.Scintilla.EndOfLine.IsVisible = ds.showEndOfLineChars;
 				df.Scintilla.Whitespace.Mode = ds.showWhiteSpaces ? ScintillaNET.WhitespaceMode.VisibleAlways : ScintillaNET.WhitespaceMode.Invisible;
+				df.Scintilla.Lines.FirstVisibleIndex = ds.firstVisibleLine;
 				return df;
 			}
 			else

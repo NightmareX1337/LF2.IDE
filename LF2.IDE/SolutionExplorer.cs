@@ -78,7 +78,7 @@ namespace LF2.IDE
 		{
 			try
 			{
-				CheckForIllegalCrossThreadCalls = false;
+				//CheckForIllegalCrossThreadCalls = false;
 				treeView.Nodes.Clear();
 				TreeNode rootNode = (TreeNode)e.Result;
 				treeView.Nodes.Add(rootNode);

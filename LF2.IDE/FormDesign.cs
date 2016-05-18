@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Linq;
+using System.Threading;
 
 namespace LF2.IDE
 {
@@ -1212,11 +1213,13 @@ namespace LF2.IDE
 		// God save us from ever needing to write this kind of creepy code
 		public bool SyncToEditor(DocumentForm theDoc, bool auto = false)
 		{
+			if (theDoc == null)
+				return false;
 			try
 			{
-				if (theDoc == null || theDoc.DocumentType != DocumentType.ObjectData || !Settings.Current.syncDesign || theDoc.syncing)
+				if (theDoc.DocumentType != DocumentType.ObjectData || !Settings.Current.syncDesign || !Monitor.TryEnter(theDoc.syncLock))
 					return false;
-				theDoc.syncing = true;
+				Monitor.Enter(theDoc.syncLock);
 				int fs = theDoc.Scintilla.Text.LastIndexOf("<frame>", theDoc.Scintilla.Lines.Current.EndPosition);
 				if (fs < 0)
 					return false;
@@ -1345,8 +1348,7 @@ namespace LF2.IDE
 			catch { return false; }
 			finally
 			{
-				if (theDoc != null)
-					theDoc.syncing = false;
+				Monitor.Exit(theDoc.syncLock);
 			}
 		}
 

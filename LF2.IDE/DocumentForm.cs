@@ -22,7 +22,7 @@ namespace LF2.IDE
 		private DocumentType documentType = DocumentType.Default;
 		private System.Timers.Timer syncTimer = new System.Timers.Timer(1000) { AutoReset = true };
 		public bool justEdited = false;
-		public volatile bool syncing = false;
+		public object syncLock = new object();
 
 		public List<SpriteSheet> spriteList = new List<SpriteSheet>(0);
 		public Bitmap[] frames;
@@ -463,7 +463,7 @@ namespace LF2.IDE
 
 		void ScintillaTextChanged(object sender, EventArgs e)
 		{
-			if (!syncing)
+			if (Monitor.TryEnter(syncLock))
 			{
 				justEdited = true;
 				SetMarginAuto();
@@ -515,11 +515,11 @@ namespace LF2.IDE
 		// God save us from ever needing to write this kind of creepy code
 		public bool SyncToDesign(bool auto = false)
 		{
-			if (documentType != DocumentType.ObjectData || auto && !mainForm.formDesign.checkBoxLinkage.Checked || syncing)
+			if (documentType != DocumentType.ObjectData || auto && !mainForm.formDesign.checkBoxLinkage.Checked || !Monitor.TryEnter(syncLock))
 				return false;
 			try
 			{
-				syncing = true;
+				Monitor.Enter(syncLock);
 				int fs = Scintilla.Text.LastIndexOf("<frame>", Scintilla.Lines.Current.EndPosition);
 				if (fs < 0)
 					return false;
@@ -659,7 +659,7 @@ namespace LF2.IDE
 			}
 			finally
 			{
-				syncing = false;
+				Monitor.Exit(syncLock);
 			}
 		}
 

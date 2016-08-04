@@ -21,7 +21,7 @@ namespace LF2.IDE
 				if (plugs.ContainsKey(key))
 					return plugs[key];
 				else
-					throw new ArgumentException();
+					throw new ArgumentException("Plugin could not be found", key);
 			}
 		}
 

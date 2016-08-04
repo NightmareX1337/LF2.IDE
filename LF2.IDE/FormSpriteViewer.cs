@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace LF2.IDE
 {
@@ -32,6 +33,13 @@ namespace LF2.IDE
 
 		void FormPicFormClosed(object sender, FormClosedEventArgs e)
 		{
+			if (show.DockState == DockState.DockRightAutoHide || 
+				show.DockState == DockState.DockLeftAutoHide || 
+				show.DockState == DockState.DockTopAutoHide || 
+				show.DockState == DockState.DockBottomAutoHide)
+			{
+				Program.MainForm.dockPanel.ActiveAutoHideContent = show;
+			}
 			show.Show();
 		}
 	}

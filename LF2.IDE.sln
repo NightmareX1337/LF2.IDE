@@ -5,6 +5,11 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LF2.IDE", "LF2.IDE\LF2.IDE.csproj", "{A89A480F-BED8-4268-AF8A-99D8CAC146CC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9ADDB8FA-A98F-42BF-A652-F6857F99C2F7}"
+	ProjectSection(SolutionItems) = preProject
+		Performance1.psess = Performance1.psess
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,8 +20,8 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A89A480F-BED8-4268-AF8A-99D8CAC146CC}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{A89A480F-BED8-4268-AF8A-99D8CAC146CC}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{A89A480F-BED8-4268-AF8A-99D8CAC146CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A89A480F-BED8-4268-AF8A-99D8CAC146CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A89A480F-BED8-4268-AF8A-99D8CAC146CC}.Debug|x64.ActiveCfg = Debug|x64
 		{A89A480F-BED8-4268-AF8A-99D8CAC146CC}.Debug|x64.Build.0 = Debug|x64
 		{A89A480F-BED8-4268-AF8A-99D8CAC146CC}.Debug|x86.ActiveCfg = Debug|x86
@@ -30,5 +35,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

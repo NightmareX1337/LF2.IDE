@@ -57,6 +57,15 @@ namespace TagBox
 		AutoSize
 	}
 
+	public enum CPointCoverMode
+	{
+		None = 0,
+		SameBehind = 10,
+		SameFront = 11,
+		OppositeBehind = 20,
+		OppositeFront = 21
+	}
+
 	#endregion
 
 	#region Data classes
@@ -667,8 +676,8 @@ namespace TagBox
 		}
 		public event EventHandler DircontrolChanged;
 
-		private bool? _cover;
-		public bool? cover
+		private int? _cover;
+		public int? cover
 		{
 			get { return _cover; }
 			set
@@ -1778,14 +1787,14 @@ namespace TagBox
 		}
 		public event EventHandler WCoverChanged;
 
-		bool cpointCover;
-		[DefaultValue(false)]
-		public bool CPointCover
+		CPointCoverMode cpointCover;
+		[DefaultValue(CPointCoverMode.OppositeBehind)]
+		public CPointCoverMode CPointCover
 		{
 			get { return cpointCover; }
 			set
 			{
-				bool old = cpointCover;
+				var old = cpointCover;
 				cpointCover = value;
 				base.Invalidate();
 
@@ -2624,12 +2633,12 @@ namespace TagBox
 			}
 
 			bool cdraw = false;
-			if (displayModes.HasFlag(DisplayModes.CPoint) && cpointImage != null && cpointCover && CPointPoint != null)
+			if (displayModes.HasFlag(DisplayModes.CPoint) && cpointImage != null && (cpointCover == CPointCoverMode.OppositeBehind || cpointCover == CPointCoverMode.SameBehind || cpointCover == CPointCoverMode.None) && CPointPoint != null)
 			{
 				{
 					Point p = tagData.cpoint.Point;
 					p.Offset(-cpointImageOffset.X, -cpointImageOffset.Y);
-					e.Graphics.DrawImage(cpointImage, new Rectangle(p, cpointImage.Size), 0, 0, cpointImage.Width, cpointImage.Height, GraphicsUnit.Pixel, imageAttr);
+					e.Graphics.DrawImage(cpointImage, (cpointCover == CPointCoverMode.SameBehind) ? new Rectangle(p, cpointImage.Size) : new Rectangle(new Point(p.X + cpointImage.Size.Width, p.Y), new Size(-cpointImage.Size.Width, cpointImage.Size.Height)), 0, 0, cpointImage.Width, cpointImage.Height, GraphicsUnit.Pixel, imageAttr);
 				}
 				if (tagData.cpoint.Vector != Point.Empty)
 				{
@@ -2805,7 +2814,7 @@ namespace TagBox
 				{
 					Point p = tagData.cpoint.Point;
 					p.Offset(-cpointImageOffset.X, -cpointImageOffset.Y);
-					e.Graphics.DrawImage(cpointImage, new Rectangle(p, cpointImage.Size), 0, 0, cpointImage.Width, cpointImage.Height, GraphicsUnit.Pixel, imageAttr);
+					e.Graphics.DrawImage(cpointImage, (cpointCover == CPointCoverMode.SameFront) ? new Rectangle(p, cpointImage.Size) : new Rectangle(new Point(p.X + cpointImage.Size.Width, p.Y), new Size(-cpointImage.Size.Width, cpointImage.Size.Height)), 0, 0, cpointImage.Width, cpointImage.Height, GraphicsUnit.Pixel, imageAttr);
 				}
 				if (tagData.cpoint.Vector != Point.Empty)
 				{

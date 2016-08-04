@@ -110,7 +110,9 @@
 			this.itr_h = new System.Windows.Forms.TextBox();
 			this.itr_w = new System.Windows.Forms.TextBox();
 			this.itr_y = new System.Windows.Forms.TextBox();
+			this.itr_caughtact2 = new System.Windows.Forms.TextBox();
 			this.itr_caughtact1 = new System.Windows.Forms.TextBox();
+			this.itr_catchingact2 = new System.Windows.Forms.TextBox();
 			this.itr_catchingact1 = new System.Windows.Forms.TextBox();
 			this.itr_zwidth = new System.Windows.Forms.TextBox();
 			this.itr_x = new System.Windows.Forms.TextBox();
@@ -197,8 +199,6 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.textBox_caption = new System.Windows.Forms.TextBox();
 			this.tagBox = new TagBox.TagBox();
-			this.itr_catchingact2 = new System.Windows.Forms.TextBox();
-			this.itr_caughtact2 = new System.Windows.Forms.TextBox();
 			this.tabPage_b.SuspendLayout();
 			this.tabPage_c.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_ImageIndex)).BeginInit();
@@ -486,8 +486,10 @@
 			// 
 			this.cpoint_cover.FormattingEnabled = true;
 			this.cpoint_cover.Items.AddRange(new object[] {
-            "0",
-            "1"});
+            "10",
+            "11",
+            "20",
+            "21"});
 			this.cpoint_cover.Location = new System.Drawing.Point(199, 163);
 			this.cpoint_cover.Name = "cpoint_cover";
 			this.cpoint_cover.Size = new System.Drawing.Size(55, 21);
@@ -1066,6 +1068,14 @@
 			this.itr_y.TabIndex = 4;
 			this.itr_y.TextChanged += new System.EventHandler(this.ItrRectangleChanged);
 			// 
+			// itr_caughtact2
+			// 
+			this.itr_caughtact2.Location = new System.Drawing.Point(245, 191);
+			this.itr_caughtact2.Name = "itr_caughtact2";
+			this.itr_caughtact2.Size = new System.Drawing.Size(55, 20);
+			this.itr_caughtact2.TabIndex = 17;
+			this.itr_caughtact2.TextChanged += new System.EventHandler(this.itr_caughtact_TextChanged);
+			// 
 			// itr_caughtact1
 			// 
 			this.itr_caughtact1.Location = new System.Drawing.Point(184, 190);
@@ -1073,6 +1083,14 @@
 			this.itr_caughtact1.Size = new System.Drawing.Size(55, 20);
 			this.itr_caughtact1.TabIndex = 17;
 			this.itr_caughtact1.TextChanged += new System.EventHandler(this.itr_caughtact_TextChanged);
+			// 
+			// itr_catchingact2
+			// 
+			this.itr_catchingact2.Location = new System.Drawing.Point(245, 165);
+			this.itr_catchingact2.Name = "itr_catchingact2";
+			this.itr_catchingact2.Size = new System.Drawing.Size(55, 20);
+			this.itr_catchingact2.TabIndex = 16;
+			this.itr_catchingact2.TextChanged += new System.EventHandler(this.itr_catchingact_TextChanged);
 			// 
 			// itr_catchingact1
 			// 
@@ -1995,6 +2013,7 @@
 			this.tagBox.BackgroundImage = global::LF2.IDE.Properties.Resources.check;
 			this.tagBox.BackgroundInterpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 			this.tagBox.ControlKey = false;
+			this.tagBox.CPointCover = TagBox.CPointCoverMode.None;
 			this.tagBox.DisplayModes = ((TagBox.DisplayModes)(((((((TagBox.DisplayModes.Bdy | TagBox.DisplayModes.Itr) 
             | TagBox.DisplayModes.WPoint) 
             | TagBox.DisplayModes.OPoint) 
@@ -2021,22 +2040,6 @@
 			this.tagBox.ActivePointChanged += new System.EventHandler(this.TagBoxPointChanged);
 			this.tagBox.ActiveVectorChanged += new System.EventHandler(this.TagBoxVectorChanged);
 			this.tagBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tagBox_MouseUp);
-			// 
-			// itr_catchingact2
-			// 
-			this.itr_catchingact2.Location = new System.Drawing.Point(245, 165);
-			this.itr_catchingact2.Name = "itr_catchingact2";
-			this.itr_catchingact2.Size = new System.Drawing.Size(55, 20);
-			this.itr_catchingact2.TabIndex = 16;
-			this.itr_catchingact2.TextChanged += new System.EventHandler(this.itr_catchingact_TextChanged);
-			// 
-			// itr_caughtact2
-			// 
-			this.itr_caughtact2.Location = new System.Drawing.Point(245, 191);
-			this.itr_caughtact2.Name = "itr_caughtact2";
-			this.itr_caughtact2.Size = new System.Drawing.Size(55, 20);
-			this.itr_caughtact2.TabIndex = 17;
-			this.itr_caughtact2.TextChanged += new System.EventHandler(this.itr_caughtact_TextChanged);
 			// 
 			// FormDesign
 			// 

@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Linq;
 using System.Threading;
+using TagBox;
 
 namespace LF2.IDE
 {
@@ -25,7 +26,7 @@ namespace LF2.IDE
 
 		MainForm mainForm;
 
-		Image blood = Properties.Resources.bpoint, weaponactImage, vactionImage, vactionImageMirror;
+		Image blood = Properties.Resources.bpoint, weaponactImage, vactionImage;
 
 		static readonly Cursor
 			cur_bdy = new Cursor(Properties.Resources.bdy.GetHicon()),
@@ -399,12 +400,9 @@ namespace LF2.IDE
 				int c = 0;
 				int.TryParse(cpoint_cover.Text, out c);
 
-				tagBox.CPointCover = (c != 0);
-				try
-				{
-					tagBox.CPoint.cover = tagBox.CPointCover;
-				}
-				catch { }
+				tagBox.CPointCover = (CPointCoverMode)c;	//in "cover: XY" if Y == 0 then caught char is behind the holder else it's in the front
+				tagBox.CPoint.cover = c;					//in "cover: XY" if X == 1 then caught char is facing same direction as catcher else the opposite
+
 				if (!editing)
 					SyncToEditor(mainForm.ActiveDocument, true);
 			}
@@ -682,50 +680,17 @@ namespace LF2.IDE
 				tagBox.CPointImage = null;
 				return;
 			}
-			bool dir = (cpoint_dircontrol.Text == "0" || cpoint_dircontrol.Text == "");
-			if (tagBox.CPoint != null)
-			{
-				tagBox.CPoint.dircontrol = dir;
-			}
-			vactionImageMirror = (Image)(vactionImage = (Image)Properties.Resources.ResourceManager.GetObject("caught" + caughtPoints[cpoint_vaction.SelectedIndex, 1])).Clone();
-			if (vactionImage == null)
-			{
-				tagBox.CPointImage = null;
-				tagBox.CPointImageOffset = Point.Empty;
-				return;
-			}
-			vactionImageMirror.RotateFlip(RotateFlipType.RotateNoneFlipX);
-			if (dir)
-			{
-				tagBox.CPointImage = vactionImageMirror;
-				tagBox.CPointImageOffset = new Point(vactionImageMirror.Width - caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
-			}
-			else
-			{
-				tagBox.CPointImage = vactionImage;
-				tagBox.CPointImageOffset = new Point(caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
-			}
+			
+			vactionImage = (Image)Properties.Resources.ResourceManager.GetObject("caught" + caughtPoints[cpoint_vaction.SelectedIndex, 1]);
+			tagBox.CPointImage = vactionImage;
+			tagBox.CPointImageOffset = new Point(caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
+			
 			tagBox.Refresh();
 		}
 
 		void DircontrolChanged(object sender, EventArgs e)
 		{
-			if (vactionImage == null) return;
-
-			int dir = 0;
-			int.TryParse(cpoint_dircontrol.Text, out dir);
-
-			if (dir == 0)
-			{
-				tagBox.CPointImage = vactionImageMirror;
-				tagBox.CPointImageOffset = new Point(vactionImageMirror.Width - caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
-			}
-			else
-			{
-				tagBox.CPointImage = vactionImage;
-				tagBox.CPointImageOffset = new Point(caughtPoints[cpoint_vaction.SelectedIndex, 2], caughtPoints[cpoint_vaction.SelectedIndex, 3]);
-			}
-
+			
 		}
 
 		public List<Obj> opointCache = new List<Obj>(128);
@@ -1124,7 +1089,7 @@ namespace LF2.IDE
 				{
 					cpoint_aaction.Text = tagBox.CPoint.aaction.HasValue ? tagBox.CPoint.aaction.ToString() : "";
 					cpoint_backhurtact.Text = tagBox.CPoint.backhurtact.HasValue ? tagBox.CPoint.backhurtact.ToString() : "";
-					cpoint_cover.Text = tagBox.CPoint.cover.HasValue ? (tagBox.CPoint.cover.Value ? "1" : "0") : "";
+					cpoint_cover.Text = tagBox.CPoint.cover.HasValue ? tagBox.CPoint.cover.Value.ToString() : "";
 					cpoint_decrease.Text = tagBox.CPoint.decrease.HasValue ? tagBox.CPoint.decrease.ToString() : "";
 					cpoint_dircontrol.Text = tagBox.CPoint.dircontrol.HasValue ? (tagBox.CPoint.dircontrol.Value ? "1" : "0") : "";
 					cpoint_fronthurtact.Text = tagBox.CPoint.fronthurtact.HasValue ? tagBox.CPoint.fronthurtact.ToString() : "";
@@ -1293,7 +1258,7 @@ namespace LF2.IDE
 						if (int.TryParse(cpoint_backhurtact.Text, out i))
 							frame.cpoint.backhurtact = i;
 						if (int.TryParse(cpoint_cover.Text, out i))
-							frame.cpoint.cover = i != 0;
+							frame.cpoint.cover = i;
 						if (int.TryParse(cpoint_decrease.Text, out i))
 							frame.cpoint.decrease = i;
 						if (int.TryParse(cpoint_dircontrol.Text, out i))

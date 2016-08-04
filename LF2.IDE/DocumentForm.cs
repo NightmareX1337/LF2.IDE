@@ -496,7 +496,7 @@ namespace LF2.IDE
 			toolStripStatusLabel_SelLines.Text = (scintilla.Selection.Length > 0 ? sel + 1 : 0).ToString();
 			if (!justEdited)
 			{
-				SyncToDesign(auto = true);
+				SyncToDesign(auto : true);
 			}
 		}
 

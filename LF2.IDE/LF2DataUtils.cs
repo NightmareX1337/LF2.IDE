@@ -264,7 +264,7 @@ namespace LF2.IDE
 			public int? y;
 			public int? injury;
 			public int? fronthurtact;
-			public bool? cover;
+			public int? cover;
 			public int? backhurtact;
 			public int? vaction;
 			public int? aaction;
@@ -295,7 +295,7 @@ namespace LF2.IDE
 				if (fronthurtact.HasValue)
 					str.Append("fronthurtact: ").Append(fronthurtact.Value).Append("  ");
 				if (cover.HasValue)
-					str.Append("cover: ").Append(cover.Value ? "1" : "0").Append("  ");
+					str.Append("cover: ").Append(cover.Value).Append("  ");
 				if (backhurtact.HasValue)
 					str.Append("backhurtact: ").Append(backhurtact.Value).Append("  ");
 				if (vaction.HasValue)
@@ -1017,7 +1017,7 @@ namespace LF2.IDE
 								frame.cpoint.fronthurtact = int.Parse(frameTokens[++i]);
 								break;
 							case "cover:":
-								frame.cpoint.cover = int.Parse(frameTokens[++i]) != 0;
+								frame.cpoint.cover = int.Parse(frameTokens[++i]);
 								break;
 							case "backhurtact:":
 								frame.cpoint.backhurtact = int.Parse(frameTokens[++i]);

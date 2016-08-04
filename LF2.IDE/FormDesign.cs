@@ -1775,5 +1775,10 @@ namespace LF2.IDE
 			if (!editing)
 				SyncToEditor(mainForm.ActiveDocument, true);
 		}
+
+		private void checkBox_AutoLoadOpointViewer_CheckedChanged(object sender, EventArgs e)
+		{
+			Settings.Current.autoLoadOpointViewer = checkBox_AutoLoadOpointViewer.Checked;
+		}
 	}
 }

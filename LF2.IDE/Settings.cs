@@ -27,7 +27,8 @@ namespace LF2.IDE
 			autoComplete = true,
 			saveDocStates = true,
 			syncDesign = false,
-			ignoreIncorrectLfPath = false;
+			ignoreIncorrectLfPath = false,
+			autoLoadOpointViewer = false;
 
 		public Rectangle window = new Rectangle(0, 0, 1200, 550);
 		public FormWindowState windowState = FormWindowState.Maximized;

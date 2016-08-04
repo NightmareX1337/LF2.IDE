@@ -160,6 +160,8 @@
 			this.tabPage_o = new System.Windows.Forms.TabPage();
 			this.button_oReset = new System.Windows.Forms.Button();
 			this.groupBox_OpointPanel = new System.Windows.Forms.GroupBox();
+			this.label_OpointWarning = new System.Windows.Forms.Label();
+			this.checkBox_AutoLoadOpointViewer = new System.Windows.Forms.CheckBox();
 			this.progressBar_CacheCreation = new System.Windows.Forms.ProgressBar();
 			this.label_CacheCreationProgress = new System.Windows.Forms.Label();
 			this.button_CreateOpointCache = new System.Windows.Forms.Button();
@@ -1596,9 +1598,10 @@
 			// 
 			// groupBox_OpointPanel
 			// 
-			this.groupBox_OpointPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+			this.groupBox_OpointPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox_OpointPanel.Controls.Add(this.label_OpointWarning);
+			this.groupBox_OpointPanel.Controls.Add(this.checkBox_AutoLoadOpointViewer);
 			this.groupBox_OpointPanel.Controls.Add(this.progressBar_CacheCreation);
 			this.groupBox_OpointPanel.Controls.Add(this.label_CacheCreationProgress);
 			this.groupBox_OpointPanel.Controls.Add(this.button_CreateOpointCache);
@@ -1608,6 +1611,27 @@
 			this.groupBox_OpointPanel.TabIndex = 56;
 			this.groupBox_OpointPanel.TabStop = false;
 			this.groupBox_OpointPanel.Text = "Opoint Viewer";
+			// 
+			// label_OpointWarning
+			// 
+			this.label_OpointWarning.AutoSize = true;
+			this.label_OpointWarning.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+			this.label_OpointWarning.Location = new System.Drawing.Point(6, 100);
+			this.label_OpointWarning.Name = "label_OpointWarning";
+			this.label_OpointWarning.Size = new System.Drawing.Size(286, 13);
+			this.label_OpointWarning.TabIndex = 56;
+			this.label_OpointWarning.Text = "Warning: Opoint viewer uses a lot of memory ~600MB";
+			// 
+			// checkBox_AutoLoadOpointViewer
+			// 
+			this.checkBox_AutoLoadOpointViewer.AutoSize = true;
+			this.checkBox_AutoLoadOpointViewer.Location = new System.Drawing.Point(102, 23);
+			this.checkBox_AutoLoadOpointViewer.Name = "checkBox_AutoLoadOpointViewer";
+			this.checkBox_AutoLoadOpointViewer.Size = new System.Drawing.Size(187, 17);
+			this.checkBox_AutoLoadOpointViewer.TabIndex = 55;
+			this.checkBox_AutoLoadOpointViewer.Text = "Auto-load opoint viewer on startup";
+			this.checkBox_AutoLoadOpointViewer.UseVisualStyleBackColor = true;
+			this.checkBox_AutoLoadOpointViewer.CheckedChanged += new System.EventHandler(this.checkBox_AutoLoadOpointViewer_CheckedChanged);
 			// 
 			// progressBar_CacheCreation
 			// 
@@ -2277,5 +2301,7 @@
 		public System.Windows.Forms.TextBox textBox_caption;
 		public System.Windows.Forms.TextBox itr_caughtact2;
 		public System.Windows.Forms.TextBox itr_catchingact2;
+		private System.Windows.Forms.CheckBox checkBox_AutoLoadOpointViewer;
+		private System.Windows.Forms.Label label_OpointWarning;
 	}
 }

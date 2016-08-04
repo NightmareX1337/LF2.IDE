@@ -207,7 +207,10 @@ namespace LF2.IDE
 				solutionExplorer.refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
 				solutionExplorer.PopulateTreeView(solutionExplorer.DestinationFolder);
 				formDesign.stopWatch.Start();
-				formDesign.StartCaching();
+				if (Settings.Current.autoLoadOpointViewer)
+				{
+					formDesign.StartCaching();
+				}
 			}
 
 			formDesign.checkBoxLinkage.Checked = Settings.Current.syncDesign;

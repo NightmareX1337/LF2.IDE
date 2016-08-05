@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.FileIO;
 
 namespace LF2.IDE
 {
@@ -23,7 +24,8 @@ namespace LF2.IDE
 		MainForm mainForm;
 		public Stopwatch stopWatch = new Stopwatch();
 
-		// These are not used
+		// TODO: Reduce code duplication
+
 		public TreeNode GetFiltered(TreeNode node, string pattern)
 		{
 			TreeNode result = node.Clone() as TreeNode;
@@ -34,6 +36,7 @@ namespace LF2.IDE
 					result.Nodes.RemoveAt(i);
 			return result;
 		}
+
 		void GetFilteredRef(TreeNode node, string pattern)
 		{
 			foreach (TreeNode tn in node.Nodes)
@@ -50,49 +53,80 @@ namespace LF2.IDE
 			if (Directory.Exists(target))
 			{
 				stopWatch.Restart();
-				populateTreeView.RunWorkerAsync(target + '|' + filterToolStripComboBox.Text);
+				populateTreeView.RunWorkerAsync(new PopulationData(target, filterToolStripComboBox.Text));
 			}
 		}
 
-		void PopulateTreeViewDoWork(object sender, DoWorkEventArgs e)
+		class PopulationData
 		{
-			string[] arg = (e.Argument as string).Split('|');
-			DirectoryInfo info = new DirectoryInfo(arg[0]);
-			TreeNode rootNode = new TreeNode(info.Name, 0, 1);
-			rootNode.Tag = info;
-			GetEverything(info.GetDirectories(), rootNode, arg[1]);
-			foreach (FileInfo file in info.GetFiles(arg[1]))
+			public string target, filter;
+
+			public PopulationData(string target, string filter)
+			{
+				this.target = target;
+				this.filter = filter;
+			}
+		}
+
+		public class FileSystemNode
+		{
+			public FileSystemInfo fileSystem;
+			public List<FileSystemNode> nodes;
+
+			public FileSystemNode(FileSystemInfo fileSystem, IEnumerable<FileSystemNode> nodes = null)
+			{
+				this.fileSystem = fileSystem;
+				if (nodes != null)
+					this.nodes.AddRange(nodes);
+			}
+		}
+
+		void PopulateTreeView_DoWork(object sender, DoWorkEventArgs e)
+		{
+			var data = (PopulationData)e.Argument;
+			DirectoryInfo dir = new DirectoryInfo(data.target);
+			var rootNode = new FileSystemNode(dir);
+			GetFileSystemTree(dir.GetDirectories(), rootNode, data.filter);
+			foreach (FileInfo file in dir.GetFiles(data.filter))
 			{
 				if (populateTreeView.CancellationPending)
 					break;
-				int img = iconListManager.AddFileIcon(file.FullName);
-				TreeNode item = new TreeNode(file.Name, img, img);
-				item.Tag = file;
-				rootNode.Nodes.Add(item);
+				var item = new FileSystemNode(file);
+				rootNode.nodes.Add(item);
 			}
-			rootNode.Expand();
 			e.Result = rootNode;
 		}
 
-		void PopulateTreeViewRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		private void GetFileSystemTree(IEnumerable<DirectoryInfo> subDirs, FileSystemNode nodeToAddTo, string filter)
 		{
-			try
+			DirectoryInfo[] subSubDirs;
+			foreach (DirectoryInfo subDir in subDirs)
 			{
-				//CheckForIllegalCrossThreadCalls = false;
-				treeView.Nodes.Clear();
-				TreeNode rootNode = (TreeNode)e.Result;
-				treeView.Nodes.Add(rootNode);
-				mainForm.formEventLog.Log("Solution Explorer Refreshed (" + filterToolStripComboBox.Text + "): " + stopWatch.Elapsed, true);
+				if (populateTreeView.CancellationPending)
+					return;
+				FileSystemNode aNode = new FileSystemNode(subDir);
+				aNode.nodes = new List<FileSystemNode>(16);
+				subSubDirs = subDir.GetDirectories();
+				if (subSubDirs.Length != 0)
+				{
+					GetFileSystemTree(subSubDirs, aNode, filter);
+				}
+				if (nodeToAddTo.nodes == null)
+				{
+					nodeToAddTo.nodes = new List<FileSystemNode>(16);
+				}
+				nodeToAddTo.nodes.Add(aNode);
+				foreach (FileInfo file in subDir.GetFiles(filter))
+				{
+					if (populateTreeView.CancellationPending)
+						return;
+					FileSystemNode item = new FileSystemNode(file);
+					aNode.nodes.Add(item);
+				}
 			}
-			catch { }
-			finally
-			{
-				refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-			}
-			stopWatch.Reset();
 		}
 
-		private void GetEverything(DirectoryInfo[] subDirs, TreeNode nodeToAddTo, string filter)
+		private void GetFileSystemTree(IEnumerable<DirectoryInfo> subDirs, TreeNode nodeToAddTo, string filter)
 		{
 			TreeNode aNode;
 			DirectoryInfo[] subSubDirs;
@@ -105,7 +139,7 @@ namespace LF2.IDE
 				subSubDirs = subDir.GetDirectories();
 				if (subSubDirs.Length != 0)
 				{
-					GetEverything(subSubDirs, aNode, filter);
+					GetFileSystemTree(subSubDirs, aNode, filter);
 				}
 				nodeToAddTo.Nodes.Add(aNode);
 				foreach (FileInfo file in subDir.GetFiles(filter))
@@ -120,7 +154,60 @@ namespace LF2.IDE
 			}
 		}
 
-		void RefreshToolStripButtonClick(object sender, EventArgs e)
+		void GenerateTreeNodes(FileSystemNode fsNode, TreeNode treeNode)
+		{
+			if (fsNode.nodes == null)
+				throw new ArgumentNullException("fsNode.nodes");
+
+			foreach(var fs in fsNode.nodes)
+			{
+				if (fs.fileSystem is DirectoryInfo)
+				{
+					DirectoryInfo dir = (DirectoryInfo)fs.fileSystem;
+					TreeNode item = new TreeNode(dir.Name, 0, 1);
+					item.Tag = dir;
+					treeNode.Nodes.Add(item);
+					GenerateTreeNodes(fs, item); 
+				}
+				else if (fs.fileSystem is FileInfo)
+				{
+					FileInfo file = (FileInfo)fs.fileSystem;
+					int img = iconListManager.AddFileIcon(file.FullName);
+					TreeNode item = new TreeNode(file.Name, img, img);
+					item.Tag = file;
+					treeNode.Nodes.Add(item);
+				}
+			}
+		}
+
+		void PopulateTreeView_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			try
+			{
+				if (e.Error != null)
+					throw e.Error;
+
+				treeView.Nodes.Clear();
+				var fsNode = (FileSystemNode)e.Result;
+				TreeNode treeNode = new TreeNode(fsNode.fileSystem.Name, 0, 1);
+				treeNode.Tag = fsNode.fileSystem;
+				GenerateTreeNodes(fsNode, treeNode);
+				treeView.Nodes.Add(treeNode);
+				treeNode.Expand();
+				mainForm.formEventLog.Log("Solution Explorer Refreshed (" + filterToolStripComboBox.Text + "): " + stopWatch.Elapsed, true);
+			}
+			catch(Exception ex)
+			{
+				mainForm.formEventLog.Error(ex, "Solution Folder Loading Error");
+			}
+			finally
+			{
+				refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+			}
+			stopWatch.Reset();
+		}
+
+		void RefreshToolStripButton_Click(object sender, EventArgs e)
 		{
 			if (populateTreeView.IsBusy)
 			{
@@ -142,7 +229,7 @@ namespace LF2.IDE
 
 		IconListManager iconListManager;
 
-		void treeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+		void treeViewNode_MouseClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
 			TreeNode newSelected = e.Node;
 			DirectoryInfo nodeDirInfo;
@@ -216,7 +303,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void TreeViewNodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+		void TreeViewNode_MouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
 			TreeNode newSelected = e.Node;
 			FileInfo nodeFileInfo;
@@ -288,19 +375,19 @@ namespace LF2.IDE
 			}
 		}
 
-		void ExpandAllToolStripButtonClick(object sender, EventArgs e)
+		void ExpandAllToolStripButton_Click(object sender, EventArgs e)
 		{
 			treeView.ExpandAll();
 		}
 
-		void CollapseAllToolStripButtonClick(object sender, EventArgs e)
+		void CollapseAllToolStripButton_Click(object sender, EventArgs e)
 		{
 			treeView.CollapseAll();
 		}
 
 		static readonly char[] illegalChars = ("\\/|:*?\"<>").ToCharArray();
 
-		void TreeViewAfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+		void TreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
 		{
 			try
 			{
@@ -343,7 +430,7 @@ namespace LF2.IDE
 							DirectoryInfo dir = new DirectoryInfo(fms);
 							node.Tag = dir;
 							node.Nodes.Clear();
-							GetEverything(dir.GetDirectories(), node, filterToolStripComboBox.Text);
+							GetFileSystemTree(dir.GetDirectories(), node, filterToolStripComboBox.Text);
 							foreach (FileInfo file in dir.GetFiles(filterToolStripComboBox.Text))
 							{
 								int img = iconListManager.AddFileIcon(file.FullName);
@@ -365,18 +452,18 @@ namespace LF2.IDE
 			}
 		}
 
-		void BiggerToolStripButtonClick(object sender, EventArgs e)
+		void BiggerToolStripButton_Click(object sender, EventArgs e)
 		{
 			treeView.ImageList = biggerToolStripButton.Checked ? imageListLarge : imageListSmall;
 			treeView.ItemHeight = biggerToolStripButton.Checked ? 35 : 19;
 		}
 
-		void SolutionExplorerKeyDown(object sender, KeyEventArgs e)
+		void SolutionExplorer_KeyDown(object sender, KeyEventArgs e)
 		{
 
 		}
 
-		void TreeViewKeyDown(object sender, KeyEventArgs e)
+		void TreeView_KeyDown(object sender, KeyEventArgs e)
 		{
 			TreeNode newSelected = treeView.SelectedNode;
 			if (newSelected == null) return;
@@ -450,10 +537,19 @@ namespace LF2.IDE
 				else if (e.KeyCode == Keys.Delete)
 				{
 					e.Handled = true;
-					if (MessageBox.Show("Are you sure to delete '" + nodeFileInfo.Name + "' file?\r\nIt will be lost forever (a long time)", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+					if (MessageBox.Show("Are you sure to delete '" + nodeFileInfo.Name + "' file?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 					{
-						nodeFileInfo.Delete();
-						newSelected.Remove();
+						bool cancelled = false;
+						try
+						{
+							FileSystem.DeleteFile(nodeFileInfo.FullName, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
+						}
+						catch (OperationCanceledException)
+						{
+							cancelled = true;
+						}
+						if (!cancelled)
+							newSelected.Remove();
 					}
 				}
 			}
@@ -463,27 +559,36 @@ namespace LF2.IDE
 				if (e.KeyCode == Keys.Delete)
 				{
 					e.Handled = true;
-					if (MessageBox.Show("Are you sure to delete '" + nodeDirInfo.Name + "' directory and it's dependencies?\r\nThey will be lost forever (a long time)", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+					if (MessageBox.Show("Are you sure to delete '" + nodeDirInfo.Name + "' directory and it's dependencies?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 					{
-						nodeDirInfo.Delete();
-						newSelected.Remove();
+						bool cancelled = false;
+						try
+						{
+							FileSystem.DeleteDirectory(nodeDirInfo.FullName, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
+						}
+						catch (OperationCanceledException)
+						{
+							cancelled = true;
+						}
+						if (!cancelled)
+							newSelected.Remove();
 					}
 				}
 			}
 			this.Show();
 		}
 
-		void TreeViewBeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
+		void TreeView_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
 		{
 			if (!e.Node.IsSelected) e.CancelEdit = true;
 		}
 
-		void RenameToolStripMenuItemClick(object sender, EventArgs e)
+		void RenameToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			treeView.SelectedNode.BeginEdit();
 		}
 
-		void EditToolStripMenuItemClick(object sender, EventArgs e)
+		void EditToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (treeView.SelectedNode.Tag is FileInfo)
 			{
@@ -492,7 +597,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void RunToolStripMenuItemClick(object sender, EventArgs e)
+		void RunToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (treeView.SelectedNode.Tag is FileInfo)
 			{
@@ -517,15 +622,24 @@ namespace LF2.IDE
 			if (treeView.SelectedNode.Tag is FileInfo)
 			{
 				FileInfo fi = (FileInfo)treeView.SelectedNode.Tag;
-				if (MessageBox.Show("Are you sure to delete '" + fi.Name + "' file?\r\nIt will be lost forever (a long time)", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+				//if (MessageBox.Show("Are you sure to delete '" + fi.Name + "' file?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 				{
-					fi.Delete();
-					treeView.SelectedNode.Remove();
+					bool cancelled = false;
+					try
+					{
+						FileSystem.DeleteFile(fi.FullName, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
+					}
+					catch (OperationCanceledException)
+					{
+						cancelled = true;
+					}
+					if (!cancelled)
+						treeView.SelectedNode.Remove();
 				}
 			}
 		}
 
-		void CopyToolStripMenuItemClick(object sender, EventArgs e)
+		void CopyToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (treeView.SelectedNode.Tag is FileInfo)
 			{
@@ -536,17 +650,17 @@ namespace LF2.IDE
 			}
 		}
 
-		void ExpandChildNodesToolStripMenuItemClick(object sender, EventArgs e)
+		void ExpandChildNodesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			treeView.SelectedNode.ExpandAll();
 		}
 
-		void CollapseChildNodesToolStripMenuItemClick(object sender, EventArgs e)
+		void CollapseChildNodesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			treeView.SelectedNode.Collapse(false);
 		}
 
-		void CreateNewFileToolStripMenuItemClick(object sender, EventArgs e)
+		void CreateNewFileToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TreeNode selected = treeView.SelectedNode;
 			if (selected.Tag is DirectoryInfo)
@@ -577,7 +691,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void CreateNewDirectoryToolStripMenuItemClick(object sender, EventArgs e)
+		void CreateNewDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TreeNode selected = treeView.SelectedNode;
 			if (selected.Tag is DirectoryInfo)
@@ -608,25 +722,34 @@ namespace LF2.IDE
 			}
 		}
 
-		void RenameToolStripMenuItem1Click(object sender, EventArgs e)
+		void RenameToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
 			treeView.SelectedNode.BeginEdit();
 		}
 
-		void DeleteToolStripMenuItem1Click(object sender, EventArgs e)
+		void DeleteToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
 			if (treeView.SelectedNode.Tag is DirectoryInfo)
 			{
 				DirectoryInfo di = (DirectoryInfo)treeView.SelectedNode.Tag;
-				if (MessageBox.Show("Are you sure to delete '" + di.Name + "' directory and it's dependencies?\r\nThey will be lost forever (a long time)", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+				//if (MessageBox.Show("Are you sure to delete '" + di.Name + "' directory and it's dependencies?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 				{
-					di.Delete();
-					treeView.SelectedNode.Remove();
+					bool cancelled = false;
+					try
+					{
+						FileSystem.DeleteDirectory(di.FullName, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
+					}
+					catch (OperationCanceledException)
+					{
+						cancelled = true;
+					}
+					if(!cancelled)
+						treeView.SelectedNode.Remove();
 				}
 			}
 		}
 
-		void CopyToolStripMenuItem1Click(object sender, EventArgs e)
+		void CopyToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
 			if (treeView.SelectedNode.Tag is DirectoryInfo)
 			{
@@ -637,12 +760,12 @@ namespace LF2.IDE
 			}
 		}
 
-		void MultiSelectToolStripButtonCheckedChanged(object sender, EventArgs e)
+		void MultiSelectToolStripButton_CheckedChanged(object sender, EventArgs e)
 		{
 			treeView.CheckBoxes = multiToolStripDropDownButton.Enabled = multiSelectToolStripButton.Checked;
 		}
 
-		void EditAllFilesToolStripMenuItemClick(object sender, EventArgs e)
+		void EditAllFilesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			foreach (TreeNode node in treeView.Nodes)
 			{
@@ -685,7 +808,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void RunAllFilesToolStripMenuItemClick(object sender, EventArgs e)
+		void RunAllFilesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			foreach (TreeNode node in treeView.Nodes)
 			{
@@ -755,7 +878,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void ClearSelectionsToolStripMenuItemClick(object sender, EventArgs e)
+		void ClearSelectionsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			foreach (TreeNode node in treeView.Nodes)
 			{
@@ -785,14 +908,14 @@ namespace LF2.IDE
 			}
 		}
 
-		void DeleteAllToolStripMenuItemClick(object sender, EventArgs e)
+		void DeleteAllToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			List<TreeNode> deleting = new List<TreeNode>(0);
 			foreach (TreeNode node in treeView.Nodes)
 			{
 				if (!node.Checked && node.Nodes.Count > 0)
 				{
-					DeleteAll(node.Nodes, deleting);
+					AddForDeletionRecursive(node.Nodes, deleting);
 				}
 				if (node.Checked)
 				{
@@ -801,23 +924,23 @@ namespace LF2.IDE
 			}
 			if (deleting.Count > 0)
 			{
-				string delete = "";
+				string deleteList = "";
 				foreach (TreeNode tnt in deleting)
 				{
 					if (tnt.Tag is FileInfo)
 					{
 						FileInfo fi = (FileInfo)tnt.Tag;
 						fi.Refresh();
-						delete += "File: '" + fi.FullName + "'\r\n";
+						deleteList += "File: '" + fi.FullName + "'\r\n";
 					}
 					else if (tnt.Tag is DirectoryInfo)
 					{
 						DirectoryInfo di = (DirectoryInfo)tnt.Tag;
 						di.Refresh();
-						delete += "Directory: '" + di.FullName + "'\r\n";
+						deleteList += "Directory: '" + di.FullName + "'\r\n";
 					}
 				}
-				if (MessageBox.Show(this, "Are sure to delete these files, directories and their dependencies?\r\n" + delete, "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+				if (MessageBox.Show(this, "Are sure to delete these files, directories and their dependencies?\r\n" + deleteList, this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 				{
 					backgroundDeleter.RunWorkerAsync(deleting);
 					this.Show();
@@ -827,13 +950,13 @@ namespace LF2.IDE
 			}
 		}
 
-		void DeleteAll(TreeNodeCollection nodes, List<TreeNode> deleting)
+		void AddForDeletionRecursive(TreeNodeCollection nodes, List<TreeNode> deleting)
 		{
 			foreach (TreeNode node in nodes)
 			{
 				if (!node.Checked && node.Nodes.Count > 0)
 				{
-					DeleteAll(node.Nodes, deleting);
+					AddForDeletionRecursive(node.Nodes, deleting);
 				}
 				if (node.Checked)
 				{
@@ -842,26 +965,15 @@ namespace LF2.IDE
 			}
 		}
 
-		void FilterToolStripLabelClick(object sender, EventArgs e)
+		void FilterToolStripLabel_Click(object sender, EventArgs e)
 		{
-		rerefresh:
-			if (File.Exists(Settings.Current.lfPath))
-			{
-				refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
-				PopulateTreeView(DestinationFolder);
-			}
-			else
-			{
-				FormSettings fs = new FormSettings();
-				if (fs.ShowDialog() == DialogResult.OK)
-					goto rerefresh;
-			}
-			this.Show();
+			refreshToolStripButton.PerformClick();
 		}
 
-		void BackgroundDeleterDoWork(object sender, DoWorkEventArgs e)
+		void BackgroundDeleter_DoWork(object sender, DoWorkEventArgs e)
 		{
 			List<TreeNode> deleting = (List<TreeNode>)e.Argument;
+			e.Result = deleting;
 			foreach (TreeNode node in deleting)
 			{
 				if (backgroundDeleter.CancellationPending)
@@ -876,11 +988,6 @@ namespace LF2.IDE
 					if (fi.Exists)
 					{
 						fi.Delete();
-						node.Remove();
-					}
-					else
-					{
-						node.Remove();
 					}
 				}
 				else if (node.Tag is DirectoryInfo)
@@ -890,30 +997,34 @@ namespace LF2.IDE
 					if (di.Exists)
 					{
 						di.Delete(true);
-						node.Remove();
-					}
-					else
-					{
-						node.Remove();
 					}
 				}
 			}
 		}
 
-		void BackgroundDeleterProgressChanged(object sender, ProgressChangedEventArgs e)
+		void BackgroundDeleter_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-
-		}
-
-		void BackgroundDeleterRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-		{
+			if (e.Result != null)
+			{
+				var deleting = (List<TreeNode>)e.Result;
+				foreach (var node in deleting)
+				{
+					if (node.Tag is FileSystemInfo)
+					{
+						FileSystemInfo fsi = (FileSystemInfo)node.Tag;
+						fsi.Refresh();
+						if (!fsi.Exists)
+							node.Remove();
+					}
+				}
+			}
 			if (e.Error != null)
 			{
-				mainForm.formEventLog.Error(e.Error, "Thread Error");
+				mainForm.formEventLog.Error(e.Error, "Async File Deletion Error");
 			}
 		}
 
-		void SelectChildNodesToolStripMenuItemClick(object sender, EventArgs e)
+		void SelectChildNodesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (treeView.SelectedNode.Tag is DirectoryInfo)
 			{
@@ -925,7 +1036,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void SelectFilesToolStripMenuItemClick(object sender, EventArgs e)
+		void SelectFilesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (treeView.SelectedNode.Tag is DirectoryInfo)
 			{
@@ -940,7 +1051,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void SelectDirectoriesToolStripMenuItemClick(object sender, EventArgs e)
+		void SelectDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (treeView.SelectedNode.Tag is DirectoryInfo)
 			{
@@ -955,7 +1066,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void PreviewToolStripMenuItemClick(object sender, EventArgs e)
+		void PreviewToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (treeView.SelectedNode.Tag is FileInfo)
 			{
@@ -965,7 +1076,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void CopyAllToolStripMenuItemClick(object sender, EventArgs e)
+		void CopyAllToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			StringCollection sc = new StringCollection();
 			foreach (TreeNode node in treeView.Nodes)
@@ -1039,7 +1150,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void OpenInExplorerToolStripMenuItemClick(object sender, EventArgs e)
+		void OpenInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TreeNode node = treeView.SelectedNode;
 			DirectoryInfo di = (DirectoryInfo)node.Tag;
@@ -1047,7 +1158,7 @@ namespace LF2.IDE
 			Process.Start(psi);
 		}
 
-		void OpenFileInExplorerToolStripMenuItemClick(object sender, EventArgs e)
+		void OpenFileInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TreeNode node = treeView.SelectedNode;
 			FileInfo di = (FileInfo)node.Tag;
@@ -1055,7 +1166,7 @@ namespace LF2.IDE
 			Process.Start(psi);
 		}
 
-		void EditWithoutDecryptionToolStripMenuItemClick(object sender, EventArgs e)
+		void EditWithoutDecryptionToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (treeView.SelectedNode.Tag is FileInfo)
 			{
@@ -1070,7 +1181,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void PlayToolStripMenuItem1Click(object sender, EventArgs e)
+		void PlayToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
 			TreeNode node = treeView.SelectedNode;
 			FileInfo nodeFileInfo;
@@ -1091,7 +1202,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void PlayToolStripMenuItemClick(object sender, EventArgs e)
+		void PlayToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TreeNode node = treeView.SelectedNode;
 			FileInfo nodeFileInfo;
@@ -1113,7 +1224,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void MakeTransparentToolStripMenuItemClick(object sender, EventArgs e)
+		void MakeTransparentToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TreeNode node = treeView.SelectedNode;
 			FileInfo nodeFileInfo;
@@ -1134,7 +1245,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void ChangePixelFormatToolStripMenuItemClick(object sender, EventArgs e)
+		void ChangePixelFormatToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TreeNode node = treeView.SelectedNode;
 			FileInfo nodeFileInfo;
@@ -1159,7 +1270,7 @@ namespace LF2.IDE
 		PreviewForm preview = new PreviewForm();
 		TreeNode lastPreview = null;
 
-		void TreeViewNodeMouseHover(object sender, TreeNodeMouseHoverEventArgs e)
+		void TreeViewNode_MouseHover(object sender, TreeNodeMouseHoverEventArgs e)
 		{
 			TreeNode node = e.Node;
 			Point p = treeView.PointToScreen(new Point(-160, 0));
@@ -1205,7 +1316,7 @@ namespace LF2.IDE
 			}
 		}
 
-		void MakeMirroredToolStripMenuItemClick(object sender, EventArgs e)
+		void MakeMirroredToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TreeNode node = treeView.SelectedNode;
 			FileInfo nodeFileInfo;
@@ -1227,9 +1338,61 @@ namespace LF2.IDE
 			}
 		}
 
-		void SolutionExplorerFormClosed(object sender, FormClosedEventArgs e)
+		void SolutionExplorer_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			stopWatch.Reset();
+		}
+
+		private void dirContextMenuStrip_Opening(object sender, CancelEventArgs e)
+		{
+			pasteToolStripMenuItem.Enabled = Clipboard.ContainsFileDropList();
+		}
+
+		private void filterToolStripComboBox_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyData == Keys.Enter)
+			{
+				refreshToolStripButton.PerformClick();
+				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
+		}
+
+		private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (treeView.SelectedNode.Tag is DirectoryInfo)
+			{
+				try
+				{
+					DirectoryInfo dir = (DirectoryInfo)treeView.SelectedNode.Tag;
+					StringCollection files = Clipboard.GetFileDropList();
+					if (files != null)
+					{
+						foreach (string fso in files)
+						{
+							if (File.Exists(fso))
+							{
+								FileSystem.CopyFile(fso, dir.FullName + "\\" + Path.GetFileName(fso), UIOption.AllDialogs, UICancelOption.ThrowException);
+							}
+							else if (Directory.Exists(fso) && !(string.Equals(fso, dir.FullName.Substring(0, fso.Length), StringComparison.InvariantCultureIgnoreCase)))
+							{
+								FileSystem.CopyDirectory(fso, dir.FullName + "\\" + Path.GetFileName(fso), UIOption.AllDialogs, UICancelOption.ThrowException);
+							}
+						}
+						treeView.SelectedNode.Nodes.Clear();
+						GetFileSystemTree(dir.EnumerateDirectories(), treeView.SelectedNode, filterToolStripComboBox.Text);
+						foreach (FileInfo file in dir.EnumerateFiles(filterToolStripComboBox.Text))
+						{
+							int img = iconListManager.AddFileIcon(file.FullName);
+							TreeNode item = new TreeNode(file.Name, img, img);
+							item.Tag = file;
+							treeView.SelectedNode.Nodes.Add(item);
+						}
+						treeView.Refresh();
+					}
+				}
+				catch (OperationCanceledException) { }
+			}
 		}
 	}
 }

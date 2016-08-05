@@ -176,11 +176,6 @@
     </Compile>
     <Compile Include="ObjectType.cs" />
     <Compile Include="HelperTools.cs" />
-    <Compile Include="Properties\Settings1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="TagBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -363,10 +358,6 @@
     </Compile>
     <None Include="data.lang.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
     </None>
     <None Include="Resources\Menu\excol.png" />
     <None Include="Templates\AI.as">

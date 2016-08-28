@@ -846,7 +846,9 @@ namespace LF2.IDE
 				backgroundWorker_CreateOpointCache.RunWorkerAsync();
 			}
 			else
+			{
 				backgroundWorker_CreateOpointCache.CancelAsync();
+			}
 		}
 
 		void CreateOpointCache(object sender, DoWorkEventArgs e)
@@ -912,6 +914,10 @@ namespace LF2.IDE
 
 				try { mainForm.formEventLog.Log("Opoint Cache Created: " + stopWatch.Elapsed, true); }
 				catch { }
+			}
+			if (e.Cancelled)
+			{
+				tagBox.OPointImage = null;
 			}
 			button_CreateOpointCache.Text = cacheButtonString;
 			stopWatch.Reset();

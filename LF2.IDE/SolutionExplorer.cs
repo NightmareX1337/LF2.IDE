@@ -537,12 +537,12 @@ namespace LF2.IDE
 				else if (e.KeyCode == Keys.Delete)
 				{
 					e.Handled = true;
-					if (MessageBox.Show("Are you sure to delete '" + nodeFileInfo.Name + "' file?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+					//if (MessageBox.Show("Are you sure to delete '" + nodeFileInfo.Name + "' file?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 					{
 						bool cancelled = false;
 						try
 						{
-							FileSystem.DeleteFile(nodeFileInfo.FullName, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
+							FileSystem.DeleteFile(nodeFileInfo.FullName, UIOption.AllDialogs, e.Shift ? RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
 						}
 						catch (OperationCanceledException)
 						{
@@ -559,12 +559,12 @@ namespace LF2.IDE
 				if (e.KeyCode == Keys.Delete)
 				{
 					e.Handled = true;
-					if (MessageBox.Show("Are you sure to delete '" + nodeDirInfo.Name + "' directory and it's dependencies?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+					//if (MessageBox.Show("Are you sure to delete '" + nodeDirInfo.Name + "' directory and it's dependencies?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 					{
 						bool cancelled = false;
 						try
 						{
-							FileSystem.DeleteDirectory(nodeDirInfo.FullName, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
+							FileSystem.DeleteDirectory(nodeDirInfo.FullName, UIOption.AllDialogs, e.Shift ? RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
 						}
 						catch (OperationCanceledException)
 						{
@@ -1372,7 +1372,7 @@ namespace LF2.IDE
 						{
 							if (File.Exists(fso))
 							{
-								FileSystem.CopyFile(fso, dir.FullName + "\\" + Path.GetFileName(fso), UIOption.AllDialogs, UICancelOption.ThrowException);
+								FileSystem.CopyFile(fso, dir.FullName + "\\" + Path.GetFileName(fso), UIOption.AllDialogs, UICancelOption.ThrowException); //TODO: fix unhandled exception
 							}
 							else if (Directory.Exists(fso) && !(string.Equals(fso, dir.FullName.Substring(0, fso.Length), StringComparison.InvariantCultureIgnoreCase)))
 							{

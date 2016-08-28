@@ -467,6 +467,13 @@ namespace LF2.IDE
 		{
 			TreeNode newSelected = treeView.SelectedNode;
 			if (newSelected == null) return;
+
+			if (e.KeyCode == Keys.F2)
+			{
+				newSelected.BeginEdit();
+				return;
+			}
+
 			FileInfo nodeFileInfo;
 			DirectoryInfo nodeDirInfo;
 			ProcessStartInfo psi;

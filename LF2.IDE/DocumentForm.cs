@@ -206,12 +206,13 @@ namespace LF2.IDE
 			AddOrRemoveAsteric();
 		}
 
-
 		public DocumentForm(MainForm main)
 		{
 			syncTimer.Elapsed += syncTimer_Elapsed;
 			mainForm = main;
 			InitializeComponent();
+			scintilla.DocumentNavigation.MaxHistorySize = 20;
+			scintilla.DocumentNavigation.NavigationPointTimeout = 500;
 		}
 
 		void DocumentFormActivated(object sender, EventArgs e)
@@ -498,6 +499,7 @@ namespace LF2.IDE
 			{
 				SyncToDesign(auto : true);
 			}
+			mainForm.UpdateNavigationControls();
 		}
 
 		private void scintilla_KeyDown(object sender, KeyEventArgs e)

@@ -69,6 +69,10 @@
 			this.toolStripIncrementalSearcher = new ScintillaNET.ToolStripIncrementalSearcher();
 			this.toolStripSeparator_mainToolStrip6 = new System.Windows.Forms.ToolStripSeparator();
 			this.mainToolStrip = new System.Windows.Forms.ToolStrip();
+			this.toolStripButton_NavigateBack = new System.Windows.Forms.ToolStripButton();
+			this.toolStripDropDownButton_NavigateList = new System.Windows.Forms.ToolStripDropDownButton();
+			this.toolStripButton_NavigateForward = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.exportToHtmlToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -205,7 +209,7 @@
 			this.dockPanel.Margin = new System.Windows.Forms.Padding(2);
 			this.dockPanel.Name = "dockPanel";
 			this.dockPanel.ShowDocumentIcon = true;
-			this.dockPanel.Size = new System.Drawing.Size(1184, 461);
+			this.dockPanel.Size = new System.Drawing.Size(1284, 461);
 			dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
 			dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
 			autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
@@ -431,6 +435,10 @@
 			// mainToolStrip
 			// 
 			this.mainToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton_NavigateBack,
+            this.toolStripDropDownButton_NavigateList,
+            this.toolStripButton_NavigateForward,
+            this.toolStripSeparator6,
             this.newToolStripButton,
             this.reopenToolStripButton,
             this.openToolStripButton,
@@ -474,8 +482,41 @@
             this.toolStripIncrementalSearcher});
 			this.mainToolStrip.Location = new System.Drawing.Point(0, 24);
 			this.mainToolStrip.Name = "mainToolStrip";
-			this.mainToolStrip.Size = new System.Drawing.Size(1184, 27);
+			this.mainToolStrip.Size = new System.Drawing.Size(1284, 27);
 			this.mainToolStrip.TabIndex = 3;
+			// 
+			// toolStripButton_NavigateBack
+			// 
+			this.toolStripButton_NavigateBack.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton_NavigateBack.Image = global::LF2.IDE.Properties.Resources.MB__back_16linear;
+			this.toolStripButton_NavigateBack.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton_NavigateBack.Name = "toolStripButton_NavigateBack";
+			this.toolStripButton_NavigateBack.Size = new System.Drawing.Size(23, 24);
+			this.toolStripButton_NavigateBack.ToolTipText = "Navigate Back (Ctrl+U)";
+			this.toolStripButton_NavigateBack.Click += new System.EventHandler(this.toolStripButton_NavigateBack_Click);
+			// 
+			// toolStripDropDownButton_NavigateList
+			// 
+			this.toolStripDropDownButton_NavigateList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
+			this.toolStripDropDownButton_NavigateList.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripDropDownButton_NavigateList.Name = "toolStripDropDownButton_NavigateList";
+			this.toolStripDropDownButton_NavigateList.Size = new System.Drawing.Size(13, 24);
+			this.toolStripDropDownButton_NavigateList.ToolTipText = "Navigation List";
+			// 
+			// toolStripButton_NavigateForward
+			// 
+			this.toolStripButton_NavigateForward.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton_NavigateForward.Image = global::LF2.IDE.Properties.Resources.MB__forward_16linear;
+			this.toolStripButton_NavigateForward.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton_NavigateForward.Name = "toolStripButton_NavigateForward";
+			this.toolStripButton_NavigateForward.Size = new System.Drawing.Size(23, 24);
+			this.toolStripButton_NavigateForward.ToolTipText = "Navigate Forward (Ctrl+Shift+U)";
+			this.toolStripButton_NavigateForward.Click += new System.EventHandler(this.toolStripButton_NavigateForward_Click);
+			// 
+			// toolStripSeparator6
+			// 
+			this.toolStripSeparator6.Name = "toolStripSeparator6";
+			this.toolStripSeparator6.Size = new System.Drawing.Size(6, 27);
 			// 
 			// openToolStripButton
 			// 
@@ -619,7 +660,6 @@
 			this.resetZoomToolStripDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.resetCurrentZoomToolStripMenuItem,
             this.resetAllZoomToolStripMenuItem});
-			this.resetZoomToolStripDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("resetZoomToolStripDropDownButton.Image")));
 			this.resetZoomToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.resetZoomToolStripDropDownButton.Name = "resetZoomToolStripDropDownButton";
 			this.resetZoomToolStripDropDownButton.Size = new System.Drawing.Size(13, 24);
@@ -726,7 +766,7 @@
             this.lineNumberToolStripTextBox});
 			this.jumpToToolStrip.Location = new System.Drawing.Point(0, 51);
 			this.jumpToToolStrip.Name = "jumpToToolStrip";
-			this.jumpToToolStrip.Size = new System.Drawing.Size(1028, 25);
+			this.jumpToToolStrip.Size = new System.Drawing.Size(1284, 25);
 			this.jumpToToolStrip.TabIndex = 500;
 			this.jumpToToolStrip.Visible = false;
 			// 
@@ -868,7 +908,7 @@
 			this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
 			this.mainMenuStrip.Name = "mainMenuStrip";
 			this.mainMenuStrip.ShowItemToolTips = true;
-			this.mainMenuStrip.Size = new System.Drawing.Size(1184, 24);
+			this.mainMenuStrip.Size = new System.Drawing.Size(1284, 24);
 			this.mainMenuStrip.TabIndex = 6;
 			// 
 			// fileToolStripMenuItem
@@ -1380,7 +1420,7 @@
             this.toolStripComboBoxUF});
 			this.toolStrip_Fold.Location = new System.Drawing.Point(0, 51);
 			this.toolStrip_Fold.Name = "toolStrip_Fold";
-			this.toolStrip_Fold.Size = new System.Drawing.Size(1184, 25);
+			this.toolStrip_Fold.Size = new System.Drawing.Size(1284, 25);
 			this.toolStrip_Fold.TabIndex = 7;
 			this.toolStrip_Fold.Text = "toolStrip3";
 			this.toolStrip_Fold.Visible = false;
@@ -1480,7 +1520,7 @@
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1184, 512);
+			this.ClientSize = new System.Drawing.Size(1284, 512);
 			this.Controls.Add(this.dockPanel);
 			this.Controls.Add(this.jumpToToolStrip);
 			this.Controls.Add(this.toolStrip_Fold);
@@ -1646,6 +1686,10 @@
 		private System.Windows.Forms.ToolStripMenuItem autoLoadToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
 		private System.Windows.Forms.ToolStripButton toolStripButton_DataTxt;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+		private System.Windows.Forms.ToolStripButton toolStripButton_NavigateBack;
+		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton_NavigateList;
+		private System.Windows.Forms.ToolStripButton toolStripButton_NavigateForward;
 		/*private System.Windows.Forms.ToolStripMenuItem batToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem batToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem brokenweaponToolStripMenuItem;

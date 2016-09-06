@@ -722,6 +722,7 @@ namespace LF2.IDE
 				}
 				textWrapToolStripButton.ToolTipText = "Wrap: " + ActiveDocument.Scintilla.LineWrapping.Mode.ToString();
 				showAllCharsToolStripButton.Checked = ActiveDocument.Scintilla.EndOfLine.IsVisible || ActiveDocument.Scintilla.Whitespace.Mode == ScintillaNET.WhitespaceMode.VisibleAlways;
+				UpdateNavigationControls();
 
 				toolStripIncrementalSearcher.Scintilla = ActiveDocument.Scintilla;
 				if (ActiveDocument.frames != null)
@@ -743,6 +744,47 @@ namespace LF2.IDE
 			}
 			else
 				toolStripIncrementalSearcher.Scintilla = null;
+		}
+
+		public void UpdateNavigationControls()
+		{
+			if (ActiveDocument == null)
+			{
+				toolStripButton_NavigateBack.Enabled = false;
+				toolStripButton_NavigateForward.Enabled = false;
+				toolStripDropDownButton_NavigateList.DropDownItems.Clear();
+				toolStripDropDownButton_NavigateList.Enabled = false;
+				return;
+			}
+			toolStripButton_NavigateBack.Enabled = ActiveDocument.Scintilla.DocumentNavigation.CanNavigateBackward;
+			toolStripButton_NavigateForward.Enabled = ActiveDocument.Scintilla.DocumentNavigation.CanNavigateForward;
+			toolStripDropDownButton_NavigateList.DropDownItems.Clear();
+			foreach (var nav in ActiveDocument.Scintilla.DocumentNavigation.ForewardStack)
+			{
+				var tsi = new ToolStripMenuItem(string.Format("Line {0,4}:   ", nav.StartingLine.Number + 1) + nav.StartingLine.Text.Trim());
+				tsi.Click += tsi_Click;
+				tsi.Tag = nav;
+				toolStripDropDownButton_NavigateList.DropDownItems.Add(tsi);
+			}
+			ToolStripMenuItem item = new ToolStripMenuItem(string.Format("Line {0,4}:   ", ActiveDocument.Scintilla.Lines.Current.Number + 1) + ActiveDocument.Scintilla.Lines.Current.Text.Trim());
+			item.Checked = true;
+			toolStripDropDownButton_NavigateList.DropDownItems.Add(item);
+			
+			int insertPlace = toolStripDropDownButton_NavigateList.DropDownItems.Count;
+			foreach (var nav in ActiveDocument.Scintilla.DocumentNavigation.BackwardStack)
+			{
+				var tsi = new ToolStripMenuItem(string.Format("Line {0,4}:   ", nav.StartingLine.Number + 1) + nav.StartingLine.Text.Trim());
+				tsi.Click += tsi_Click;
+				tsi.Tag = nav;
+				toolStripDropDownButton_NavigateList.DropDownItems.Insert(insertPlace, tsi);
+			}
+		}
+
+		void tsi_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem item = (ToolStripMenuItem)sender;
+			var nav = (ScintillaNET.NavigationPont)item.Tag;
+			nav.Select();
 		}
 
 		void ToolStripLabelIndex_Click(object sender, EventArgs e)
@@ -1975,6 +2017,24 @@ namespace LF2.IDE
 				}
 			}
 			catch { }
+		}
+
+		private void toolStripButton_NavigateBack_Click(object sender, EventArgs e)
+		{
+			if (ActiveDocument != null)
+			{
+				ActiveDocument.Scintilla.DocumentNavigation.NavigateBackward();
+				//UpdateNavigationControls();
+			}
+		}
+
+		private void toolStripButton_NavigateForward_Click(object sender, EventArgs e)
+		{
+			if (ActiveDocument != null)
+			{
+				ActiveDocument.Scintilla.DocumentNavigation.NavigateForward();
+				//UpdateNavigationControls();
+			}
 		}
 	}
 }

@@ -498,6 +498,9 @@
     <Content Include="Resources\lightning.ico" />
     <Content Include="Resources\link.png" />
     <Content Include="Resources\link_break.png" />
+    <None Include="Resources\MB__back.png" />
+    <None Include="Resources\MB__back_16linear.png" />
+    <None Include="Resources\MB__forward_16linear.png" />
     <Content Include="Resources\Menu\bigger.png" />
     <Content Include="Resources\Menu\collapse.png" />
     <Content Include="Resources\Menu\ControlPanel.png" />

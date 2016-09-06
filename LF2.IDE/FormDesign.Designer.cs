@@ -2106,6 +2106,7 @@
 			this.Load += new System.EventHandler(this.FormTag_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormTag_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormTag_KeyUp);
+			this.MouseEnter += new System.EventHandler(this.FormDesign_MouseEnter);
 			this.tabPage_b.ResumeLayout(false);
 			this.tabPage_b.PerformLayout();
 			this.tabPage_c.ResumeLayout(false);

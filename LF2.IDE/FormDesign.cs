@@ -343,7 +343,7 @@ namespace LF2.IDE
 
 		void ImageIndexChanged(object sender, EventArgs e)
 		{
-			if (!editing)
+			if (!editing && mainForm.lastActiveDoc != null && mainForm.lastActiveDoc.frameIndexTag != numericUpDown_ImageIndex.Value)
 				SyncToEditor(mainForm.ActiveDocument, true);
 			if (mainForm.lastActiveFrame != null)
 				tagBox.Image = mainForm.lastActiveFrame[mainForm.lastActiveDoc.frameIndexTag = (int)numericUpDown_ImageIndex.Value];
@@ -1785,6 +1785,11 @@ namespace LF2.IDE
 		private void checkBox_AutoLoadOpointViewer_CheckedChanged(object sender, EventArgs e)
 		{
 			Settings.Current.autoLoadOpointViewer = checkBox_AutoLoadOpointViewer.Checked;
+		}
+
+		private void FormDesign_MouseEnter(object sender, EventArgs e)
+		{
+			this.Activate();
 		}
 	}
 }

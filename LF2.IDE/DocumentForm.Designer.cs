@@ -119,6 +119,7 @@
 			this.scintilla.TextChanged += new System.EventHandler(this.ScintillaTextChanged);
 			this.scintilla.KeyDown += new System.Windows.Forms.KeyEventHandler(this.scintilla_KeyDown);
 			this.scintilla.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ScintillaKeyPress);
+			this.scintilla.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scintilla_MouseMove);
 			// 
 			// saveFileDialog
 			// 

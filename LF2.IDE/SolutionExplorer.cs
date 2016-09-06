@@ -385,7 +385,7 @@ namespace LF2.IDE
 			treeView.CollapseAll();
 		}
 
-		static readonly char[] illegalChars = ("\\/|:*?\"<>").ToCharArray();
+		static readonly char[] illegalChars = Path.GetInvalidFileNameChars();
 
 		void TreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
 		{
@@ -412,6 +412,12 @@ namespace LF2.IDE
 							node.Tag = file;
 							node.ImageIndex = node.SelectedImageIndex = iconListManager.AddFileIcon(fns);
 						}
+						else
+						{
+							MessageBox.Show(this, "A file with target name already exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							e.CancelEdit = true;
+							return;
+						}
 					}
 					else
 					{
@@ -425,7 +431,8 @@ namespace LF2.IDE
 					string fms = di.Parent.FullName + "\\" + e.Label;
 					if (di.Exists)
 					{
-						if(Directory.Exists(fms))
+						if(!Directory.Exists(fms))
+						{
 							di.MoveTo(fms);
 							DirectoryInfo dir = new DirectoryInfo(fms);
 							node.Tag = dir;
@@ -438,6 +445,13 @@ namespace LF2.IDE
 								item.Tag = file;
 								node.Nodes.Add(item);
 							}
+						}
+						else
+						{
+							MessageBox.Show(this, "A directory with target name already exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							e.CancelEdit = true;
+							return;
+						}
 					}
 					else
 					{
@@ -448,7 +462,7 @@ namespace LF2.IDE
 			catch (Exception ex)
 			{
 				e.CancelEdit = true;
-				mainForm.formEventLog.Log(ex.ToString(), "ERROR", true);
+				mainForm.formEventLog.Error(ex, "File Renaming Error");
 			}
 		}
 
@@ -674,21 +688,21 @@ namespace LF2.IDE
 			{
 				DirectoryInfo di = (DirectoryInfo)selected.Tag;
 				di.Refresh();
-				FileInfo[] fia = di.GetFiles();
+				IEnumerable<FileInfo> files = di.GetFiles();
 				int j = 0;
-				for (int i = 0; i < fia.Length; i++)
+				foreach (FileInfo file in files)
 				{
-					if (fia[i].Name == "New File" + (j == 0 ? "" : " " + j)) j++;
+					if (file.Name == "New File" + (j == 0 ? "" : " " + j)) j++;
 				}
-				string file = "New File" + (j == 0 ? "" : " " + j), path = di.FullName + "\\" + file;
-				TreeNode node = new TreeNode(file, 2, 2);
+				string newFile = "New File" + (j == 0 ? "" : " " + j), path = di.FullName + "\\" + newFile;
+				TreeNode node = new TreeNode(newFile, 2, 2);
 				if (File.Exists(path))
 				{
 					MessageBox.Show("What's going on here?!!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 				else
 				{
-					File.Create(path);
+					using (File.Create(path)) { }
 					node.Tag = new FileInfo(path);
 					selected.Nodes.Add(node);
 					selected.Expand();

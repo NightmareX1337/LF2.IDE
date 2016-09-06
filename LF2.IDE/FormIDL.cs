@@ -110,8 +110,8 @@ namespace LF2.IDE
 					if (result == 0)
 					{
 						label_Result.Text = "Successful";
-						SetForegroundWindow(new HandleRef(p, p.MainWindowHandle));
-						this.Close();
+						//SetForegroundWindow(new HandleRef(p, p.MainWindowHandle));
+						//this.Close();
 					}
 					else if (result == 1)
 					{

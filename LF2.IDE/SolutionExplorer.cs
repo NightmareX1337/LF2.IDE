@@ -484,6 +484,8 @@ namespace LF2.IDE
 
 			if (e.KeyCode == Keys.F2)
 			{
+				e.Handled = true;
+				e.SuppressKeyPress = true;
 				newSelected.BeginEdit();
 				return;
 			}
@@ -498,6 +500,7 @@ namespace LF2.IDE
 				if (e.KeyCode == Keys.Enter)
 				{
 					e.Handled = true;
+					e.SuppressKeyPress = true;
 					if (nodeFileInfo.Exists)
 					{
 						string ext = nodeFileInfo.Extension.ToLowerInvariant();
@@ -558,6 +561,7 @@ namespace LF2.IDE
 				else if (e.KeyCode == Keys.Delete)
 				{
 					e.Handled = true;
+					e.SuppressKeyPress = true;
 					//if (MessageBox.Show("Are you sure to delete '" + nodeFileInfo.Name + "' file?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 					{
 						bool cancelled = false;
@@ -580,6 +584,7 @@ namespace LF2.IDE
 				if (e.KeyCode == Keys.Delete)
 				{
 					e.Handled = true;
+					e.SuppressKeyPress = true;
 					//if (MessageBox.Show("Are you sure to delete '" + nodeDirInfo.Name + "' directory and it's dependencies?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 					{
 						bool cancelled = false;

@@ -1767,69 +1767,106 @@ namespace LF2.IDE
 
 		private void MainForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.Control)
+			if (e.Modifiers == Keys.Control && (e.KeyCode == Keys.F4 || e.KeyCode == Keys.W))
 			{
-				if (e.Modifiers == Keys.Control && (e.KeyCode == Keys.F4 || e.KeyCode == Keys.W))
+				if (ActiveDocument != null)
+					ActiveDocument.Close();
+				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
+			else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.B)
+			{
+				if (ActiveDocument != null)
 				{
-					if (ActiveDocument != null)
-						ActiveDocument.Close();
-				}
-				else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.B)
-				{
-					if (ActiveDocument != null)
+					var range = ActiveDocument.Scintilla.FindReplace.Find(ActiveDocument.Scintilla.CurrentPos + 1, ActiveDocument.Scintilla.TextLength, "<frame>", ScintillaNET.SearchFlags.MatchCase);
+					if (range != null)
 					{
-						var range = ActiveDocument.Scintilla.FindReplace.Find(ActiveDocument.Scintilla.CurrentPos + 1, ActiveDocument.Scintilla.TextLength, "<frame>", ScintillaNET.SearchFlags.MatchCase);
-						if (range != null)
-						{
-							ActiveDocument.Scintilla.CurrentPos = range.Start;
-							ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3;
-						}
+						ActiveDocument.Scintilla.CurrentPos = range.Start;
+						ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3;
 					}
 				}
-				else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.B)
+				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
+			else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.B)
+			{
+				if (ActiveDocument != null)
 				{
-					if (ActiveDocument != null)
+					var range = ActiveDocument.Scintilla.FindReplace.Find(0, ActiveDocument.Scintilla.CurrentPos, new Regex("<frame>"), true);
+					if (range != null)
 					{
-						var range = ActiveDocument.Scintilla.FindReplace.Find(0, ActiveDocument.Scintilla.CurrentPos, new Regex("<frame>"), true);
-						if (range != null)
-						{
-							ActiveDocument.Scintilla.CurrentPos = range.Start;
-							ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3;
-						}
+						ActiveDocument.Scintilla.CurrentPos = range.Start;
+						ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3;
 					}
 				}
-				else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Tab)
+				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
+			else if(e.Modifiers == Keys.Control && e.KeyCode == Keys.R)
+			{
+				if (ActiveDocument != null)
 				{
-					var docs = dockPanel.DocumentsToArray();
-					if (docs.Length < 2)
+					ushort index;
+					string xstr = ActiveDocument.Scintilla.Selection.Text.Trim();
+					if (ActiveDocument.Scintilla.Selection.Length == 0 && !ushort.TryParse(xstr, out index))
 						return;
-					int a = 0;
-					for (int i = 0; i < docs.Length; i++)
+					ScintillaNET.Range rng = ActiveDocument.Scintilla.FindReplace.Find(new Regex("(<frame>) (" + xstr + " )"));
+					if (rng != null)
 					{
-						if (docs[i] == dockPanel.ActiveDocument)
-						{
-							a = i + 1;
-							break;
-						}
+						ActiveDocument.Scintilla.GoTo.Position(rng.Start);
+						ActiveDocument.Scintilla.GoTo.Line(ActiveDocument.Scintilla.Lines.Current.Number + 1);
 					}
-					((DocumentForm)docs[a % docs.Length]).Activate();
 				}
-				else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Tab)
+				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
+			else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.U)
+			{
+				toolStripButton_NavigateBack_Click(null, null);
+				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
+			else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.U)
+			{
+				toolStripButton_NavigateForward_Click(null, null);
+				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
+			else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Tab)
+			{
+				var docs = dockPanel.DocumentsToArray();
+				if (docs.Length < 2)
+					return;
+				int a = 0;
+				for (int i = 0; i < docs.Length; i++)
 				{
-					var docs = dockPanel.DocumentsToArray();
-					if (docs.Length < 2)
-						return;
-					int a = 0;
-					for (int i = 0; i < docs.Length; i++)
+					if (docs[i] == dockPanel.ActiveDocument)
 					{
-						if (docs[i] == dockPanel.ActiveDocument)
-						{
-							a = i - 1;
-							break;
-						}
+						a = i + 1;
+						break;
 					}
-					((DocumentForm)docs[(a < 0 ? docs.Length + (a % docs.Length) : (a % docs.Length))]).Activate();
 				}
+				((DocumentForm)docs[a % docs.Length]).Activate();
+				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
+			else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Tab)
+			{
+				var docs = dockPanel.DocumentsToArray();
+				if (docs.Length < 2)
+					return;
+				int a = 0;
+				for (int i = 0; i < docs.Length; i++)
+				{
+					if (docs[i] == dockPanel.ActiveDocument)
+					{
+						a = i - 1;
+						break;
+					}
+				}
+				((DocumentForm)docs[(a < 0 ? docs.Length + (a % docs.Length) : (a % docs.Length))]).Activate();
+				e.Handled = true;
+				e.SuppressKeyPress = true;
 			}
 		}
 

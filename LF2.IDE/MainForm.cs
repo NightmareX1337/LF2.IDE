@@ -797,6 +797,7 @@ namespace LF2.IDE
 				{
 					ActiveDocument.Scintilla.GoTo.Position(rng.Start);
 					ActiveDocument.Scintilla.GoTo.Line(ActiveDocument.Scintilla.Lines.Current.Number + 1);
+					ActiveDocument.Scintilla.Lines.Current.EnsureVisible();
 					ActiveDocument.Activate();
 					ActiveDocument.Scintilla.Focus();
 				}
@@ -813,6 +814,7 @@ namespace LF2.IDE
 				{
 					ActiveDocument.Scintilla.GoTo.Position(rng.Start);
 					ActiveDocument.Scintilla.GoTo.Line(ActiveDocument.Scintilla.Lines.Current.Number + 1);
+					ActiveDocument.Scintilla.Lines.Current.EnsureVisible();
 					ActiveDocument.Activate();
 					ActiveDocument.Scintilla.Focus();
 				}
@@ -826,6 +828,7 @@ namespace LF2.IDE
 				int o;
 				if (!int.TryParse(lineNumberToolStripTextBox.Text, out o)) return;
 				ActiveDocument.Scintilla.GoTo.Line(o - 1);
+				ActiveDocument.Scintilla.Lines.Current.EnsureVisible();
 				ActiveDocument.Activate();
 				ActiveDocument.Scintilla.Focus();
 			}

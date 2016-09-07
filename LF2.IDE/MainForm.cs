@@ -793,7 +793,8 @@ namespace LF2.IDE
 				if (rng != null)
 				{
 					ActiveDocument.Scintilla.GoTo.Position(rng.Start);
-					ActiveDocument.Scintilla.GoTo.Line(ActiveDocument.Scintilla.Lines.Current.Number + 1);
+					int bug = ActiveDocument.Scintilla.Lines.FirstVisibleIndex - ActiveDocument.Scintilla.Lines.VisibleLines[0].Number;
+					ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3 + bug;
 					ActiveDocument.Scintilla.Lines.Current.EnsureVisible();
 					ActiveDocument.Activate();
 					ActiveDocument.Scintilla.Focus();
@@ -810,7 +811,8 @@ namespace LF2.IDE
 				if (rng != null)
 				{
 					ActiveDocument.Scintilla.GoTo.Position(rng.Start);
-					ActiveDocument.Scintilla.GoTo.Line(ActiveDocument.Scintilla.Lines.Current.Number + 1);
+					int bug = ActiveDocument.Scintilla.Lines.FirstVisibleIndex - ActiveDocument.Scintilla.Lines.VisibleLines[0].Number;
+					ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3 + bug;
 					ActiveDocument.Scintilla.Lines.Current.EnsureVisible();
 					ActiveDocument.Activate();
 					ActiveDocument.Scintilla.Focus();
@@ -825,6 +827,8 @@ namespace LF2.IDE
 				int o;
 				if (!int.TryParse(lineNumberToolStripTextBox.Text, out o)) return;
 				ActiveDocument.Scintilla.GoTo.Line(o - 1);
+				int bug = ActiveDocument.Scintilla.Lines.FirstVisibleIndex - ActiveDocument.Scintilla.Lines.VisibleLines[0].Number;
+				ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3 + bug;
 				ActiveDocument.Scintilla.Lines.Current.EnsureVisible();
 				ActiveDocument.Activate();
 				ActiveDocument.Scintilla.Focus();
@@ -1779,7 +1783,9 @@ namespace LF2.IDE
 					if (range != null)
 					{
 						ActiveDocument.Scintilla.CurrentPos = range.Start;
-						ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3;
+						int bug = ActiveDocument.Scintilla.Lines.FirstVisibleIndex - ActiveDocument.Scintilla.Lines.VisibleLines[0].Number;
+						ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3 + bug;
+						ActiveDocument.Scintilla.Lines.Current.EnsureVisible();
 					}
 				}
 				e.Handled = true;
@@ -1793,7 +1799,9 @@ namespace LF2.IDE
 					if (range != null)
 					{
 						ActiveDocument.Scintilla.CurrentPos = range.Start;
-						ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3;
+						int bug = ActiveDocument.Scintilla.Lines.FirstVisibleIndex - ActiveDocument.Scintilla.Lines.VisibleLines[0].Number;
+						ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3 + bug;
+						ActiveDocument.Scintilla.Lines.Current.EnsureVisible();
 					}
 				}
 				e.Handled = true;
@@ -1811,7 +1819,9 @@ namespace LF2.IDE
 					if (rng != null)
 					{
 						ActiveDocument.Scintilla.GoTo.Position(rng.Start);
-						ActiveDocument.Scintilla.GoTo.Line(ActiveDocument.Scintilla.Lines.Current.Number + 1);
+						ActiveDocument.Scintilla.Lines.Current.EnsureVisible();
+						int bug = ActiveDocument.Scintilla.Lines.FirstVisibleIndex - ActiveDocument.Scintilla.Lines.VisibleLines[0].Number;
+						ActiveDocument.Scintilla.Lines.FirstVisibleIndex = ActiveDocument.Scintilla.Lines.Current.Number - ActiveDocument.Scintilla.Lines.VisibleCount / 3 + bug;
 					}
 				}
 				e.Handled = true;

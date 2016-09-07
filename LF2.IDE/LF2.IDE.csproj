@@ -149,7 +149,8 @@
       <HintPath>..\Assemblies\WMPLib\signed\Interop.WMPLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="ScintillaNET">
+    <Reference Include="ScintillaNET, Version=2.5.2.0, Culture=neutral, PublicKeyToken=948d6c9751444115, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assemblies\ScintillaNET v2.5.2\ScintillaNET.dll</HintPath>
     </Reference>
     <Reference Include="System" />

@@ -457,6 +457,7 @@
 			this.tabPage_b.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_b.TabIndex = 5;
 			this.tabPage_b.Text = "b";
+			this.tabPage_b.MouseEnter += new System.EventHandler(this.FormDesign_MouseEnter);
 			// 
 			// label_c_Kind
 			// 
@@ -651,6 +652,7 @@
 			this.tabPage_c.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_c.TabIndex = 4;
 			this.tabPage_c.Text = "c";
+			this.tabPage_c.MouseEnter += new System.EventHandler(this.FormDesign_MouseEnter);
 			// 
 			// label_cHint
 			// 
@@ -778,6 +780,7 @@
 			this.tabControl_Tags.TabIndex = 2;
 			this.tabControl_Tags.TabStop = false;
 			this.tabControl_Tags.SelectedIndexChanged += new System.EventHandler(this.TagChanged);
+			this.tabControl_Tags.MouseEnter += new System.EventHandler(this.FormDesign_MouseEnter);
 			// 
 			// tabPage_bdy
 			// 
@@ -801,6 +804,7 @@
 			this.tabPage_bdy.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_bdy.TabIndex = 0;
 			this.tabPage_bdy.Text = "bdy";
+			this.tabPage_bdy.MouseEnter += new System.EventHandler(this.FormDesign_MouseEnter);
 			// 
 			// label1
 			// 
@@ -968,6 +972,7 @@
 			this.tabPage_itr.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_itr.TabIndex = 1;
 			this.tabPage_itr.Text = "itr";
+			this.tabPage_itr.MouseEnter += new System.EventHandler(this.FormDesign_MouseEnter);
 			// 
 			// label_itrHint
 			// 
@@ -1344,6 +1349,7 @@
 			this.tabPage_w.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_w.TabIndex = 2;
 			this.tabPage_w.Text = "w";
+			this.tabPage_w.MouseEnter += new System.EventHandler(this.FormDesign_MouseEnter);
 			// 
 			// wpoint_weaponact
 			// 
@@ -1585,6 +1591,7 @@
 			this.tabPage_o.Size = new System.Drawing.Size(310, 424);
 			this.tabPage_o.TabIndex = 3;
 			this.tabPage_o.Text = "o";
+			this.tabPage_o.MouseEnter += new System.EventHandler(this.FormDesign_MouseEnter);
 			// 
 			// button_oReset
 			// 
@@ -1795,6 +1802,7 @@
 			this.tabPage_center.TabIndex = 6;
 			this.tabPage_center.Text = "center";
 			this.tabPage_center.UseVisualStyleBackColor = true;
+			this.tabPage_center.MouseEnter += new System.EventHandler(this.FormDesign_MouseEnter);
 			// 
 			// centery
 			// 

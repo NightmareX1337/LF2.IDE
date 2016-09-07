@@ -758,7 +758,7 @@ namespace LF2.IDE
 
 		private void scintilla_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (mainForm.ContainsFocus)
+			if (mainForm.ContainsFocus && mainForm.formDesign.ContainsFocus)
 			{
 				this.Focus();
 				ActiveControl = scintilla;

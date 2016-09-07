@@ -1796,7 +1796,10 @@ namespace LF2.IDE
 
 		private void FormDesign_MouseEnter(object sender, EventArgs e)
 		{
-			this.Activate();
+			if (mainForm.ActiveDocument == null || mainForm.ActiveDocument.ContainsFocus)
+			{
+				this.Activate();
+			}
 		}
 	}
 }

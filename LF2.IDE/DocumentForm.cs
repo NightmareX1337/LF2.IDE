@@ -258,16 +258,23 @@ namespace LF2.IDE
 			for (int i = 0; i < matches.Count; i++)
 			{
 				string path = lfdir + "\\" + matches[i].Groups[3].Value.Trim();
-				Bitmap img = (Bitmap)Image.FromFile(path);
-				img.Tag = Path.GetFileName(path);
-				int si = int.Parse(matches[i].Groups[1].Value.Trim()),
-					ei = int.Parse(matches[i].Groups[2].Value.Trim()),
-					w = int.Parse(matches[i].Groups[4].Value.Trim()),
-					h = int.Parse(matches[i].Groups[5].Value.Trim()),
-					r = int.Parse(matches[i].Groups[6].Value.Trim()),
-					c = int.Parse(matches[i].Groups[7].Value.Trim());
-				SpriteSheet fm = new SpriteSheet(si, ei, img.Tag as string, img, w, h, c, r);
-				spriteList.Add(fm);
+				using (Bitmap temp = (Bitmap)Image.FromFile(path))
+				{
+					Bitmap img = new Bitmap(temp.Width, temp.Height, PixelFormat.Format32bppRgb);
+					using (Graphics gr = Graphics.FromImage(img))
+					{
+						gr.DrawImage(temp, new Rectangle(0, 0, img.Width, img.Height), new Rectangle(0, 0, temp.Width, temp.Height), GraphicsUnit.Pixel);
+					}
+					img.Tag = Path.GetFileName(path);
+					int si = int.Parse(matches[i].Groups[1].Value.Trim()),
+						ei = int.Parse(matches[i].Groups[2].Value.Trim()),
+						w = int.Parse(matches[i].Groups[4].Value.Trim()),
+						h = int.Parse(matches[i].Groups[5].Value.Trim()),
+						r = int.Parse(matches[i].Groups[6].Value.Trim()),
+						c = int.Parse(matches[i].Groups[7].Value.Trim());
+					SpriteSheet fm = new SpriteSheet(si, ei, img.Tag as string, img, w, h, c, r);
+					spriteList.Add(fm);
+				}
 			}
 		}
 

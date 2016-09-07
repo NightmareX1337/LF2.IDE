@@ -25,7 +25,7 @@ namespace LF2.IDE
 			byte[] decryptedtext = new byte[Math.Max(0, buffer.Length - 123)];
 			string password = EncryptionKey;
 
-			if (string.IsNullOrEmpty(password)) return Encoding.Default.GetString(buffer);
+			if (string.IsNullOrEmpty(password)) return Encoding.ASCII.GetString(buffer);
 
 			for (int i = 0, j = 123; i < decryptedtext.Length; i++, j++)
 				unchecked
@@ -33,7 +33,7 @@ namespace LF2.IDE
 					decryptedtext[i] = (byte)(buffer[j] - (byte)password[i % password.Length]);
 				}
 
-			return Encoding.Default.GetString(decryptedtext);
+			return Encoding.ASCII.GetString(decryptedtext);
 		}
 
 		public static void Encrypt(string text, string filepath)
@@ -61,7 +61,7 @@ namespace LF2.IDE
 
 			File.WriteAllBytes(filepath, dat);
 		}
-		
+
 		/*
 		public static unsafe string DecryptUnsafe(string filepath)
 		{
@@ -70,7 +70,7 @@ namespace LF2.IDE
 			byte[] decryptedtext = new byte[dec = Math.Max(0, buffer.Length - 123)];
 			byte* password = stackalloc byte[pass = EncryptionKey.Length];
 
-			if (pass == 0) return Encoding.Default.GetString(buffer);
+			if (pass == 0) return Encoding.ASCII.GetString(buffer);
 
 			for (int i = 0; i < pass; i++)
 				password[i] = (byte)EncryptionKey[i];
@@ -85,7 +85,7 @@ namespace LF2.IDE
 
 			}
 
-			return Encoding.Default.GetString(decryptedtext);
+			return Encoding.ASCII.GetString(decryptedtext);
 		}
 
 		public static unsafe void EncryptUnsafe(string text, string filepath)

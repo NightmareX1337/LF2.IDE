@@ -22,7 +22,7 @@ public class UnsafeLF2DataAlgorithm : DataUtil
 		byte[] decryptedtext = new byte[dec = Math.Max(0, buffer.Length - 123)];
 		byte* password = stackalloc byte[pass = EncryptionKey.Length];
 
-		if (pass == 0) return Encoding.Default.GetString(buffer);
+		if (pass == 0) return Encoding.ASCII.GetString(buffer);
 
 		for (int i = 0; i < pass; i++)
 			password[i] = (byte)EncryptionKey[i];
@@ -33,7 +33,7 @@ public class UnsafeLF2DataAlgorithm : DataUtil
 				d[i] = (byte)(b[j] - password[i % pass]);
 		}
 
-		return Encoding.Default.GetString(decryptedtext);
+		return Encoding.ASCII.GetString(decryptedtext);
 	}
 
 	public unsafe override void Encrypt(string filepath, string text)

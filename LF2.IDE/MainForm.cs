@@ -1341,6 +1341,7 @@ namespace LF2.IDE
 			if (file.EndsWith(".dat"))
 			{
 				DocumentForm doc = new DocumentForm(this);
+				doc.Scintilla.Encoding = Encoding.ASCII;
 				doc.Scintilla.AppendText(LF2DataUtils.Decrypt(file));
 				doc.Scintilla.UndoRedo.EmptyUndoBuffer();
 				doc.Scintilla.Modified = false;
@@ -1367,7 +1368,8 @@ namespace LF2.IDE
 			else
 			{
 				DocumentForm doc = new DocumentForm(this);
-				doc.Scintilla.AppendText(File.ReadAllText(file, Encoding.Default));
+				doc.Scintilla.Encoding = Encoding.UTF8;
+				doc.Scintilla.AppendText(File.ReadAllText(file, Encoding.UTF8));
 				doc.Scintilla.UndoRedo.EmptyUndoBuffer();
 				doc.Scintilla.Modified = false;
 				doc.TabText = Path.GetFileName(file);

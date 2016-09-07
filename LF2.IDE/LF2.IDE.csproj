@@ -395,6 +395,10 @@
       <Link>SciLexer64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\Assemblies\IDL\Release\IDL.dll">
+      <Link>IDL.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Main.ico" />
     <Content Include="Main_.ico" />
     <None Include="docking.xml">

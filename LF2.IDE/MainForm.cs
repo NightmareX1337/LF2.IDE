@@ -230,7 +230,8 @@ namespace LF2.IDE
 			{
 				Settings.Current.Reload();
 				checkUpdatesAutoToolStripMenuItem.Checked = Settings.Current.checkUpdatesAuto;
-				updateHistory();
+				textWrapToolStripButton.Checked = Settings.Current.lineWrapping;
+				UpdateHistoryList();
 			}
 			catch (Exception ex)
 			{
@@ -266,14 +267,14 @@ namespace LF2.IDE
 				DocSet ds = Settings.Current.documentSettings[docLoop++];
 				if (!File.Exists(ds.filePath))
 					return null;
-				DocumentForm df = Open(ds.filePath, true);
-				df.Scintilla.LineWrapping.Mode = ds.lineWrappingMode;
-				df.Scintilla.Selection.Start = ds.selectionStart;
-				df.Scintilla.Selection.End = ds.selectionEnd;
-				df.Scintilla.EndOfLine.IsVisible = ds.showEndOfLineChars;
-				df.Scintilla.Whitespace.Mode = ds.showWhiteSpaces ? ScintillaNET.WhitespaceMode.VisibleAlways : ScintillaNET.WhitespaceMode.Invisible;
-				df.Scintilla.Lines.FirstVisibleIndex = ds.firstVisibleLine;
-				return df;
+				DocumentForm doc = Open(ds.filePath, true);
+				doc.Scintilla.LineWrapping.Mode = Settings.Current.lineWrapping ? ScintillaNET.LineWrappingMode.Word : ScintillaNET.LineWrappingMode.None;
+				doc.Scintilla.EndOfLine.IsVisible = Settings.Current.showEndOfLineChars;
+				doc.Scintilla.Whitespace.Mode = Settings.Current.showWhiteSpaces ? ScintillaNET.WhitespaceMode.VisibleAlways : ScintillaNET.WhitespaceMode.Invisible;
+				doc.selectionStart = ds.selectionStart;
+				doc.selectionEnd = ds.selectionEnd;
+				doc.firstVisibleLine = ds.firstVisibleLine;
+				return doc;
 			}
 			else
 				return null;
@@ -317,7 +318,7 @@ namespace LF2.IDE
 			{
 				MessageBox.Show("File '" + fns + "' not exists in target path", Program.Title);
 				Settings.Current.recentFileHistory.Remove(fns);
-				updateHistory();
+				UpdateHistoryList();
 			}
 			else
 				Open(fns, true);
@@ -420,7 +421,7 @@ namespace LF2.IDE
 					Settings.Current.recentFileHistory.RemoveAt(i);
 		}
 
-		public void updateHistory()
+		public void UpdateHistoryList()
 		{
 			openRecentToolStripMenuItem.DropDownItems.Clear();
 			foreach (string rf in Settings.Current.recentFileHistory)
@@ -436,7 +437,7 @@ namespace LF2.IDE
 		{
 			if (openFileDialogData.ShowDialog() == DialogResult.OK)
 				Open(openFileDialogData.FileNames);
-			updateHistory();
+			UpdateHistoryList();
 		}
 
 		FormWindowState lastWindowState = FormWindowState.Maximized;
@@ -670,12 +671,9 @@ namespace LF2.IDE
 						new DocSet()
 						{
 							filePath = df.FilePath,
-							firstVisibleLine = df.Scintilla.Lines.FirstVisibleIndex,
-							lineWrappingMode = df.Scintilla.LineWrapping.Mode,
+							firstVisibleLine = df.Scintilla.Lines.VisibleLines[0].Number,
 							selectionStart = df.Scintilla.Selection.Start,
 							selectionEnd = df.Scintilla.Selection.End,
-							showEndOfLineChars = df.Scintilla.EndOfLine.IsVisible,
-							showWhiteSpaces = df.Scintilla.Whitespace.Mode == ScintillaNET.WhitespaceMode.VisibleAlways
 						});
 				}
 			}
@@ -720,7 +718,6 @@ namespace LF2.IDE
 				{
 					textWrapToolStripButton.Checked = true;
 				}
-				textWrapToolStripButton.ToolTipText = "Wrap: " + ActiveDocument.Scintilla.LineWrapping.Mode.ToString();
 				showAllCharsToolStripButton.Checked = ActiveDocument.Scintilla.EndOfLine.IsVisible || ActiveDocument.Scintilla.Whitespace.Mode == ScintillaNET.WhitespaceMode.VisibleAlways;
 				UpdateNavigationControls();
 
@@ -870,7 +867,7 @@ namespace LF2.IDE
 			{
 				MessageBox.Show("File '" + fns + "' not exists in target path", Program.Title);
 				ActiveDocument.Scintilla.Modified = true;
-				updateHistory();
+				UpdateHistoryList();
 			}
 			else if (ActiveDocument.Scintilla.Modified)
 			{
@@ -950,23 +947,21 @@ namespace LF2.IDE
 
 		void ToolStripButtonwwClick(object sender, EventArgs e)
 		{
-			if (ActiveDocument.Scintilla.LineWrapping.Mode == ScintillaNET.LineWrappingMode.None)
+			Settings.Current.lineWrapping = textWrapToolStripButton.Checked;
+			foreach (DocumentForm doc in dockPanel.Documents)
 			{
-				ActiveDocument.Scintilla.LineWrapping.Mode = ScintillaNET.LineWrappingMode.Word;
-				textWrapToolStripButton.Checked = true;
+				doc.Scintilla.LineWrapping.Mode = Settings.Current.lineWrapping ? ScintillaNET.LineWrappingMode.Word : ScintillaNET.LineWrappingMode.None;
 			}
-			else
-			{
-				ActiveDocument.Scintilla.LineWrapping.Mode = ScintillaNET.LineWrappingMode.None;
-				textWrapToolStripButton.Checked = false;
-			}
-			textWrapToolStripButton.ToolTipText = "Wrap: " + ActiveDocument.Scintilla.LineWrapping.Mode.ToString();
 		}
 
 		void ToolStripButtoneolClick(object sender, EventArgs e)
 		{
-			ActiveDocument.Scintilla.Whitespace.Mode = showAllCharsToolStripButton.Checked ? ScintillaNET.WhitespaceMode.VisibleAlways : ScintillaNET.WhitespaceMode.Invisible;
-			ActiveDocument.Scintilla.EndOfLine.IsVisible = showAllCharsToolStripButton.Checked;
+			Settings.Current.showEndOfLineChars = Settings.Current.showWhiteSpaces = showAllCharsToolStripButton.Checked;
+			foreach (DocumentForm doc in dockPanel.Documents)
+			{
+				doc.Scintilla.EndOfLine.IsVisible = Settings.Current.showEndOfLineChars;
+				doc.Scintilla.Whitespace.Mode = Settings.Current.showWhiteSpaces ? ScintillaNET.WhitespaceMode.VisibleAlways : ScintillaNET.WhitespaceMode.Invisible;
+			}
 		}
 
 		void ToolStripButtonFClick(object sender, EventArgs e)
@@ -1323,7 +1318,7 @@ namespace LF2.IDE
 			}
 			addToHistory(file);
 			if (updateHistory)
-				this.updateHistory();
+				this.UpdateHistoryList();
 			return doc;
 		}
 
@@ -1332,7 +1327,7 @@ namespace LF2.IDE
 			foreach (string file in files)
 				Open(file, false);
 
-			updateHistory();
+			UpdateHistoryList();
 		}
 
 		public bool OpenWithImage(string file, bool updateHistory)
@@ -1377,7 +1372,7 @@ namespace LF2.IDE
 				doc.Show(dockPanel);
 			}
 			if (!arg) addToHistory(file);
-			if (updateHistory) this.updateHistory();
+			if (updateHistory) this.UpdateHistoryList();
 			return arg;
 		}
 
@@ -1391,7 +1386,7 @@ namespace LF2.IDE
 			while (filer.MoveNext())
 				arg |= OpenWithImage(filer.Current, false);
 
-			updateHistory();
+			UpdateHistoryList();
 
 			this.Activate();
 			if (arg) argsToolStripMenuItem.ShowDropDown();
@@ -1630,7 +1625,7 @@ namespace LF2.IDE
 		private void clearRecentHistoryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Settings.Current.recentFileHistory.Clear();
-			updateHistory();
+			UpdateHistoryList();
 		}
 
 		private void toolStripButtonFold_KeyDown(object sender, KeyEventArgs e)

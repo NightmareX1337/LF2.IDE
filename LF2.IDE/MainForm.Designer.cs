@@ -151,7 +151,7 @@
 			this.transparencyToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pixelFormatterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.spriteMirrorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.mirrorAllSpritesİnADirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mirrorAllSpritesInADirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.gridDrawerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.spriteHandlerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.refreshAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -690,13 +690,14 @@
 			// 
 			// textWrapToolStripButton
 			// 
+			this.textWrapToolStripButton.CheckOnClick = true;
 			this.textWrapToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.textWrapToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("textWrapToolStripButton.Image")));
 			this.textWrapToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.textWrapToolStripButton.Name = "textWrapToolStripButton";
 			this.textWrapToolStripButton.Size = new System.Drawing.Size(23, 24);
 			this.textWrapToolStripButton.Text = "Text Wrap";
-			this.textWrapToolStripButton.Click += new System.EventHandler(this.ToolStripButtonwwClick);
+			this.textWrapToolStripButton.CheckedChanged += new System.EventHandler(this.ToolStripButtonwwClick);
 			// 
 			// showAllCharsToolStripButton
 			// 
@@ -707,7 +708,7 @@
 			this.showAllCharsToolStripButton.Name = "showAllCharsToolStripButton";
 			this.showAllCharsToolStripButton.Size = new System.Drawing.Size(23, 24);
 			this.showAllCharsToolStripButton.Text = "Show All Characters";
-			this.showAllCharsToolStripButton.Click += new System.EventHandler(this.ToolStripButtoneolClick);
+			this.showAllCharsToolStripButton.CheckedChanged += new System.EventHandler(this.ToolStripButtoneolClick);
 			// 
 			// toolStripButtonFolding
 			// 
@@ -1244,7 +1245,7 @@
             this.transparencyToolToolStripMenuItem,
             this.pixelFormatterToolStripMenuItem,
             this.spriteMirrorerToolStripMenuItem,
-            this.mirrorAllSpritesİnADirectoryToolStripMenuItem,
+            this.mirrorAllSpritesInADirectoryToolStripMenuItem,
             this.gridDrawerToolStripMenuItem});
 			this.spriteToolsToolStripMenuItem.Name = "spriteToolsToolStripMenuItem";
 			this.spriteToolsToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
@@ -1271,12 +1272,12 @@
 			this.spriteMirrorerToolStripMenuItem.Text = "Sprite &Mirrorer";
 			this.spriteMirrorerToolStripMenuItem.Click += new System.EventHandler(this.SpriteMirrorerToolStripMenuItemClick);
 			// 
-			// mirrorAllSpritesİnADirectoryToolStripMenuItem
+			// mirrorAllSpritesInADirectoryToolStripMenuItem
 			// 
-			this.mirrorAllSpritesİnADirectoryToolStripMenuItem.Name = "mirrorAllSpritesİnADirectoryToolStripMenuItem";
-			this.mirrorAllSpritesİnADirectoryToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.mirrorAllSpritesİnADirectoryToolStripMenuItem.Text = "Mirror All Sprites in a Directory";
-			this.mirrorAllSpritesİnADirectoryToolStripMenuItem.Click += new System.EventHandler(this.mirrorAllSpritesInADirectoryToolStripMenuItem_Click);
+			this.mirrorAllSpritesInADirectoryToolStripMenuItem.Name = "mirrorAllSpritesInADirectoryToolStripMenuItem";
+			this.mirrorAllSpritesInADirectoryToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+			this.mirrorAllSpritesInADirectoryToolStripMenuItem.Text = "Mirror All Sprites in a Directory";
+			this.mirrorAllSpritesInADirectoryToolStripMenuItem.Click += new System.EventHandler(this.mirrorAllSpritesInADirectoryToolStripMenuItem_Click);
 			// 
 			// gridDrawerToolStripMenuItem
 			// 
@@ -1677,7 +1678,7 @@
 		public System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem createErrorToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem closeAllDocumentsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem mirrorAllSpritesİnADirectoryToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mirrorAllSpritesInADirectoryToolStripMenuItem;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog_Sprite;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripButton toolStripSplitButtonIDL;

@@ -16,7 +16,7 @@ namespace LF2.IDE
 		public static Settings Current = new Settings();
 
 		public static readonly string SettingsDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LF2.IDE",
-			SettingsPath = SettingsDir + "\\settings.xml";
+			SettingsPath = SettingsDir + "\\settings-v2.xml";
 
 		public string lfPath = "lf2.exe",
 			encryptionKey = "odBearBecauseHeIsVeryGoodSiuHungIsAGo",
@@ -35,6 +35,10 @@ namespace LF2.IDE
 
 		public List<string> recentFileHistory = new List<string>(8),
 			activePlugins = new List<string>();
+
+		public bool showWhiteSpaces = false,
+			showEndOfLineChars = false,
+			lineWrapping = true;
 
 		public List<DocSet> documentSettings;
 
@@ -76,11 +80,6 @@ namespace LF2.IDE
 	public class DocSet
 	{
 		public string filePath;
-
-		public LineWrappingMode lineWrappingMode = LineWrappingMode.None;
-
-		public bool showWhiteSpaces = false,
-			showEndOfLineChars = false;
 
 		public int firstVisibleLine = 0,
 			selectionStart = 0,

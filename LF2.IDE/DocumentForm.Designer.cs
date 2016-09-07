@@ -329,6 +329,7 @@
 			this.Activated += new System.EventHandler(this.DocumentFormActivated);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DocumentForm_FormClosing);
 			this.Load += new System.EventHandler(this.DocumentFormLoad);
+			this.Shown += new System.EventHandler(this.DocumentForm_Shown);
 			this.Enter += new System.EventHandler(this.DocumentFormActivated);
 			((System.ComponentModel.ISupportInitialize)(this.scintilla)).EndInit();
 			this.statusStrip.ResumeLayout(false);

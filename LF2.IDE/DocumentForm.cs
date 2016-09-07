@@ -227,6 +227,10 @@ namespace LF2.IDE
 			scintilla.NativeInterface.SendMessageDirect(2516, true);
 			SetMarginAuto();
 
+			scintilla.LineWrapping.Mode = Settings.Current.lineWrapping ? ScintillaNET.LineWrappingMode.Word : ScintillaNET.LineWrappingMode.None;
+			scintilla.Whitespace.Mode = Settings.Current.showWhiteSpaces ? WhitespaceMode.VisibleAlways : WhitespaceMode.Invisible;
+			scintilla.EndOfLine.IsVisible = Settings.Current.showEndOfLineChars;
+
 			if (Settings.Current.lfPath == null || !File.Exists(Settings.Current.lfPath))
 				return;
 
@@ -753,6 +757,17 @@ namespace LF2.IDE
 				ActiveControl = scintilla;
 				scintilla.Focus();
 			}
+		}
+
+		public int selectionStart;
+		public int selectionEnd;
+		public int firstVisibleLine;
+
+		private void DocumentForm_Shown(object sender, EventArgs e)
+		{
+			scintilla.Selection.Start = this.selectionStart;
+			scintilla.Selection.End = this.selectionEnd;
+			scintilla.Lines.FirstVisibleIndex = this.firstVisibleLine;
 		}
 	}
 

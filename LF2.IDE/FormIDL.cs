@@ -390,7 +390,10 @@ namespace LF2.IDE
 
 		private void FormIDL_Deactivate(object sender, EventArgs e)
 		{
-			this.Opacity = 0.75;
+            if (!this.Disposing)
+            {
+                this.Opacity = 0.75;
+            }
 		}
 	}
 }

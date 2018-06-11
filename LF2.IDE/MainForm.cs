@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -287,7 +286,7 @@ namespace LF2.IDE
 		{
 			formEventLog.Error(e.Exception, "UNHANDLED ERROR");
 		}
-
+  
 		public void ErrorBlast(object sender, EventArgs e)
 		{
 			ErrorBlast(0);
@@ -1206,19 +1205,19 @@ namespace LF2.IDE
 
 		private void argsTransClick(object sender, EventArgs e)
 		{
-			FormTransparencyTools ftt = new FormTransparencyTools(openFileDialog_Image.FileName, this);
+			FormTransparencyTools ftt = new FormTransparencyTools((sender as ToolStripMenuItem).Tag as string, this);
 			ftt.Show(this);
 		}
 
 		private void argsPixClick(object sender, EventArgs e)
 		{
-			FormImageSaver fis = new FormImageSaver(openFileDialog_Image.FileName, true, this);
+			FormImageSaver fis = new FormImageSaver((sender as ToolStripMenuItem).Tag as string, true, this);
 			fis.ShowDialog(this);
 		}
 
 		private void argsMirClick(object sender, EventArgs e)
 		{
-			FormSpriteMirrorer fsm = new FormSpriteMirrorer(openFileDialog_Image.FileName, this);
+			FormSpriteMirrorer fsm = new FormSpriteMirrorer((sender as ToolStripMenuItem).Tag as string, this);
 			fsm.Show(this);
 		}
 
@@ -1254,15 +1253,29 @@ namespace LF2.IDE
 			folderBrowserDialog_Sprite.SelectedPath = Path.GetDirectoryName(Settings.Current.lfPath);
 			if(folderBrowserDialog_Sprite.ShowDialog() == DialogResult.OK)
 			{
+				int count = 0;
 				string path = folderBrowserDialog_Sprite.SelectedPath;
 				try
 				{
 					var fs = Directory.EnumerateFiles(path, "*.bmp", Directory.Exists(path + "\\" + "sys") ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 					foreach (string sprite in fs)
 					{
-						string fileName = Path.GetFileNameWithoutExtension(sprite), 
-							fileDir = Path.GetDirectoryName(sprite), 
-							file = Path.GetFileName(sprite), 
+						//using (MemoryStream ms = new MemoryStream())
+						//{
+						//	using (Bitmap bmp = new Bitmap(sprite))
+						//	{
+						//		bmp.Save(ms, ImageFormat.Bmp);
+						//		count++;
+						//	}
+						//	using (var img = File.Open(sprite, FileMode.Create, FileAccess.Write, FileShare.None))
+						//	{
+						//		byte[] bytes = ms.ToArray();
+						//		img.Write(bytes, 0, bytes.Length);
+						//	}
+						//}
+						string fileName = Path.GetFileNameWithoutExtension(sprite),
+							fileDir = Path.GetDirectoryName(sprite),
+							file = Path.GetFileName(sprite),
 							mirrored = fileDir + "\\" + fileName + "_mirror.bmp";
 
 						if (file.EndsWith("_mirror.bmp") || File.Exists(mirrored) || file.EndsWith("_s.bmp") || file.EndsWith("_f.bmp") || file == "s.bmp" || file == "face.bmp")
@@ -1270,9 +1283,11 @@ namespace LF2.IDE
 						using (Bitmap bmp = new Bitmap(sprite))
 						{
 							bmp.RotateFlip(RotateFlipType.RotateNoneFlipX);
-							bmp.Save(mirrored, System.Drawing.Imaging.ImageFormat.Bmp);
+							bmp.Save(mirrored, ImageFormat.Bmp);
+							count++;
 						}
 					}
+					MessageBox.Show(this, count + " files have been mirrored", "Sprite Mirrorer");
 				}
 				catch(Exception ex)
 				{
@@ -1354,7 +1369,7 @@ namespace LF2.IDE
 				trans = new ToolStripMenuItem("Make Transparent"),
 				pix = new ToolStripMenuItem("Change Pixel Format"),
 				mir = new ToolStripMenuItem("Make Mirrored");
-				item.Tag = file;
+				trans.Tag = pix.Tag = mir.Tag = item.Tag = file;
 				trans.Click += new EventHandler(argsTransClick);
 				pix.Click += new EventHandler(argsPixClick);
 				mir.Click += new EventHandler(argsMirClick);

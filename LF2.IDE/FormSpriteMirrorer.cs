@@ -16,12 +16,11 @@ namespace LF2.IDE
 		{
 			InitializeComponent();
 			mainForm = main;
-			Bitmap img = HelperTools.GetClonedBitmap(path);
 
 			foreach (string rft in RotateFlipType.GetNames(typeof(RotateFlipType)))
 				comboBox_Mode.Items.Add(rft);
 
-			drawBox_OriginalSprite.Image = original = img;
+			drawBox_OriginalSprite.Image = original = HelperTools.GetClonedBitmap(path);
 			drawBox_ModifedSprite.Image = (Bitmap)original.Clone();
 
 			this.path = Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + "_mirror" + Path.GetExtension(path);
@@ -37,7 +36,7 @@ namespace LF2.IDE
 
 		void ComboBoxModeSelectedIndexChanged(object sender, EventArgs e)
 		{
-			drawBox_ModifedSprite.Image.RotateFlip((RotateFlipType)RotateFlipType.Parse(typeof(RotateFlipType), (string)comboBox_Mode.SelectedItem));
+			(drawBox_ModifedSprite.Image = (Image)original.Clone()).RotateFlip((RotateFlipType)RotateFlipType.Parse(typeof(RotateFlipType), (string)comboBox_Mode.SelectedItem));
 			drawBox_ModifedSprite.Refresh();
 		}
 		

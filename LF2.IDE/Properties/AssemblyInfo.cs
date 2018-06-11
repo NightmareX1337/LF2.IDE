@@ -9,9 +9,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("LF2 IDE")]
 [assembly: AssemblyDescription("LF2 Integrated Development Environment")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("NightmareX1337")]
+[assembly: AssemblyCompany("Ahmet Sait Koçak")]
 [assembly: AssemblyProduct("LF2 IDE")]
-[assembly: AssemblyCopyright("Copyright © NightmareX1337 2013-2016")]
+[assembly: AssemblyCopyright("Copyright © Ahmet Sait Koçak 2013-2018")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

@@ -42,6 +42,8 @@ namespace LF2.IDE
 			this.drawBox_OriginalSprite = new DrawBox.DrawBox();
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
 			this.drawBox_ModifedSprite = new DrawBox.DrawBox();
+			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
 			this.splitContainer.SuspendLayout();
@@ -74,12 +76,17 @@ namespace LF2.IDE
 			// 
 			// drawBox_OriginalSprite
 			// 
+			this.drawBox_OriginalSprite.ControlKey = false;
 			this.drawBox_OriginalSprite.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.drawBox_OriginalSprite.Interpolation = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			this.drawBox_OriginalSprite.Location = new System.Drawing.Point(0, 0);
+			this.drawBox_OriginalSprite.MultiRectangleMode = false;
 			this.drawBox_OriginalSprite.Name = "drawBox_OriginalSprite";
+			this.drawBox_OriginalSprite.OneRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
 			this.drawBox_OriginalSprite.PictureMode = DrawBox.PictureMode.ShrinkOnly;
 			this.drawBox_OriginalSprite.Rectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+			this.drawBox_OriginalSprite.Rectangles = ((System.Collections.Generic.List<System.Drawing.Rectangle>)(resources.GetObject("drawBox_OriginalSprite.Rectangles")));
+			this.drawBox_OriginalSprite.ShiftKey = false;
 			this.drawBox_OriginalSprite.Size = new System.Drawing.Size(200, 263);
 			this.drawBox_OriginalSprite.TabIndex = 2;
 			this.drawBox_OriginalSprite.TabStop = false;
@@ -105,15 +112,24 @@ namespace LF2.IDE
 			// 
 			// drawBox_ModifedSprite
 			// 
+			this.drawBox_ModifedSprite.ControlKey = false;
 			this.drawBox_ModifedSprite.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.drawBox_ModifedSprite.Interpolation = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			this.drawBox_ModifedSprite.Location = new System.Drawing.Point(0, 0);
+			this.drawBox_ModifedSprite.MultiRectangleMode = false;
 			this.drawBox_ModifedSprite.Name = "drawBox_ModifedSprite";
+			this.drawBox_ModifedSprite.OneRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
 			this.drawBox_ModifedSprite.PictureMode = DrawBox.PictureMode.ShrinkOnly;
 			this.drawBox_ModifedSprite.Rectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+			this.drawBox_ModifedSprite.Rectangles = ((System.Collections.Generic.List<System.Drawing.Rectangle>)(resources.GetObject("drawBox_ModifedSprite.Rectangles")));
+			this.drawBox_ModifedSprite.ShiftKey = false;
 			this.drawBox_ModifedSprite.Size = new System.Drawing.Size(264, 263);
 			this.drawBox_ModifedSprite.TabIndex = 3;
 			this.drawBox_ModifedSprite.TabStop = false;
+			// 
+			// saveFileDialog
+			// 
+			this.saveFileDialog.Filter = "Bitmap Image (*.bmp)|*.bmp";
 			// 
 			// FormSpriteMirrorer
 			// 
@@ -131,6 +147,7 @@ namespace LF2.IDE
 			this.Load += new System.EventHandler(this.FormMirrorerLoad);
 			this.splitContainer.Panel1.ResumeLayout(false);
 			this.splitContainer.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
 			this.splitContainer.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -142,5 +159,6 @@ namespace LF2.IDE
 		public System.Windows.Forms.SplitContainer splitContainer;
 		public DrawBox.DrawBox drawBox_OriginalSprite;
 		public System.Windows.Forms.Button button_Apply;
+		private System.Windows.Forms.SaveFileDialog saveFileDialog;
 	}
 }

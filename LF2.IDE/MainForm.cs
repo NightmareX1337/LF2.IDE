@@ -24,7 +24,7 @@ namespace LF2.IDE
 
 		public MainForm(string[] args)
 		{
-			Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(this.UnhandledError);
+			Application.ThreadException += new ThreadExceptionEventHandler(this.UnhandledError);
 			InitializeComponent();
 
 			this.args = args;
@@ -241,7 +241,7 @@ namespace LF2.IDE
 		}
 
 		readonly string felPersist = typeof(FormEventLog).FullName,
-			ftPersist = typeof(FormDesign).FullName,
+			fdPersist = typeof(FormDesign).FullName,
 			ffPersist = typeof(FormFrame).FullName,
 			fsPersist = typeof(FormShape).FullName,
 			sePersist = typeof(SolutionExplorer).FullName,
@@ -252,7 +252,7 @@ namespace LF2.IDE
 		{
 			if (persistString == felPersist)
 				return formEventLog = new FormEventLog();
-			else if (persistString == ftPersist)
+			else if (persistString == fdPersist)
 				return formDesign = new FormDesign(this);
 			else if (persistString == ffPersist)
 				return formFrame = new FormFrame(this);
@@ -728,8 +728,8 @@ namespace LF2.IDE
 					lastActiveFrame = lastActiveDoc.frames;
 					formDesign.EditIn();
 					formDesign.numericUpDown_ImageIndex.Maximum = 
-					formFrame.numericUpDown_pic.Maximum = 
-					formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
+						formFrame.numericUpDown_pic.Maximum = 
+						formShape.numericUpDown_ImageIndex.Maximum = lastActiveFrame.Length - 1;
 					formDesign.EditOut();
 					formFrame.numericUpDown_pic.Value = lastActiveDoc.frameIndexFrame;
 					formShape.numericUpDown_ImageIndex.Value = lastActiveDoc.frameIndexShape;

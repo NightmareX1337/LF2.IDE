@@ -1240,10 +1240,10 @@ namespace DrawBox
 		}
 
 		[EditorBrowsable]
-		protected override void OnPaintBackground(PaintEventArgs pevent)
+		protected override void OnPaintBackground(PaintEventArgs e)
 		{
-			pevent.Graphics.InterpolationMode = backgroundInterpolation;
-			base.OnPaintBackground(pevent);
+			e.Graphics.InterpolationMode = backgroundInterpolation;
+			base.OnPaintBackground(e);
 		}
 
 		#endregion
@@ -1281,7 +1281,6 @@ namespace DrawBox
 		[EditorBrowsable]
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
-			base.OnMouseDown(e);
 			if ((e.Button & MouseButtons.Left) != 0)
 				leftMouse = true;
 			if ((e.Button & MouseButtons.Right) != 0)
@@ -1426,14 +1425,13 @@ namespace DrawBox
 						b = true;
 					}
 					break;
-			}
-		}
+            }
+            base.OnMouseDown(e);
+        }
 
 		[EditorBrowsable]
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
-			base.OnMouseMove(e);
-
 			if (e.Location == mouse)
 				return;
 			else
@@ -1567,12 +1565,12 @@ namespace DrawBox
 					}
 					break;
 			}
+			base.OnMouseMove(e);
 		}
 
 		[EditorBrowsable]
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			base.OnMouseUp(e);
 			if ((e.Button & MouseButtons.Left) != 0)
 				leftMouse = false;
 			if ((e.Button & MouseButtons.Right) != 0)
@@ -1593,15 +1591,16 @@ namespace DrawBox
 					bb = false;
 				}
 			}
+			base.OnMouseUp(e);
 		}
 
 		[EditorBrowsable]
 		protected override void OnMouseLeave(EventArgs e)
 		{
-			base.OnMouseLeave(e);
 			if (showCoordinateToolTip)
 				toolTipC.Show(relativeMouseLocation.X + "," + relativeMouseLocation.Y, this, controlMouseLocationC, 1);
-			base.Invalidate();
+			Invalidate();
+			base.OnMouseLeave(e);
 		}
 
 		#endregion

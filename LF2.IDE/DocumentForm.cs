@@ -235,47 +235,43 @@ namespace LF2.IDE
 				return;
 
 			if (TabText.TrimEnd(' ', '*').EndsWith(".dat"))
+			{
 				try
 				{
-					ParseFiles(Path.GetDirectoryName(Settings.Current.lfPath));
-					ParseFrames();
+					if (ParseFiles(Path.GetDirectoryName(Settings.Current.lfPath)))
+					    ParseFrames();
 				}
 				catch (Exception ex)
 				{
 					mainForm.formEventLog.Error(ex, "Parsing Error");
 				}
+			}
 		}
 
-		public void ParseFiles(string lfdir)
+		public bool ParseFiles(string lfdir)
 		{
 			spriteList.Clear();
 			string dat = scintilla.Text;
 			int begin = dat.IndexOf("<bmp_begin>"), end = dat.IndexOf("<bmp_end>", begin + 11);
-			if (begin < 0 || end < 0) return;
+			if (begin < 0 || end < 0) return false;
 			string script = dat.Substring(begin + 11, end - begin);
 			MatchCollection matches = Regex.Matches(script, SpriteSheet.regexPattern);
-			if (matches.Count < 1) return;
+			if (matches.Count < 1) return false;
 			for (int i = 0; i < matches.Count; i++)
 			{
 				string path = lfdir + "\\" + matches[i].Groups[3].Value.Trim();
-				using (Bitmap temp = (Bitmap)Image.FromFile(path))
-				{
-					Bitmap img = new Bitmap(temp.Width, temp.Height, PixelFormat.Format32bppRgb);
-					using (Graphics gr = Graphics.FromImage(img))
-					{
-						gr.DrawImage(temp, new Rectangle(0, 0, img.Width, img.Height), new Rectangle(0, 0, temp.Width, temp.Height), GraphicsUnit.Pixel);
-					}
-					img.Tag = Path.GetFileName(path);
-					int si = int.Parse(matches[i].Groups[1].Value.Trim()),
-						ei = int.Parse(matches[i].Groups[2].Value.Trim()),
-						w = int.Parse(matches[i].Groups[4].Value.Trim()),
-						h = int.Parse(matches[i].Groups[5].Value.Trim()),
-						r = int.Parse(matches[i].Groups[6].Value.Trim()),
-						c = int.Parse(matches[i].Groups[7].Value.Trim());
-					SpriteSheet fm = new SpriteSheet(si, ei, img.Tag as string, img, w, h, c, r);
-					spriteList.Add(fm);
-				}
+				Bitmap img = HelperTools.GetClonedBitmap(path);
+				img.Tag = Path.GetFileName(path);
+				int si = int.Parse(matches[i].Groups[1].Value.Trim()),
+					ei = int.Parse(matches[i].Groups[2].Value.Trim()),
+					w = int.Parse(matches[i].Groups[4].Value.Trim()),
+					h = int.Parse(matches[i].Groups[5].Value.Trim()),
+					r = int.Parse(matches[i].Groups[6].Value.Trim()),
+					c = int.Parse(matches[i].Groups[7].Value.Trim());
+				SpriteSheet fm = new SpriteSheet(si, ei, img.Tag as string, img, w, h, c, r);
+				spriteList.Add(fm);
 			}
+            return true;
 		}
 
 		public void ParseFrames()

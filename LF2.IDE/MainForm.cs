@@ -1109,8 +1109,8 @@ namespace LF2.IDE
 				{
 					if (doc.TabText.TrimEnd(' ', '*').EndsWith(".dat"))
 					{
-						doc.ParseFiles(Path.GetDirectoryName(Settings.Current.lfPath));
-						doc.ParseFrames();
+						if (doc.ParseFiles(Path.GetDirectoryName(Settings.Current.lfPath)))
+						 doc.ParseFrames();
 					}
 				}
 				lastActiveFrame = ActiveDocument.frames;
@@ -1147,8 +1147,8 @@ namespace LF2.IDE
 			}
 			try
 			{
-				ActiveDocument.ParseFiles(Path.GetDirectoryName(Settings.Current.lfPath));
-				ActiveDocument.ParseFrames();
+				if (ActiveDocument.ParseFiles(Path.GetDirectoryName(Settings.Current.lfPath)))
+					ActiveDocument.ParseFrames();
 				lastActiveFrame = ActiveDocument.frames;
 				if (lastActiveFrame != null && lastActiveFrame.Length > 0)
 				{
